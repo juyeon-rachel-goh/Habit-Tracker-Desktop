@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 
 @Component({
   selector: 'app-contact-us',
@@ -7,11 +12,23 @@ import { FormControl, Validators } from '@angular/forms';
   styleUrls: ['./contact-us.component.scss'],
 })
 export class ContactUsComponent implements OnInit {
-  constructor() {}
+  public contactUsForm = new FormGroup({});
 
-  ngOnInit(): void {}
-  emailFormControl = new FormControl('', [
-    Validators.required,
-    Validators.email,
-  ]);
+  constructor(private formBuilder: FormBuilder) {}
+
+  ngOnInit(): void {
+    this.contactUsForm = this.formBuilder.group({
+      firstName: [
+        '',
+        [Validators.required, Validators.pattern('^[a-zA-Z\\-]+')],
+      ],
+      lastName: [
+        '',
+        [Validators.required, Validators.pattern('^[a-zA-Z\\-]+')],
+      ],
+      email: ['', [Validators.required, Validators.email]],
+    });
+  }
+
+  onSubmit() {}
 }

@@ -7,20 +7,21 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-
-import { AddEditItemComponent } from './body/habit-tracker/add-edit-item/add-edit-item.component';
-import { HabitDetailComponent } from './body/habit-tracker/habit-detail/habit-detail.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { BodyModule } from './body/body.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MoodSelectorComponent } from './body/habit-tracker/mood-selector/mood-selector.component';
+import { RegisterComponent } from './auth/register/register.component';
+import { InputModule } from './input/input.module';
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
     FooterComponent,
-    AddEditItemComponent,
-    HabitDetailComponent,
+    MoodSelectorComponent,
   ],
   imports: [
     BrowserModule,
@@ -30,6 +31,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
+    BodyModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

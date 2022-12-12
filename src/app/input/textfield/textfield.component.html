@@ -1,0 +1,14 @@
+<mat-form-field appearance="fill">
+  <ng-container *ngIf="label"
+    ><mat-label>{{ label }}</mat-label></ng-container
+  >
+  <ng-container *ngIf="icon"
+    ><mat-icon matSuffix>{{ icon }}</mat-icon></ng-container
+  >
+  <ng-container *ngIf="formControl"
+    ><input matInput [formControl]="formControl"
+  /></ng-container>
+  <ng-container *ngIf="hint"
+    ><mat-hint>{{ hint }}</mat-hint></ng-container
+  >
+</mat-form-field>
