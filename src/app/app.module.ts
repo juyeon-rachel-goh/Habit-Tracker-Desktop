@@ -15,6 +15,9 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MoodSelectorComponent } from './body/habit-tracker/mood-selector/mood-selector.component';
 import { RegisterComponent } from './auth/register/register.component';
 import { InputModule } from './input/input.module';
+import { AuthModule } from './auth/auth.module';
+import { PipesModule } from './pipes/pipes.module';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -32,6 +35,10 @@ import { InputModule } from './input/input.module';
     MatInputModule,
     MatButtonModule,
     BodyModule,
+    AuthModule,
+    InputModule,
+    PipesModule,
+    HttpClientModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

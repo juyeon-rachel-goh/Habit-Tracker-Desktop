@@ -14,5 +14,5 @@ export class TextfieldComponent implements OnInit {
   @Input() label: string = '';
   @Input() icon: string = '';
   @Input() hint: string = '';
-  @Input() formControl?: FormControl;
+  @Input() inputFormControl?: FormControl;
 }

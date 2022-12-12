@@ -1,5 +1,21 @@
-<!-- <app-textfield label="Username" hint="Enter username"></app-textfield>
-<app-textfield label="Email" hint="Enter username"></app-textfield>
-<app-textfield label="Password" hint="Enter username"></app-textfield> -->
-
-<app-textfield></app-textfield>
+<form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+  <app-textfield
+    label="Username"
+    hint="Enter username"
+    id="username"
+    [inputFormControl]="registerForm.get('username') | asFormControl"
+  ></app-textfield>
+  <app-textfield
+    label="Email"
+    hint="Enter username"
+    id="email"
+    [inputFormControl]="registerForm.get('email') | asFormControl"
+  ></app-textfield>
+  <app-textfield
+    label="Password"
+    hint="Enter Password"
+    id="password"
+    [inputFormControl]="registerForm.get('password') | asFormControl"
+  ></app-textfield>
+  <button mat-raised-button color="primary">Submit</button>
+</form>
