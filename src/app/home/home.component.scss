@@ -8,7 +8,12 @@ $font-stack: Verdana, sans-serif;
     font-weight: bold;
   }
   .name {
-    font: italic 75% $font-stack;
+    font: italic 60% $font-stack;
     text-align: right;
   }
+}
+
+.button {
+  padding: 10px 20px;
+  font: 150% $font-stack;
 }
