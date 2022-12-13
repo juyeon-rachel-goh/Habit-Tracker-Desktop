@@ -1,0 +1,14 @@
+$font-stack: Verdana, sans-serif;
+
+.heading {
+  font: 300% $font-stack;
+  color: #000000;
+  letter-spacing: 1px;
+  .accent {
+    font-weight: bold;
+  }
+  .name {
+    font: italic 75% $font-stack;
+    text-align: right;
+  }
+}
