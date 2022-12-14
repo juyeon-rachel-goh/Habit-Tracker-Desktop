@@ -1,0 +1,55 @@
+<div class="bg-light py-5">
+  <div class="container">
+    <div class="d-flex flex-row justify-content-between">
+      <div>
+        <a href="#" class="navbar-brand header heading"
+          ><img
+            src="https://www.svgrepo.com/show/426881/neon-app-icon.svg"
+            width="50px"
+            height="50px"
+          />Habits</a
+        >
+        <div class="px-4 text-muted">&copy; Habits 2022</div>
+      </div>
+      <div>
+        <form [formGroup]="newsletterForm" (ngSubmit)="onNewsLetterSubmit()">
+          Sign up for newsletter
+          <div>
+            <app-textfield
+              label="Email"
+              hint="Enter Vaild Email"
+              id="email"
+              [inputFormControl]="
+                newsletterForm.get('newSubscriber') | asFormControl
+              "
+            ></app-textfield
+            ><button mat-raised-button color="primary" type="submit">
+              Sign Up
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <div>
+        <h4>Let's get social</h4>
+        <div class="d-flex flex-row justify-content-between">
+          <img
+            src="https://img.icons8.com/office/2x/instagram-new.png"
+            width="25px"
+            height="25px"
+          />
+          <img
+            src="https://img.icons8.com/office/2x/twitter.png"
+            width="25px"
+            height="25px"
+          />
+          <img
+            src="https://img.icons8.com/office/2x/linkedin.png"
+            width="25px"
+            height="25px"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
