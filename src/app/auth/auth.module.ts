@@ -6,6 +6,7 @@ import { InputModule } from '../input/input.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { PipesModule } from '../pipes/pipes.module';
 import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
 
 @NgModule({
   declarations: [RegisterComponent, SignInComponent],
@@ -15,6 +16,7 @@ import { MatButtonModule } from '@angular/material/button';
     ReactiveFormsModule,
     PipesModule,
     MatButtonModule,
+    MatInputModule,
   ],
 })
 export class AuthModule {}
