@@ -1,0 +1,9 @@
+$font-stack: Verdana, sans-serif;
+.contents {
+  font: bold 100% $font-stack;
+
+  .header {
+    font: bold 200% $font-stack;
+    color: #000000;
+  }
+}
