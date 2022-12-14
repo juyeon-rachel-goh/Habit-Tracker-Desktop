@@ -1,0 +1,18 @@
+$font-stack: Verdana, sans-serif;
+
+.form-width {
+  min-width: 150px;
+  max-width: 500px;
+  width: 100%;
+}
+
+.heading {
+  font: bold 200% $font-stack;
+  padding: 75px 20px 20px 20px;
+  text-align: center;
+}
+
+.register-page-buttons {
+  align-content: center;
+  padding-bottom: 75px;
+}
