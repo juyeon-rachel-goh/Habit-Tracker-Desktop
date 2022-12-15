@@ -8,10 +8,17 @@ import { User } from '../models/user';
 })
 export class AuthService {
   private url = 'http://localhost:4200/api/auth';
+
   constructor(private http: HttpClient) {}
 
   public addUser(user: User): Observable<User> {
     const url = `${this.url}/register`;
     return this.http.post<User>(url, user);
   }
+
+  public signInUser(user: User): Observable<User> {
+    const url = `${this.url}/signin`;
+    return this.http.post<User>(url, user);
+  }
+  //https://stackoverflow.com/questions/40020703/angular2-redirect-to-calling-url-after-successful-login//
 }

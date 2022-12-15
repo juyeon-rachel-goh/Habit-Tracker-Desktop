@@ -1,36 +1,36 @@
 <div class="container">
   <form
-    [formGroup]="registerForm"
+    [formGroup]="signInForm"
     (ngSubmit)="onSubmit()"
     class="form-width mx-auto"
   >
-    <div class="heading">Become a Member</div>
+    <div class="heading">Sign In</div>
     <div>
       <app-textfield
         label="Username"
         id="username"
-        [inputFormControl]="registerForm.get('username') | asFormControl"
+        [inputFormControl]="signInForm.get('username') | asFormControl"
       ></app-textfield>
     </div>
     <div>
       <app-textfield
         label="Email"
         id="email"
-        [inputFormControl]="registerForm.get('email') | asFormControl"
+        [inputFormControl]="signInForm.get('email') | asFormControl"
       >
       </app-textfield>
       <mat-error
         *ngIf="
-          registerForm?.get('email')?.hasError('email') &&
-          !registerForm?.get('email')?.hasError('required')
+          signInForm?.get('email')?.hasError('email') &&
+          !signInForm?.get('email')?.hasError('required')
         "
       >
         Please enter a valid email address
       </mat-error>
       <mat-error
         *ngIf="
-          registerForm?.get('email')?.touched &&
-          registerForm?.get('email')?.hasError('required')
+          signInForm?.get('email')?.touched &&
+          signInForm?.get('email')?.hasError('required')
         "
       >
         Email is <strong>required</strong>
@@ -41,7 +41,7 @@
         name="password"
         id="password"
         label="Password"
-        [inputFormControl]="registerForm.get('password') | asFormControl"
+        [inputFormControl]="signInForm.get('password') | asFormControl"
         [type]="passwordType"
         [icon]="passwordIcon"
         (click)="togglePasswordVisibility()"
@@ -49,9 +49,9 @@
       ></app-textfield>
     </div>
     <div class="register-page-buttons">
-      <button mat-raised-button color="primary" type="submit">Sign Up</button>
+      <button mat-raised-button color="primary" type="submit">Sign In</button>
       <button mat-stroked-button type="button">
-        <a href="https://www.google.com/">Already a Member?</a>
+        <a href="/register">Not a Member?</a>
       </button>
     </div>
   </form>

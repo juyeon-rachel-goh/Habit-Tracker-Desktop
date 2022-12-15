@@ -12,12 +12,13 @@ export class SignInComponent implements OnInit {
     private authService: AuthService,
     private formBuilder: FormBuilder
   ) {}
-  public registerForm = new FormGroup({});
+  public signInForm = new FormGroup({});
   public showPassword: boolean = false;
   public passwordType = 'text';
   public passwordIcon = 'visibility_off';
+
   ngOnInit(): void {
-    this.registerForm = this.formBuilder.group({
+    this.signInForm = this.formBuilder.group({
       username: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]],
@@ -25,8 +26,7 @@ export class SignInComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.registerForm.value);
-    this.authService.addUser(this.registerForm.value).subscribe();
+    this.authService.signInUser(this.signInForm.value).subscribe();
   }
 
   public togglePasswordVisibility(): void {
