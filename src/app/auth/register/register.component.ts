@@ -14,6 +14,9 @@ export class RegisterComponent implements OnInit {
   ) {}
 
   public registerForm = new FormGroup({});
+  public showPassword: boolean = false;
+  public passwordType = 'text';
+  public passwordIcon = 'visibility_off';
 
   ngOnInit(): void {
     this.registerForm = this.formBuilder.group({
@@ -26,5 +29,11 @@ export class RegisterComponent implements OnInit {
   onSubmit() {
     console.log(this.registerForm.value);
     this.authService.addUser(this.registerForm.value).subscribe();
+  }
+
+  public togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
+    this.passwordType = this.showPassword ? 'text' : 'password';
+    this.passwordIcon = this.showPassword ? 'visibility_off' : 'visibility';
   }
 }

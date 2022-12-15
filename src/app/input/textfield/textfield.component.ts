@@ -12,11 +12,16 @@ export class TextfieldComponent implements OnInit {
   options = this._formBuilder.group({
     floatLabel: this.floatLabelControl,
   });
+
   constructor(private _formBuilder: FormBuilder) {}
 
   ngOnInit(): void {}
 
   @Input() label: string = '';
+  @Input() type: string = '';
+  @Input() icon: string = '';
+  @Input() tooltipMsg: string = '';
+  @Input() event: string = '';
   @Input() inputFormControl?: FormControl;
 
   getFloatLabelValue(): FloatLabelType {
