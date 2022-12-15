@@ -1,1 +1,58 @@
-<p>sign-in works!</p>
+<div class="container">
+  <form
+    [formGroup]="signInForm"
+    (ngSubmit)="onSubmit()"
+    class="form-width mx-auto"
+  >
+    <div class="heading">Sign In</div>
+    <div>
+      <app-textfield
+        label="Username"
+        id="username"
+        [inputFormControl]="signInForm.get('username') | asFormControl"
+      ></app-textfield>
+    </div>
+    <div>
+      <app-textfield
+        label="Email"
+        id="email"
+        [inputFormControl]="signInForm.get('email') | asFormControl"
+      >
+      </app-textfield>
+      <mat-error
+        *ngIf="
+          signInForm?.get('email')?.hasError('email') &&
+          !signInForm?.get('email')?.hasError('required')
+        "
+      >
+        Please enter a valid email address
+      </mat-error>
+      <mat-error
+        *ngIf="
+          signInForm?.get('email')?.touched &&
+          signInForm?.get('email')?.hasError('required')
+        "
+      >
+        Email is <strong>required</strong>
+      </mat-error>
+    </div>
+    <div>
+      <app-textfield
+        name="password"
+        id="password"
+        label="Password"
+        [inputFormControl]="signInForm.get('password') | asFormControl"
+        [type]="passwordType"
+        [icon]="passwordIcon"
+        (click)="togglePasswordVisibility()"
+        [tooltipMsg]="showPassword ? 'Hide Password' : 'Show Password'"
+      ></app-textfield>
+    </div>
+    <div class="register-page-buttons">
+      <button mat-raised-button color="primary" type="submit">Sign In</button>
+      <button mat-stroked-button type="button">
+        <a href="/register">Not a Member?</a>
+      </button>
+    </div>
+  </form>
+</div>
