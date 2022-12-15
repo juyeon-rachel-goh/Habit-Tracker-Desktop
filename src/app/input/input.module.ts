@@ -4,6 +4,8 @@ import { TextfieldComponent } from './textfield/textfield.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [TextfieldComponent],
@@ -12,6 +14,8 @@ import { MatInputModule } from '@angular/material/input';
     MatFormFieldModule,
     ReactiveFormsModule,
     MatInputModule,
+    MatIconModule,
+    MatTooltipModule,
   ],
   exports: [TextfieldComponent],
 })

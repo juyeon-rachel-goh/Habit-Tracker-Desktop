@@ -14,5 +14,12 @@ $font-stack: Verdana, sans-serif;
 
 .register-page-buttons {
   align-content: center;
-  padding-bottom: 75px;
+  padding-bottom: 45px;
+}
+
+button {
+  min-width: 150px;
+  max-width: 500px;
+  width: 100%;
+  margin-bottom: 14px;
 }

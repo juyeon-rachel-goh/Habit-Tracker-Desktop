@@ -8,7 +8,6 @@
     <div>
       <app-textfield
         label="Username"
-        hint="Enter username"
         id="username"
         [inputFormControl]="registerForm.get('username') | asFormControl"
       ></app-textfield>
@@ -16,7 +15,6 @@
     <div>
       <app-textfield
         label="Email"
-        hint="Enter email"
         id="email"
         [inputFormControl]="registerForm.get('email') | asFormControl"
       >
@@ -40,21 +38,21 @@
     </div>
     <div>
       <app-textfield
-        label="Password"
-        hint="Enter Password"
+        name="password"
         id="password"
+        label="Password"
         [inputFormControl]="registerForm.get('password') | asFormControl"
+        [type]="passwordType"
+        [icon]="passwordIcon"
+        (click)="togglePasswordVisibility()"
+        [tooltipMsg]="showPassword ? 'Hide Password' : 'Show Password'"
       ></app-textfield>
     </div>
     <div class="register-page-buttons">
-      <button mat-raised-button color="primary">Sign Up</button>
+      <button mat-raised-button color="primary" type="submit">Sign Up</button>
+      <button mat-stroked-button type="button">
+        <a href="https://www.google.com/">Already a Member?</a>
+      </button>
     </div>
   </form>
-</div>
-<div class="container">
-  <div class="register-page-buttons">
-    <a mat-stroked-button href="https://www.google.com/" target="_blank"
-      >Already a Member?</a
-    >
-  </div>
 </div>
