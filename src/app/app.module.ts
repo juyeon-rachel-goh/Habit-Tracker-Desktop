@@ -13,9 +13,10 @@ import { PipesModule } from './pipes/pipes.module';
 import { HttpClientModule } from '@angular/common/http';
 import { LayoutModule } from './layout/layout.module';
 import { HomeComponent } from './home/home.component';
+import { ContactUsComponent } from './contact-us/contact-us.component';
 
 @NgModule({
-  declarations: [AppComponent, HomeComponent],
+  declarations: [AppComponent, HomeComponent, ContactUsComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
