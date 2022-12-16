@@ -5,6 +5,7 @@ import { HabitTableComponent } from './habit-table/habit-table.component';
 import { HabitEditComponent } from './habit-edit/habit-edit.component';
 import { HabitDetailComponent } from './habit-detail/habit-detail.component';
 import { HabitMoodSelectorComponent } from './habit-mood-selector/habit-mood-selector.component';
+import { HabitTrackerRoutingModule } from './habit-tracker-routing.module';
 
 @NgModule({
   declarations: [
@@ -13,6 +14,6 @@ import { HabitMoodSelectorComponent } from './habit-mood-selector/habit-mood-sel
     HabitDetailComponent,
     HabitMoodSelectorComponent,
   ],
-  imports: [CommonModule],
+  imports: [CommonModule, HabitTrackerRoutingModule],
 })
 export class HabitTrackerModule {}

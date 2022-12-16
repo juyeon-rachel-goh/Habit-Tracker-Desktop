@@ -25,6 +25,7 @@ export class SignInComponent implements OnInit {
     });
   }
 
+  signInResult: any; //temp variable
   onSubmit() {
     this.authService.signInUser(this.signInForm.value).subscribe();
   }
