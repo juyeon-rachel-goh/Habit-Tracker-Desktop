@@ -8,7 +8,6 @@ import { User } from '../models/user';
 })
 export class AuthService {
   private url = 'http://localhost:4200/api/auth';
-
   constructor(private http: HttpClient) {}
 
   public addUser(user: User): Observable<User> {

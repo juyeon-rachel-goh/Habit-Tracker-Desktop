@@ -14,6 +14,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { LayoutModule } from './layout/layout.module';
 import { HomeComponent } from './home/home.component';
 import { ContactUsComponent } from './contact-us/contact-us.component';
+import { HabitTrackerModule } from './habit-tracker/habit-tracker.module';
 
 @NgModule({
   declarations: [AppComponent, HomeComponent, ContactUsComponent],
@@ -22,6 +23,7 @@ import { ContactUsComponent } from './contact-us/contact-us.component';
     AppRoutingModule,
     AuthModule,
     InputModule,
+    HabitTrackerModule,
     PipesModule,
     HttpClientModule,
     LayoutModule,

@@ -1,6 +1,20 @@
-<h1>Redirected to here once sign in is successful!</h1>
-<h1>Habit Tracker Main Page</h1>
-<h2>Habit 1</h2>
-<h2>Habit 2</h2>
-<h2>Habit 3</h2>
-<h2>Habit 4</h2>
+<h1>Redirect to here once sign in is successful!</h1>
+<div class="container">
+  <div class="">Habit Tracker Main Page</div>
+
+  <div class="d-flex flex-row">
+    <button type="button" (click)="changeMonth(-1)">
+      <mat-icon matTooltip="Display Previous Month">navigate_before</mat-icon>
+    </button>
+    <h2>{{ currentFullDate | date : "MMMM YYYY" }}</h2>
+
+    <button type="button" (click)="changeMonth(1)">
+      <mat-icon matTooltip="Display Next Month">navigate_next</mat-icon>
+    </button>
+  </div>
+  <div class="py-2">
+    <button mat-flat-button color="accent" [routerLink]="['habit-new']">
+      Add New Habit
+    </button>
+  </div>
+</div>

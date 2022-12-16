@@ -7,12 +7,14 @@ import { FooterComponent } from './footer/footer.component';
 import { InputModule } from '../input/input.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { PipesModule } from '../pipes/pipes.module';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [HeaderComponent, FooterComponent],
   imports: [
     CommonModule,
     NgbModule,
+    RouterModule,
     MatButtonModule,
     InputModule,
     ReactiveFormsModule,
