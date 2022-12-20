@@ -15,6 +15,8 @@ import { LayoutModule } from './layout/layout.module';
 import { HomeComponent } from './home/home.component';
 import { ContactUsComponent } from './contact-us/contact-us.component';
 import { HabitTrackerModule } from './habit-tracker/habit-tracker.module';
+import { NgxsModule } from '@ngxs/store';
+import { AuthState } from './store/auth.state';
 
 @NgModule({
   declarations: [AppComponent, HomeComponent, ContactUsComponent],
@@ -32,6 +34,9 @@ import { HabitTrackerModule } from './habit-tracker/habit-tracker.module';
     BrowserAnimationsModule,
     MatFormFieldModule,
     MatInputModule,
+    NgxsModule.forRoot([AuthState], {
+      developmentMode: false,
+    }),
   ],
   providers: [],
   bootstrap: [AppComponent],
