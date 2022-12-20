@@ -1,6 +1,6 @@
 export interface Habit {
   habitId?: string;
-  name: string;
+  habitName: string;
   frequency: number;
   iconColor: string;
   iconImage: string;

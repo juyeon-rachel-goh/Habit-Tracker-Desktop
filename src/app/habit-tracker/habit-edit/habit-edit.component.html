@@ -1,7 +1,26 @@
 <div class="container">
-  <div class="py-2">
-    <button mat-flat-button color="accent" [routerLink]="['../']">
-      Cancel
-    </button>
-  </div>
+  <form
+    [formGroup]="newHabitForm"
+    (ngSubmit)="onSaveHabit()"
+    class="form-width mx-auto"
+  >
+    <div class="heading">Add A New Habit</div>
+    <div class="sub-heading">Habit</div>
+    <app-textfield
+      id="habitName"
+      [inputFormControl]="newHabitForm.get('habitName') | asFormControl"
+    ></app-textfield>
+    <div class="sub-heading">Frequency - radio buttons</div>
+    <div>
+      <div class="sub-heading">Pick a Color</div>
+    </div>
+    <div><div class="sub-heading">Pick an Icon</div></div>
+
+    <div class="py-5">
+      <button mat-flat-button color="accent" [routerLink]="['../']">
+        Cancel
+      </button>
+      <button mat-flat-button color="primary">Save</button>
+    </div>
+  </form>
 </div>

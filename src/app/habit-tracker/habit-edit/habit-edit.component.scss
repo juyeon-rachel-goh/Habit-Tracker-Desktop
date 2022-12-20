@@ -1,0 +1,13 @@
+$font-stack: Verdana, sans-serif;
+
+.heading {
+  font: bold 200% $font-stack;
+  color: #000000;
+  letter-spacing: 1px;
+}
+
+.sub-heading {
+  font: bold 120% $font-stack;
+  padding-top: 10px;
+  color: #000000;
+}

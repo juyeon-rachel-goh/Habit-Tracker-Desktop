@@ -36,4 +36,6 @@ export class RegisterComponent implements OnInit {
     this.passwordType = this.showPassword ? 'text' : 'password';
     this.passwordIcon = this.showPassword ? 'visibility_off' : 'visibility';
   }
+
+  public initRegisterForm() {}
 }
