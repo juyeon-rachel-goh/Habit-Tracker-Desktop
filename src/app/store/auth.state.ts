@@ -20,11 +20,11 @@ interface UserInfo {
 export class AuthState {
   @Action(SetUserInfo)
   setUserInfo(ctx: StateContext<AuthStateInterface>) {
-    const state = ctx.getState();
+    const state = ctx.getState(); //useless? it just adds data one after another
     const cookieStr = getCookie('userInfo'); //returns a string
-    const username = cookieStr?.split('"')[3];
+    const username = cookieStr?.split('"')[3]; //better way?
     ctx.setState({
-      ...state,
+      // ...state, //useless?
       userInfo: { username },
     });
     console.log(ctx.getState());

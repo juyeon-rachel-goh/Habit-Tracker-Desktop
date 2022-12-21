@@ -29,10 +29,10 @@ export class SignInComponent implements OnInit {
 
   onSubmit() {
     // dispatch actions (=run function) by injecting the Store and calling a class
-    this.authService.signInUser(this.signInForm.value).subscribe((data) => {
-      const username = this.signInForm.get('username')?.value;
+    this.authService.signInUser(this.signInForm.value).subscribe(() => {
       this.store.dispatch(new SetUserInfo());
     });
+    //need error handling
   }
 
   public togglePasswordVisibility(): void {

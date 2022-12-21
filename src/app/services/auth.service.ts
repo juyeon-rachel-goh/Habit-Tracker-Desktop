@@ -19,5 +19,4 @@ export class AuthService {
     const url = `${this.url}/signin`;
     return this.http.post<User>(url, user);
   }
-  //https://stackoverflow.com/questions/40020703/angular2-redirect-to-calling-url-after-successful-login//
 }
