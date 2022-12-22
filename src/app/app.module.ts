@@ -17,6 +17,7 @@ import { ContactUsComponent } from './contact-us/contact-us.component';
 import { HabitTrackerModule } from './habit-tracker/habit-tracker.module';
 import { NgxsModule } from '@ngxs/store';
 import { AuthState } from './store/auth.state';
+import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
 
 @NgModule({
   declarations: [AppComponent, HomeComponent, ContactUsComponent],
@@ -37,6 +38,7 @@ import { AuthState } from './store/auth.state';
     NgxsModule.forRoot([AuthState], {
       developmentMode: false,
     }),
+    NgxsReduxDevtoolsPluginModule.forRoot(),
   ],
   providers: [],
   bootstrap: [AppComponent],

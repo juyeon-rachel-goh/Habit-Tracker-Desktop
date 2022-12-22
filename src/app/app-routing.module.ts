@@ -9,6 +9,7 @@ import { HabitEditComponent } from './habit-tracker/habit-edit/habit-edit.compon
 import { HabitDetailComponent } from './habit-tracker/habit-detail/habit-detail.component';
 import { HabitMoodSelectorComponent } from './habit-tracker/habit-mood-selector/habit-mood-selector.component';
 import { HabitMainComponent } from './habit-tracker/habit-main/habit-main.component';
+import { AuthGuard } from './guards/auth.guard';
 
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -22,7 +23,7 @@ const routes: Routes = [
   {
     path: 'habit-tracker',
     component: HabitMainComponent, // this is the component with the <router-outlet> in the template
-    //need authGuard here
+    canActivate: [AuthGuard],
     children: [
       {
         path: '',
