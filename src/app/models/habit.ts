@@ -4,7 +4,7 @@ export interface Habit {
   frequency: number;
   iconColor: string;
   iconImage: string;
-  createdOn: number;
+  createdOn: Date;
   completionStatus: boolean;
   archivedStatus: boolean;
 }
