@@ -1,0 +1,23 @@
+/* HIDE RADIO */
+.hiddenradio [type="radio"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* ICON STYLES */
+.hiddenradio [type="radio"] + mat-icon {
+  cursor: pointer;
+}
+
+/* CHECKED ICON STYLES */
+.hiddenradio [type="radio"]:checked + mat-icon {
+  outline: 2px solid #f00;
+}
+
+.icon-display {
+  font-size: 50px;
+  height: 50px;
+  width: 50px;
+}

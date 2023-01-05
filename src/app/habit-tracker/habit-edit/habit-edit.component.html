@@ -5,16 +5,60 @@
     class="form-width mx-auto"
   >
     <div class="heading">Add A New Habit</div>
-    <div class="sub-heading">Habit</div>
-    <app-textfield
-      id="habitName"
-      [inputFormControl]="newHabitForm.get('habitName') | asFormControl"
-    ></app-textfield>
+
+    <!-- Name of the habit -->
+    <div class="sub-heading">
+      <app-textfield
+        label="Name"
+        id="habitName"
+        [inputFormControl]="newHabitForm.get('habitName') | asFormControl"
+      ></app-textfield>
+    </div>
+
+    <!-- Frequency  -->
     <div class="sub-heading">Frequency - radio buttons</div>
     <div>
-      <div class="sub-heading">Pick a Color</div>
+      <input type="radio" value="Daily" /> <label for="daily">Daily</label>
     </div>
-    <div><div class="sub-heading">Pick an Icon</div></div>
+    <div>
+      <input type="radio" value="x times a week" />
+      <label for="week"><input type="number" /> times a week</label>
+    </div>
+    <div>
+      <input type="radio" value="x times a week" />
+      <label for="month"><input type="number" /> times a monthx</label>
+    </div>
+
+    <!-- Icon Picker -->
+    <div>
+      <div class="sub-heading">Pick an Icon</div>
+      <span class="px-1" *ngFor="let img of iconImages">
+        <app-icon-selector
+          name="iconImage"
+          value="{{ img }}"
+          icon="{{ img }}"
+        ></app-icon-selector>
+      </span>
+      <button type="button" (click)="onSelectRandElement(iconImages)">
+        Random
+      </button>
+    </div>
+
+    <!-- Color Picker -->
+    <div>
+      <div class="sub-heading">Pick a Color</div>
+      <span class="px-1" *ngFor="let color of iconColors">
+        <app-icon-selector
+          name="iconColor"
+          value="{{ color }}"
+          style.color="{{ color }}"
+          icon="lens"
+        ></app-icon-selector>
+      </span>
+      <button type="button" (click)="onSelectRandElement(iconColors)">
+        Random
+      </button>
+    </div>
 
     <div class="py-5">
       <button mat-flat-button color="accent" [routerLink]="['../']">
