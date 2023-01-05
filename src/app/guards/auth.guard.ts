@@ -3,10 +3,8 @@ import {
   ActivatedRouteSnapshot,
   CanActivate,
   RouterStateSnapshot,
-  UrlTree,
 } from '@angular/router';
 import { Store } from '@ngxs/store';
-import { Observable } from 'rxjs';
 import { AuthState } from '../store/auth.state';
 
 @Injectable({

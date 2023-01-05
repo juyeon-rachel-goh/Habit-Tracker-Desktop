@@ -42,7 +42,9 @@
           <a class="nav-link" [routerLink]="['/sign-in']">Sign In</a>
         </li>
         <li class="nav-item" *ngIf="isLoggedin$ | async">
-          <a class="nav-link" [routerLink]="['/']">Logout</a>
+          <a class="nav-link" [routerLink]="['/']" (click)="onSignOut()"
+            >Logout</a
+          >
         </li>
         <li class="nav-item" *ngIf="!(isLoggedin$ | async)">
           <a mat-flat-button color="primary" [routerLink]="['/register']"

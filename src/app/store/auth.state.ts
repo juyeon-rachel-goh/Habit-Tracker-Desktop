@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
-import { SetUserInfo } from './auth.action';
-import { getCookie, getCookies, setCookie } from 'typescript-cookie';
+import { SetUserInfo, ClearUserInfo } from './auth.action';
+import { getCookie } from 'typescript-cookie';
 
 interface AuthStateInterface {
   userInfo?: UserInfo;
@@ -27,6 +27,13 @@ export class AuthState {
         userInfo: userInfo,
       });
     }
+  }
+
+  @Action(ClearUserInfo)
+  clearUserInfo(ctx: StateContext<AuthStateInterface>) {
+    return ctx.setState({
+      userInfo: undefined,
+    });
   }
 
   @Selector()
