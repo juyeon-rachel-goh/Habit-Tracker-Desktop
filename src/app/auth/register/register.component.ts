@@ -21,14 +21,28 @@ export class RegisterComponent implements OnInit {
   ngOnInit(): void {
     this.registerForm = this.formBuilder.group({
       username: ['', [Validators.required]],
-      email: ['', [Validators.required, Validators.email]],
+      email: ['', [Validators.email]],
+      //password format validation comes from the backend
       password: ['', [Validators.required]],
     });
   }
 
   onSubmit() {
     console.log(this.registerForm.value);
-    this.authService.addUser(this.registerForm.value).subscribe();
+    // // //  415 Unsupported Media Type
+    this.authService
+      .checkDuplicateEmail(this.registerForm.value.email)
+      .subscribe((res) => {
+        if (res === null) {
+          this.authService.addUser(this.registerForm.value).subscribe(() => {
+            alert('Submission Successful!');
+          });
+          this.registerForm.reset();
+        } else {
+          this.registerForm.setErrors(res);
+          alert(res);
+        }
+      });
   }
 
   public togglePasswordVisibility(): void {
@@ -36,6 +50,4 @@ export class RegisterComponent implements OnInit {
     this.passwordType = this.showPassword ? 'text' : 'password';
     this.passwordIcon = this.showPassword ? 'visibility_off' : 'visibility';
   }
-
-  public initRegisterForm() {}
 }

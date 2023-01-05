@@ -21,7 +21,7 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void {
     this.userInfo$.subscribe((data) => {
-      this.username = data.username ?? '';
+      this.username = data?.username ?? '';
     });
   }
 
