@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngxs/store';
 import { AuthService } from 'src/app/services/auth.service';
 import { SetUserInfo } from 'src/app/store/auth.action';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-sign-in',
@@ -13,7 +14,8 @@ export class SignInComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private formBuilder: FormBuilder,
-    private store: Store
+    private store: Store,
+    private router: Router
   ) {}
   public signInForm = new FormGroup({});
   public showPassword: boolean = false;
@@ -31,6 +33,7 @@ export class SignInComponent implements OnInit {
     // dispatch actions (=run function) by injecting the Store and calling a class
     this.authService.signInUser(this.signInForm.value).subscribe(() => {
       this.store.dispatch(new SetUserInfo());
+      this.router.navigate(['/habit-tracker']);
     });
     //need error handling
   }
