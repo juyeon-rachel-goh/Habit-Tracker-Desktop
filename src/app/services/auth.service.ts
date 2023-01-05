@@ -20,8 +20,8 @@ export class AuthService {
     return this.http.post<User>(url, user);
   }
 
-  public signOutUser(username: string): Observable<User> {
+  public signOutUser(): Observable<any> {
     const url = `${this.url}/signout`;
-    return this.http.post<User>(url, username);
+    return this.http.post(url, null);
   }
 }

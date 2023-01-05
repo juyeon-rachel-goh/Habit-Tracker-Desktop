@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Select } from '@ngxs/store';
 import { Observable } from 'rxjs';
+import { Store } from '@ngxs/store';
 import { AuthService } from 'src/app/services/auth.service';
 import { AuthState, UserInfo } from 'src/app/store/auth.state';
+import { ClearUserInfo, SetUserInfo } from 'src/app/store/auth.action';
 
 @Component({
   selector: 'app-header',
@@ -15,7 +17,7 @@ export class HeaderComponent implements OnInit {
   @Select(AuthState.isLoggedIn) isLoggedin$!: Observable<UserInfo>;
   isNavbarCollapsed = true;
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private store: Store) {}
 
   ngOnInit(): void {
     this.userInfo$.subscribe((data) => {
@@ -24,7 +26,9 @@ export class HeaderComponent implements OnInit {
   }
 
   onSignOut() {
-    this.authService.signOutUser(this.username).subscribe();
+    this.authService
+      .signOutUser()
+      .subscribe(() => this.store.dispatch(new ClearUserInfo()));
   }
 
   toggleNavbar() {
