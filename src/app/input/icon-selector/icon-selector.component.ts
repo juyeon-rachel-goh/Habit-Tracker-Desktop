@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-icon-selector',
@@ -14,4 +15,5 @@ export class IconSelectorComponent implements OnInit {
   @Input() value: string = '';
   @Input() icon: string = '';
   @Input() inlineStyle: string = '';
+  @Input() iconFormControl?: FormControl;
 }

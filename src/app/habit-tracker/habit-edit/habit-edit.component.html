@@ -18,30 +18,29 @@
     <!-- Frequency  -->
     <div class="sub-heading">Frequency - radio buttons</div>
     <div>
-      <input type="radio" value="Daily" /> <label for="daily">Daily</label>
+      <input type="radio" value="Daily" />
+      <label for="daily">Daily</label>
     </div>
     <div>
       <input type="radio" value="x times a week" />
       <label for="week"><input type="number" /> times a week</label>
     </div>
     <div>
-      <input type="radio" value="x times a week" />
-      <label for="month"><input type="number" /> times a monthx</label>
+      <input type="radio" value="x times a month" />
+      <label for="month"><input type="number" /> times a month</label>
     </div>
-
     <!-- Icon Picker -->
     <div>
       <div class="sub-heading">Pick an Icon</div>
       <span class="px-1" *ngFor="let img of iconImages">
         <app-icon-selector
+          [iconFormControl]="newHabitForm.get('iconImage') | asFormControl"
           name="iconImage"
           value="{{ img }}"
           icon="{{ img }}"
         ></app-icon-selector>
       </span>
-      <button type="button" (click)="onSelectRandElement(iconImages)">
-        Random
-      </button>
+      <button type="button" (click)="onSelectRandIconImg()">Random</button>
     </div>
 
     <!-- Color Picker -->
@@ -49,15 +48,14 @@
       <div class="sub-heading">Pick a Color</div>
       <span class="px-1" *ngFor="let color of iconColors">
         <app-icon-selector
+          [iconFormControl]="newHabitForm.get('iconColor') | asFormControl"
           name="iconColor"
           value="{{ color }}"
           style.color="{{ color }}"
           icon="lens"
         ></app-icon-selector>
       </span>
-      <button type="button" (click)="onSelectRandElement(iconColors)">
-        Random
-      </button>
+      <button type="button" (click)="onSelectRandIconColor()">Random</button>
     </div>
 
     <div class="py-5">

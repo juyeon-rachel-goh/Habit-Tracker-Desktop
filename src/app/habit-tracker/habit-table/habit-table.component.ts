@@ -7,6 +7,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HabitTableComponent implements OnInit {
   public currentFullDate = new Date();
+  daysInMonth: number = 0;
 
   constructor() {}
 
@@ -16,7 +17,7 @@ export class HabitTableComponent implements OnInit {
       this.currentFullDate.getFullYear(),
       this.currentFullDate.getMonth() + 1
     );
-    console.log(daysInMonth);
+    this.daysInMonth = daysInMonth;
   }
 
   public changeMonth(direction: number) {
@@ -27,6 +28,7 @@ export class HabitTableComponent implements OnInit {
       this.currentFullDate.getFullYear(),
       this.currentFullDate.getMonth() + 1
     );
+    this.daysInMonth = daysInMonth;
   }
 
   private getDaysInMonth(year: number, month: number) {

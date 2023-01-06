@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 
 @Component({
   selector: 'app-habit-edit',
@@ -16,15 +21,38 @@ export class HabitEditComponent implements OnInit {
 
   ngOnInit(): void {
     this.newHabitForm = this.formBuilder?.group({
-      habitName: ['', [Validators.required]],
-      iconColor: [''],
+      habitName: [null, [Validators.required]],
+      frequency: [null, [Validators.required]],
+      iconImage: [null, [Validators.required]],
+      iconColor: [null, [Validators.required]],
+      createdOn: [null, [Validators.required]],
+      completionStatus: [null, [Validators.required]],
+      archivedStatus: [null, [Validators.required]],
     });
   }
 
-  onSaveHabit() {}
-  onSelectRandElement(arr: string[]) {
-    let selectedItem = arr[Math.floor(Math.random() * arr.length)];
-    console.log(selectedItem);
-    // save this result to newHabitForm.iconColor or iconImage
+  onSaveHabit() {
+    // if habitname,frequency,iconimage,iconcolor has values -> patchvalue below than send HTTP request
+    this.newHabitForm.patchValue({
+      createdOn: Date(),
+      completionStatus: [false],
+      archivedStatus: [false],
+    });
+    console.log(this.newHabitForm);
+  }
+  onSelectRandIconImg() {
+    let selectedImg =
+      this.iconImages[Math.floor(Math.random() * this.iconImages.length)];
+    this.newHabitForm.patchValue({
+      iconImage: selectedImg,
+    });
+  }
+
+  onSelectRandIconColor() {
+    let selectedColor =
+      this.iconColors[Math.floor(Math.random() * this.iconColors.length)];
+    this.newHabitForm.patchValue({
+      iconColor: selectedColor,
+    });
   }
 }
