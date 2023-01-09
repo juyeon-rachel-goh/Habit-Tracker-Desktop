@@ -29,23 +29,18 @@ export class RegisterComponent implements OnInit {
 
   onSubmit() {
     console.log(this.registerForm.value);
-    this.authService.addUser(this.registerForm.value).subscribe(() => {
-      alert('Submission Successful!');
-    });
-    // // //  415 Unsupported Media Type
-    // this.authService
-    //   .checkDuplicateEmail(this.registerForm.value.email)
-    //   .subscribe((res) => {
-    //     if (res === null) {
-    //       this.authService.addUser(this.registerForm.value).subscribe(() => {
-    //         alert('Submission Successful!');
-    //       });
-    //       this.registerForm.reset();
-    //     } else {
-    //       this.registerForm.setErrors(res);
-    //       alert(res);
-    //     }
-    //   });
+    this.authService
+      .checkDuplicateEmail(this.registerForm.value.email)
+      .subscribe((res) => {
+        if (res === null) {
+          this.authService.addUser(this.registerForm.value).subscribe(() => {
+            alert('Submission Successful!');
+          });
+          this.registerForm.reset();
+        } else {
+          this.registerForm.get('email')?.setErrors(res);
+        }
+      });
   }
 
   public togglePasswordVisibility(): void {
