@@ -18,16 +18,36 @@
     <!-- Frequency  -->
     <div class="sub-heading">Frequency - radio buttons</div>
     <div>
-      <input type="radio" value="Daily" />
+      <div *ngFor="let frequency of enumFrequency | keys">
+        <input
+          type="radio"
+          value="{{ frequency }}"
+          [formControl]="newHabitForm.get('frequency') | asFormControl"
+        />
+        <label for="{{ frequency }}">{{ frequency }}</label>
+      </div>
+      <label for="countPerFreq"
+        >Count per Frequency
+        <app-textfield
+          label="Count per Frequency"
+          type="number"
+          [inputFormControl]="newHabitForm.get('countPerFreq') | asFormControl"
+        ></app-textfield
+      ></label>
+      <!-- <input type="radio" value="Daily" />
       <label for="daily">Daily</label>
     </div>
     <div>
-      <input type="radio" value="x times a week" />
-      <label for="week"><input type="number" /> times a week</label>
+      <input type="radio" value="{{ frequencyWeekly }} times a week" />
+      <label for="week"
+        ><input type="number" #frequencyWeekly /> times a week</label
+      >
     </div>
     <div>
-      <input type="radio" value="x times a month" />
-      <label for="month"><input type="number" /> times a month</label>
+      <input type="radio" value="{{ frequencyMonthly }} times a month" />
+      <label for="month"
+        ><input type="number" #frequencyMonthly /> times a month</label
+      > -->
     </div>
     <!-- Icon Picker -->
     <div>
@@ -62,6 +82,7 @@
       <button mat-flat-button color="accent" [routerLink]="['../']">
         Cancel
       </button>
+      <span class="px-2"></span>
       <button mat-flat-button color="primary">Save</button>
     </div>
   </form>

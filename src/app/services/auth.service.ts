@@ -21,7 +21,7 @@ export class AuthService {
   public checkDuplicateEmail(
     email: string
   ): Observable<ValidationErrors | null> {
-    const url = `${this.url}/duplicate-email`;
+    const url = `${this.url}/duplicate-email/${email}`;
     return this.http.post<any>(url, email);
   }
 

@@ -1,7 +1,10 @@
+import { Freqeuncy } from 'src/enums/frequency';
+
 export interface Habit {
   habitId?: string;
   habitName: string;
-  frequency: number;
+  frequency: Freqeuncy;
+  countPerFreq: number;
   iconColor: string;
   iconImage: string;
   createdOn: Date;

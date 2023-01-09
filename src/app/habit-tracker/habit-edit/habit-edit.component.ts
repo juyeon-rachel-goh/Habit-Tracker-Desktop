@@ -5,6 +5,8 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
+import { HabitService } from 'src/app/services/habit.service';
+import { Freqeuncy } from 'src/enums/frequency';
 
 @Component({
   selector: 'app-habit-edit',
@@ -16,30 +18,33 @@ export class HabitEditComponent implements OnInit {
   public iconImages = ['check', 'circle', 'star', 'favorite', 'thumb_up'];
 
   public newHabitForm = new FormGroup({});
+  public enumFrequency = Freqeuncy;
 
-  constructor(private formBuilder: FormBuilder) {}
+  constructor(
+    private formBuilder: FormBuilder,
+    private habitService: HabitService
+  ) {}
 
   ngOnInit(): void {
     this.newHabitForm = this.formBuilder?.group({
       habitName: [null, [Validators.required]],
       frequency: [null, [Validators.required]],
+      countPerFreq: [
+        null,
+        [Validators.required, Validators.min(1), Validators.max(7)],
+      ],
       iconImage: [null, [Validators.required]],
       iconColor: [null, [Validators.required]],
-      createdOn: [null, [Validators.required]],
-      completionStatus: [null, [Validators.required]],
-      archivedStatus: [null, [Validators.required]],
     });
   }
 
   onSaveHabit() {
-    // if habitname,frequency,iconimage,iconcolor has values -> patchvalue below than send HTTP request
-    this.newHabitForm.patchValue({
-      createdOn: Date(),
-      completionStatus: [false],
-      archivedStatus: [false],
-    });
-    console.log(this.newHabitForm);
+    console.log(this.newHabitForm.value);
+    // call service
+    this.habitService.addHabit(this.newHabitForm.value);
+    this.newHabitForm.reset();
   }
+
   onSelectRandIconImg() {
     let selectedImg =
       this.iconImages[Math.floor(Math.random() * this.iconImages.length)];
