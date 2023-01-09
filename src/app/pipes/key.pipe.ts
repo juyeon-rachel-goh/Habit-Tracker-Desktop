@@ -1,4 +1,4 @@
-// generalized pipe to take keys out of js object
+// Returns an array of keys of given enum (or any object)
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
