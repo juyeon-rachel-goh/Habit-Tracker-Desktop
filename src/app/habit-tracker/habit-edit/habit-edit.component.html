@@ -34,25 +34,11 @@
           [inputFormControl]="newHabitForm.get('countPerFreq') | asFormControl"
         ></app-textfield
       ></label>
-      <!-- <input type="radio" value="Daily" />
-      <label for="daily">Daily</label>
-    </div>
-    <div>
-      <input type="radio" value="{{ frequencyWeekly }} times a week" />
-      <label for="week"
-        ><input type="number" #frequencyWeekly /> times a week</label
-      >
-    </div>
-    <div>
-      <input type="radio" value="{{ frequencyMonthly }} times a month" />
-      <label for="month"
-        ><input type="number" #frequencyMonthly /> times a month</label
-      > -->
     </div>
     <!-- Icon Picker -->
     <div>
       <div class="sub-heading">Pick an Icon</div>
-      <span class="px-1" *ngFor="let img of iconImages">
+      <span class="px-1" *ngFor="let img of enumIconImage | keys">
         <app-icon-selector
           [iconFormControl]="newHabitForm.get('iconImage') | asFormControl"
           name="iconImage"
@@ -66,7 +52,7 @@
     <!-- Color Picker -->
     <div>
       <div class="sub-heading">Pick a Color</div>
-      <span class="px-1" *ngFor="let color of iconColors">
+      <span class="px-1" *ngFor="let color of enumIconColor | keys">
         <app-icon-selector
           [iconFormControl]="newHabitForm.get('iconColor') | asFormControl"
           name="iconColor"

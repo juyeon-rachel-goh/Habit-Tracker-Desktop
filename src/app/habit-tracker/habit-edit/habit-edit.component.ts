@@ -6,7 +6,9 @@ import {
   Validators,
 } from '@angular/forms';
 import { HabitService } from 'src/app/services/habit.service';
-import { Freqeuncy } from 'src/enums/frequency';
+import { Freqeuncy } from 'src/app/enums/frequency';
+import { IconColor } from 'src/app/enums/icon-color';
+import { IconImage } from 'src/app/enums/icon-image';
 
 @Component({
   selector: 'app-habit-edit',
@@ -14,11 +16,10 @@ import { Freqeuncy } from 'src/enums/frequency';
   styleUrls: ['./habit-edit.component.scss'],
 })
 export class HabitEditComponent implements OnInit {
-  public iconColors = ['#0ead69', '#ffbe0b', '#d90429', '#072ac8', '#7b2cbf'];
-  public iconImages = ['check', 'circle', 'star', 'favorite', 'thumb_up'];
-
   public newHabitForm = new FormGroup({});
   public enumFrequency = Freqeuncy;
+  public enumIconColor = IconColor;
+  public enumIconImage = IconImage;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -40,22 +41,22 @@ export class HabitEditComponent implements OnInit {
 
   onSaveHabit() {
     console.log(this.newHabitForm.value);
-    // call service
-    this.habitService.addHabit(this.newHabitForm.value);
+    this.habitService.addHabit(this.newHabitForm.value).subscribe();
     this.newHabitForm.reset();
   }
 
   onSelectRandIconImg() {
-    let selectedImg =
-      this.iconImages[Math.floor(Math.random() * this.iconImages.length)];
+    const enumValues = Object.values(this.enumIconImage);
+    let selectedImg = enumValues[Math.floor(Math.random() * enumValues.length)];
     this.newHabitForm.patchValue({
       iconImage: selectedImg,
     });
   }
 
   onSelectRandIconColor() {
+    const enumValues = Object.values(this.enumIconColor);
     let selectedColor =
-      this.iconColors[Math.floor(Math.random() * this.iconColors.length)];
+      enumValues[Math.floor(Math.random() * enumValues.length)];
     this.newHabitForm.patchValue({
       iconColor: selectedColor,
     });

@@ -1,4 +1,4 @@
-import { Freqeuncy } from 'src/enums/frequency';
+import { Freqeuncy } from 'src/app/enums/frequency';
 
 export interface Habit {
   habitId?: string;
