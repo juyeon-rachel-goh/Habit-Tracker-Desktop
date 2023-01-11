@@ -5,11 +5,10 @@
 >
   <mat-label>{{ label }}</mat-label>
   <ng-container *ngIf="inputFormControl"
-    ><input matInput [formControl]="inputFormControl" [type]="type"
+    ><input matInput [formControl]="inputFormControl" [type]="inputType"
   /></ng-container>
-  <ng-container *ngIf="icon"
-    ><button (click)="(event)">
-      <mat-icon matSuffix [matTooltip]="tooltipMsg">{{ icon }}</mat-icon>
-    </button></ng-container
-  >
+
+  <button mat-icon-button matSuffix *ngIf="icon" [type]="buttonType">
+    <mat-icon matSuffix [matTooltip]="tooltipMsg">{{ icon }}</mat-icon>
+  </button>
 </mat-form-field>

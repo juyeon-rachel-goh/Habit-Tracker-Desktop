@@ -22,7 +22,7 @@
         id="password"
         label="Password"
         [inputFormControl]="signInForm.get('password') | asFormControl"
-        [type]="passwordType"
+        [inputType]="passwordType"
         [icon]="passwordIcon"
         (click)="togglePasswordVisibility()"
         [tooltipMsg]="showPassword ? 'Hide Password' : 'Show Password'"
