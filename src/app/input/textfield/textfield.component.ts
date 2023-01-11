@@ -18,7 +18,8 @@ export class TextfieldComponent implements OnInit {
   ngOnInit(): void {}
 
   @Input() label: string = '';
-  @Input() type: string = '';
+  @Input() inputType: string = '';
+  @Input() buttonType: string = '';
   @Input() icon: string = '';
   @Input() tooltipMsg: string = '';
   @Input() event: string = '';

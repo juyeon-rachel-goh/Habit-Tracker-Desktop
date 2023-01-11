@@ -19,37 +19,39 @@
         [inputFormControl]="registerForm.get('email') | asFormControl"
       >
       </app-textfield>
-      <mat-error
-        *ngIf="
-          registerForm?.get('email')?.hasError('email') &&
-          !registerForm?.get('email')?.hasError('required')
-        "
-      >
-        Please enter a valid email address
-      </mat-error>
-      <mat-error
-        *ngIf="registerForm?.get('email')?.hasError('isDuplicateEmail')"
-      >
-        This email is already taken!
-      </mat-error>
-    </div>
-    <div>
+      <small>
+        <mat-error
+          *ngIf="
+            registerForm?.get('email')?.hasError('email') &&
+            !registerForm?.get('email')?.hasError('required')
+          "
+        >
+          Please enter a valid email address
+        </mat-error>
+
+        <mat-error
+          *ngIf="registerForm?.get('email')?.hasError('isDuplicateEmail')"
+        >
+          This email is already taken!
+        </mat-error>
+      </small>
       <app-textfield
         name="password"
         id="password"
         label="Password"
-        [inputFormControl]="registerForm.get('password') | asFormControl"
-        [type]="passwordType"
-        [icon]="passwordIcon"
         (click)="togglePasswordVisibility()"
+        [inputFormControl]="registerForm.get('password') | asFormControl"
+        [inputType]="passwordType"
+        buttonType="button"
+        [icon]="passwordIcon"
         [tooltipMsg]="showPassword ? 'Hide Password' : 'Show Password'"
       ></app-textfield>
-      <div>
+      <small>
         <mat-error *ngIf="registerForm?.get('password')?.hasError('pattern')">
           Password Requirements: At least 8 characters in length Lowercase
           letters Uppercase letters Numbers Special characters
         </mat-error>
-      </div>
+      </small>
     </div>
     <div class="register-page-buttons">
       <button
