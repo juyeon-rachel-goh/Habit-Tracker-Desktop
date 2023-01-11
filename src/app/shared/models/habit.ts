@@ -1,4 +1,4 @@
-import { Freqeuncy } from 'src/app/enums/frequency';
+import { Freqeuncy } from 'src/app/habit-tracker/enums/frequency';
 
 export interface Habit {
   habitId?: string;
@@ -7,7 +7,8 @@ export interface Habit {
   countPerFreq: number;
   iconColor: string;
   iconImage: string;
+  // delete below??
   createdOn: Date;
   completionStatus: boolean;
-  archivedStatus: boolean;
+  archivedStatus: string;
 }

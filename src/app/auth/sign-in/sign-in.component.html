@@ -4,6 +4,9 @@
     (ngSubmit)="onSubmit()"
     class="form-width mx-auto"
   >
+    <div *ngIf="errorMessage" class="mt-2 alert alert-danger">
+      {{ errorMessage }}
+    </div>
     <div class="heading">Sign In</div>
     <div>
       <app-textfield

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngxs/store';
-import { AuthService } from 'src/app/services/auth.service';
+import { AuthService } from 'src/app/shared/services/auth.service';
 import { SetUserInfo } from 'src/app/store/auth.action';
 import { Router } from '@angular/router';
 
@@ -21,6 +21,7 @@ export class SignInComponent implements OnInit {
   public showPassword: boolean = false;
   public passwordType = 'text';
   public passwordIcon = 'visibility_off';
+  public errorMessage: string = '';
 
   ngOnInit(): void {
     this.signInForm = this.formBuilder.group({
@@ -30,12 +31,21 @@ export class SignInComponent implements OnInit {
   }
 
   onSubmit() {
-    // dispatch actions (=run function) by injecting the Store and calling a class
-    this.authService.signInUser(this.signInForm.value).subscribe(() => {
-      this.store.dispatch(new SetUserInfo());
-      this.router.navigate(['/habit-tracker']);
-    });
-    //need error handling
+    this.authService.signInUser(this.signInForm.value).subscribe(
+      () => {
+        this.store.dispatch(new SetUserInfo());
+        this.router.navigate(['/habit-tracker']);
+      },
+      // return error message if something goes wrong!
+      (err) => {
+        if (err.status === 400) {
+          this.errorMessage = 'Please check your ID or password again';
+        } else {
+          this.errorMessage =
+            'Oops! Something went wrong. Please try again later';
+        }
+      }
+    );
   }
 
   public togglePasswordVisibility(): void {

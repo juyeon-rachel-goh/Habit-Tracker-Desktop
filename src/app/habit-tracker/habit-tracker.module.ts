@@ -9,7 +9,7 @@ import { HabitEditComponent } from './habit-edit/habit-edit.component';
 import { HabitDetailComponent } from './habit-detail/habit-detail.component';
 import { HabitMoodSelectorComponent } from './habit-mood-selector/habit-mood-selector.component';
 import { InputModule } from '../input/input.module';
-import { PipesModule } from '../pipes/pipes.module';
+import { PipesModule } from '../shared/pipes/pipes.module';
 
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
