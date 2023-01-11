@@ -21,8 +21,15 @@ export class AuthService {
   public checkDuplicateEmail(
     email: string
   ): Observable<ValidationErrors | null> {
-    const url = `${this.url}/duplicate-email/${email}`;
+    const url = `${this.url}/validation/${email}`;
     return this.http.post<any>(url, email);
+  }
+
+  public checkDuplicateUserName(
+    username: string
+  ): Observable<ValidationErrors | null> {
+    const url = `${this.url}/validation/${username}`;
+    return this.http.post<any>(url, username);
   }
 
   // // Services for SIGNIN and OUT // //

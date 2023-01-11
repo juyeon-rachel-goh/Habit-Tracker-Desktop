@@ -3,9 +3,7 @@
   [floatLabel]="getFloatLabelValue()"
   class="form-field-full-width"
 >
-  <ng-container *ngIf="label"
-    ><mat-label>{{ label }}</mat-label></ng-container
-  >
+  <mat-label>{{ label }}</mat-label>
   <ng-container *ngIf="inputFormControl"
     ><input matInput [formControl]="inputFormControl" [type]="type"
   /></ng-container>

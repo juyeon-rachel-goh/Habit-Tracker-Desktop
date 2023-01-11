@@ -21,14 +21,25 @@ export class RegisterComponent implements OnInit {
   ngOnInit(): void {
     this.registerForm = this.formBuilder.group({
       username: ['', [Validators.required]],
-      email: ['', [Validators.email]],
-      //password format validation comes from the backend
-      password: ['', [Validators.required]],
+      email: ['', [Validators.required, Validators.email]],
+      password: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern(
+            '(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-zd$@$!%*?&].{9,}'
+          ),
+        ],
+      ],
     });
   }
 
   onSubmit() {
     console.log(this.registerForm.value);
+    // check id
+    this.authService
+      .checkDuplicateUserName(this.registerForm.value.email)
+      .subscribe();
     this.authService
       .checkDuplicateEmail(this.registerForm.value.email)
       .subscribe((res) => {
@@ -39,6 +50,7 @@ export class RegisterComponent implements OnInit {
           this.registerForm.reset();
         } else {
           this.registerForm.get('email')?.setErrors(res);
+          console.log(this.registerForm.get('email'));
         }
       });
   }
