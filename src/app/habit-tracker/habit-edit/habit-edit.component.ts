@@ -1,14 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
-import { HabitService } from 'src/app/services/habit.service';
-import { Freqeuncy } from 'src/app/enums/frequency';
-import { IconColor } from 'src/app/enums/icon-color';
-import { IconImage } from 'src/app/enums/icon-image';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { HabitService } from 'src/app/shared/services/habit.service';
+import { Freqeuncy } from 'src/app/habit-tracker/enums/frequency';
+import { IconColor } from 'src/app/habit-tracker/enums/icon-color';
+import { IconImage } from 'src/app/habit-tracker/enums/icon-image';
 
 @Component({
   selector: 'app-habit-edit',

@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container w-50">
   <form
     [formGroup]="newHabitForm"
     (ngSubmit)="onSaveHabit()"
@@ -16,7 +16,7 @@
     </div>
 
     <!-- Frequency  -->
-    <div class="sub-heading">Frequency - radio buttons</div>
+    <div class="sub-heading">Frequency</div>
     <div>
       <div *ngFor="let frequency of enumFrequency | keys">
         <input
@@ -26,15 +26,14 @@
         />
         <label for="{{ frequency }}">{{ frequency }}</label>
       </div>
-      <label for="countPerFreq"
-        >Count per Frequency
-        <app-textfield
-          label="Count per Frequency"
-          type="number"
-          [inputFormControl]="newHabitForm.get('countPerFreq') | asFormControl"
-        ></app-textfield
-      ></label>
+      <div class="sub-heading">Frequency</div>
+      <app-textfield
+        label="Count per Frequency"
+        type="number"
+        [inputFormControl]="newHabitForm.get('countPerFreq') | asFormControl"
+      ></app-textfield>
     </div>
+
     <!-- Icon Picker -->
     <div>
       <div class="sub-heading">Pick an Icon</div>

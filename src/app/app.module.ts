@@ -9,7 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { InputModule } from './input/input.module';
 import { AuthModule } from './auth/auth.module';
-import { PipesModule } from './pipes/pipes.module';
+import { PipesModule } from './shared/pipes/pipes.module';
 import { HttpClientModule } from '@angular/common/http';
 import { LayoutModule } from './layout/layout.module';
 import { HomeComponent } from './home/home.component';

@@ -6,7 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { FooterComponent } from './footer/footer.component';
 import { InputModule } from '../input/input.module';
 import { ReactiveFormsModule } from '@angular/forms';
-import { PipesModule } from '../pipes/pipes.module';
+import { PipesModule } from '../shared/pipes/pipes.module';
 import { RouterModule } from '@angular/router';
 
 @NgModule({

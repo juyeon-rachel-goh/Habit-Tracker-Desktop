@@ -49,7 +49,14 @@
       ></app-textfield>
     </div>
     <div class="register-page-buttons">
-      <button mat-raised-button color="primary" type="submit">Sign Up</button>
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="!registerForm.valid"
+      >
+        Sign Up
+      </button>
       <button mat-stroked-button type="button">
         <a href="/sign-in">Already a Member?</a>
       </button>

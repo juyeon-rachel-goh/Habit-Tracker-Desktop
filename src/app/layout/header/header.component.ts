@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Select } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { Store } from '@ngxs/store';
-import { AuthService } from 'src/app/services/auth.service';
+import { AuthService } from 'src/app/shared/services/auth.service';
 import { AuthState, UserInfo } from 'src/app/store/auth.state';
 import { ClearUserInfo, SetUserInfo } from 'src/app/store/auth.action';
 
