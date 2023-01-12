@@ -7,11 +7,16 @@ import { DailyMood } from '../models/daily-mood';
   providedIn: 'root',
 })
 export class HabitDataService {
-  private selectedMoodData = new BehaviorSubject<any>(null);
-  public selectedMood = this.selectedMoodData.asObservable();
+  private dailyMoodCollection = new Array<DailyMood>();
+  private dailyMoodData = new BehaviorSubject<Array<DailyMood>>([]);
+  public dailyMood = this.dailyMoodData.asObservable();
+
   constructor() {}
 
-  public setMood(mood: any) {
-    this.selectedMoodData.next(mood);
+  public setMood(mood: DailyMood) {
+    // overwrite if eventIndex already exist
+    // when fully implemented, eventIndex -> eventDate. Data will be unique
+    this.dailyMoodCollection.push(mood);
+    this.dailyMoodData.next(this.dailyMoodCollection);
   }
 }

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { DailyMood } from 'src/app/shared/models/daily-mood';
 import { HabitDataService } from 'src/app/shared/services/habit-data.service';
 
 @Component({
@@ -11,16 +12,7 @@ export class HabitTableComponent implements OnInit {
   public currentFullDate = new Date();
   daysInMonth: number = 0;
 
-  Habit_1 = [
-    { date: '1', completionStatus: 'True' },
-    { date: '2', completionStatus: 'False' },
-    { date: '3', completionStatus: 'True' },
-    { date: '4', completionStatus: 'True' },
-    { date: '5', completionStatus: 'True' },
-    { date: '5', completionStatus: 'True' },
-  ];
-
-  moodImage: string = '';
+  moodImage: DailyMood[] = [];
 
   constructor(
     private router: Router,
@@ -35,10 +27,12 @@ export class HabitTableComponent implements OnInit {
     );
     this.daysInMonth = daysInMonth;
 
-    //Mood Icons//
-    this.habitDataService.selectedMood.subscribe((value) => {
+    //Mood Icons -> why logging multiple times though?//
+    this.habitDataService.dailyMood.subscribe((value) => {
       this.moodImage = value;
     });
+
+    console.log(this.moodImage);
   }
 
   public changeMonth(direction: number) {
@@ -55,7 +49,16 @@ export class HabitTableComponent implements OnInit {
     return new Date(year, month, 0).getDate();
   }
 
-  public onOpenMoodSelector() {
-    this.router.navigate(['habit-tracker/mood-selector']);
+  public onOpenMoodSelector(index: number) {
+    this.router.navigate(['habit-tracker/mood-selector', index]);
+  }
+
+  public findMatchingObj(i: number) {
+    const arr = this.moodImage.filter((obj) => obj.eventIndex === i);
+    if (arr) {
+      return arr[0].mood;
+    } else {
+      return null;
+    }
   }
 }

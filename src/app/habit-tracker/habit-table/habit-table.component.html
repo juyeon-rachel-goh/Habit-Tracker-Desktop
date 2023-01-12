@@ -16,38 +16,30 @@
       Add New Habit
     </button>
   </div>
-  <div class="py-2">
-    <button mat-flat-button color="primary" [routerLink]="['mood-selector']">
-      Mood Selector
-    </button>
-  </div>
 
   <table style="width: 100%; margin-top: 10pt">
-    <tr>
-      <th>Mood</th>
-      <!-- Clickable blank cell, display selected mood icon if selected other wise leave blank -->
-      <td
-        class="right"
-        *ngFor="let n of daysInMonth | range"
-        style="cursor: pointer"
-      >
-        <a (click)="onOpenMoodSelector()">
-          <mat-icon>{{ moodImage ? moodImage : "" }}</mat-icon></a
+    <ng-container>
+      <!-- 1st row -->
+      <tr>
+        <th>Date</th>
+        <td class="right" *ngFor="let n of daysInMonth | range; let i = index">
+          {{ n }}
+        </td>
+      </tr>
+      <!-- 2nd row -->
+      <tr>
+        <th>Mood</th>
+
+        <td
+          class="right"
+          style="cursor: pointer"
+          *ngFor="let n of daysInMonth | range; let i = index"
         >
-      </td>
-    </tr>
-    <tr></tr>
-    <tr>
-      <th>Date</th>
-      <td class="right" *ngFor="let n of daysInMonth | range">
-        {{ n }}
-      </td>
-    </tr>
-    <tr>
-      <th>Habit_1</th>
-      <td class="right" *ngFor="let i of Habit_1">
-        {{ i.completionStatus }}
-      </td>
-    </tr>
+          <a (click)="onOpenMoodSelector(i)">
+            <mat-icon>{{ moodImage ? findMatchingObj(i) : "" }}</mat-icon></a
+          >
+        </td>
+      </tr>
+    </ng-container>
   </table>
 </div>
