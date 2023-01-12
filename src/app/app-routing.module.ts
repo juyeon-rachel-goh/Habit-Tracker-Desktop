@@ -32,7 +32,10 @@ const routes: Routes = [
           { path: 'habit-new', component: HabitEditComponent }, // Add new habit
           { path: 'habit-edit/:id', component: HabitEditComponent }, // Edit + Delete
           { path: 'habit-detail/:id', component: HabitDetailComponent }, // View selected habit
-          { path: 'mood-selector', component: HabitMoodSelectorComponent }, // Daily Mood Selector - grab id of Date?
+          {
+            path: 'mood-selector/:id',
+            component: HabitMoodSelectorComponent,
+          }, // Daily Mood Selector - grab id of Date?
         ],
       },
     ],

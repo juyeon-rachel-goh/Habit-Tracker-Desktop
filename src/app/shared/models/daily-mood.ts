@@ -1,5 +1,5 @@
 export interface DailyMood {
   recordId?: string;
-  date: Date;
+  eventIndex: number; //change later to Event_Date, index temporarily
   mood: string;
 }
