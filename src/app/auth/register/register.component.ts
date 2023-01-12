@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { Store } from '@ngxs/store';
 import { AuthService } from 'src/app/shared/services/auth.service';
+import { SetUserInfo } from 'src/app/store/auth.action';
 
 @Component({
   selector: 'app-register',
@@ -10,11 +13,14 @@ import { AuthService } from 'src/app/shared/services/auth.service';
 export class RegisterComponent implements OnInit {
   constructor(
     private authService: AuthService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private store: Store,
+    private router: Router
   ) {}
 
   public registerForm = new FormGroup({});
   public showPassword: boolean = false;
+  public registerComplete: boolean = false;
   public passwordType = 'text';
   public passwordIcon = 'visibility_off';
 
@@ -35,22 +41,29 @@ export class RegisterComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.registerForm.value);
-    // check id
     this.authService
-      .checkDuplicateUserName(this.registerForm.value.email)
-      .subscribe();
-    this.authService
-      .checkDuplicateEmail(this.registerForm.value.email)
+      .checkDuplicateUsername(this.registerForm.value.username)
       .subscribe((res) => {
         if (res === null) {
-          this.authService.addUser(this.registerForm.value).subscribe(() => {
-            alert('Submission Successful!');
-          });
-          this.registerForm.reset();
+          this.authService
+            .checkDuplicateEmail(this.registerForm.value.email)
+            .subscribe((res) => {
+              if (res === null) {
+                this.authService
+                  .addUser(this.registerForm.value)
+                  .subscribe(() => {
+                    this.registerComplete = true;
+                    this.store.dispatch(new SetUserInfo());
+                    setTimeout(() => {
+                      this.router.navigate(['/habit-tracker']);
+                    }, 5000);
+                  });
+              } else {
+                this.registerForm.get('email')?.setErrors(res);
+              }
+            });
         } else {
-          this.registerForm.get('email')?.setErrors(res);
-          console.log(this.registerForm.get('email'));
+          this.registerForm.get('username')?.setErrors(res);
         }
       });
   }
