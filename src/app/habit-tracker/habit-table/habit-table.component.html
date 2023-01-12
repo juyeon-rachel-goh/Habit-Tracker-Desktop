@@ -1,5 +1,5 @@
 <div class="container">
-  <div class="">Habit Tracker Main Page</div>
+  <h1 class="">Habit Tracker Main Page</h1>
 
   <div class="d-flex flex-row">
     <button type="button" (click)="changeMonth(-1)">
@@ -38,6 +38,21 @@
           <a (click)="onOpenMoodSelector(i)">
             <mat-icon>{{ moodImage ? findMatchingObj(i) : "" }}</mat-icon></a
           >
+        </td>
+      </tr>
+
+      <!-- 3rd Row -->
+      <tr>
+        <th>Habit List</th>
+        <td class="right" *ngFor="let n of daysInMonth | range; let i = index">
+          mon
+        </td>
+      </tr>
+      <!-- 4th Row : Habit list starts -->
+      <tr *ngFor="let number of 5 | range">
+        <th>Habit {{ number }}</th>
+        <td class="right" *ngFor="let n of daysInMonth | range; let i = index">
+          double-click!
         </td>
       </tr>
     </ng-container>

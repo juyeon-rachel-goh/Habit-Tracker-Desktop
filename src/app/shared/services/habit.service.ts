@@ -11,7 +11,10 @@ export class HabitService {
   private url = 'http://localhost:4200/api/habit-tracker';
   constructor(private http: HttpClient) {}
 
-  // // Services for REGISTER // //
+  public getContacts(): Observable<Habit[]> {
+    return this.http.get<Habit[]>(this.url);
+  }
+
   public addHabit(habit: Habit): Observable<Habit> {
     const url = `${this.url}`;
     return this.http.post<Habit>(url, habit);

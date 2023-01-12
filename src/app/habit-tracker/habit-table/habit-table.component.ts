@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { DailyMood } from 'src/app/shared/models/daily-mood';
 import { HabitDataService } from 'src/app/shared/services/habit-data.service';
+import { HabitService } from 'src/app/shared/services/habit.service';
 
 @Component({
   selector: 'app-habit-table',
@@ -16,7 +17,8 @@ export class HabitTableComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private habitDataService: HabitDataService
+    private habitDataService: HabitDataService,
+    private habitService: HabitService
   ) {}
 
   ngOnInit(): void {
@@ -26,13 +28,12 @@ export class HabitTableComponent implements OnInit {
       this.currentFullDate.getMonth() + 1
     );
     this.daysInMonth = daysInMonth;
-
+    // Get habits
+    this.habitService.getContacts().subscribe((data) => console.log(data));
     //Mood Icons -> why logging multiple times though?//
     this.habitDataService.dailyMood.subscribe((value) => {
       this.moodImage = value;
     });
-
-    console.log(this.moodImage);
   }
 
   public changeMonth(direction: number) {
@@ -56,7 +57,7 @@ export class HabitTableComponent implements OnInit {
   public findMatchingObj(i: number) {
     const arr = this.moodImage.filter((obj) => obj.eventIndex === i);
     if (arr) {
-      return arr[0].mood;
+      return arr[0]?.mood;
     } else {
       return null;
     }
