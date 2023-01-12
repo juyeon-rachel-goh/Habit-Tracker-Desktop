@@ -23,6 +23,10 @@ export class TextfieldComponent implements OnInit {
   @Input() icon: string = '';
   @Input() tooltipMsg: string = '';
   @Input() event: string = '';
+  @Input() errorMessage: string = '';
+  @Input() condition?: boolean;
+  @Input() errorMessage2: string = '';
+  @Input() condition2?: boolean;
   @Input() inputFormControl?: FormControl;
 
   getFloatLabelValue(): FloatLabelType {

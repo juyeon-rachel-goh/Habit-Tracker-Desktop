@@ -8,7 +8,27 @@
     ><input matInput [formControl]="inputFormControl" [type]="inputType"
   /></ng-container>
 
-  <button mat-icon-button matSuffix *ngIf="icon" [type]="buttonType">
-    <mat-icon matSuffix [matTooltip]="tooltipMsg">{{ icon }}</mat-icon>
-  </button>
+  <!-- Mat-error  -->
+  <ng-container *ngIf="condition">
+    <mat-error *ngIf="condition">
+      <small>{{ errorMessage }}</small>
+    </mat-error>
+  </ng-container>
+  <ng-container *ngIf="condition2">
+    <mat-error *ngIf="condition2">
+      <small>{{ errorMessage2 }}</small>
+    </mat-error>
+  </ng-container>
+
+  <!-- Icon inside of form-field -->
+  <ng-container *ngIf="icon">
+    <button
+      mat-icon-button
+      matSuffix
+      [type]="buttonType"
+      [matTooltip]="tooltipMsg"
+    >
+      <mat-icon>{{ icon }}</mat-icon>
+    </button>
+  </ng-container>
 </mat-form-field>

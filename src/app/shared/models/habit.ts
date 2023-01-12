@@ -7,8 +7,6 @@ export interface Habit {
   countPerFreq: number;
   iconColor: string;
   iconImage: string;
-  // delete below??
   createdOn: Date;
-  completionStatus: boolean;
-  archivedStatus: string;
+  archiveStatus: string;
 }

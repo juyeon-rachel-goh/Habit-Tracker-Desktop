@@ -4,5 +4,6 @@ export interface DailyHabitRecord {
   recordId?: string;
   date: Date;
   mood: string;
-  habits?: Habit[];
+  completionStatus: boolean; // habit done or not
+  habit?: Habit;
 }

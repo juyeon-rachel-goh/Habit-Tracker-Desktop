@@ -21,4 +21,33 @@
       Mood Selector
     </button>
   </div>
+
+  <table style="width: 100%; margin-top: 10pt">
+    <tr>
+      <th>Mood</th>
+      <!-- Clickable blank cell, display selected mood icon if selected other wise leave blank -->
+      <td
+        class="right"
+        *ngFor="let n of daysInMonth | range"
+        style="cursor: pointer"
+      >
+        <a (click)="onOpenMoodSelector()">
+          <mat-icon>{{ moodImage ? moodImage : "" }}</mat-icon></a
+        >
+      </td>
+    </tr>
+    <tr></tr>
+    <tr>
+      <th>Date</th>
+      <td class="right" *ngFor="let n of daysInMonth | range">
+        {{ n }}
+      </td>
+    </tr>
+    <tr>
+      <th>Habit_1</th>
+      <td class="right" *ngFor="let i of Habit_1">
+        {{ i.completionStatus }}
+      </td>
+    </tr>
+  </table>
 </div>

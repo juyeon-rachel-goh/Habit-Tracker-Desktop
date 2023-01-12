@@ -17,19 +17,18 @@ export class AuthService {
     return this.http.post<User>(url, user);
   }
 
+  public checkDuplicateUsername(
+    username: string
+  ): Observable<ValidationErrors | null> {
+    const url = `${this.url}/validate-username/${username}`;
+    return this.http.post<any>(url, username);
+  }
   // Check if the entered email is already taken or not at the registeration
   public checkDuplicateEmail(
     email: string
   ): Observable<ValidationErrors | null> {
-    const url = `${this.url}/validation/${email}`;
+    const url = `${this.url}/validate-email/${email}`;
     return this.http.post<any>(url, email);
-  }
-
-  public checkDuplicateUserName(
-    username: string
-  ): Observable<ValidationErrors | null> {
-    const url = `${this.url}/validation/${username}`;
-    return this.http.post<any>(url, username);
   }
 
   // // Services for SIGNIN and OUT // //
