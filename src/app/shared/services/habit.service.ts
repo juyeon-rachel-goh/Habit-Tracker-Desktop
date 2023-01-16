@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { User } from '../models/user';
 import { Habit } from '../models/habit';
 
 @Injectable({
@@ -16,7 +15,7 @@ export class HabitService {
   }
 
   public addHabit(habit: Habit): Observable<Habit> {
-    const url = `${this.url}`;
+    const url = `${this.url}` + '/new-habit';
     return this.http.post<Habit>(url, habit);
   }
 }

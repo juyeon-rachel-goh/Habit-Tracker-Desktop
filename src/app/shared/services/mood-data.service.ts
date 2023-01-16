@@ -2,6 +2,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { DailyMood } from '../models/daily-mood';
+import { MoodService } from './mood.service';
 
 @Injectable({
   providedIn: 'root',

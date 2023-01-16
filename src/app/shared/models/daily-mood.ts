@@ -1,5 +1,5 @@
 export interface DailyMood {
-  Id?: string;
+  id?: string;
   eventDate: string;
   mood: string;
 }
