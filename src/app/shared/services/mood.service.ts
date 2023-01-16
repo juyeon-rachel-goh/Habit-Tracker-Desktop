@@ -10,14 +10,13 @@ export class MoodService {
   private url = 'http://localhost:4200/api/habit-tracker';
   constructor(private http: HttpClient) {}
 
-  //   public getMoods(): Observable<Habit[]> {
-  //     return this.http.get<Habit[]>(this.url);
-  //   }
+  public getDailyMoods(): Observable<DailyMood[]> {
+    const url = `${this.url}` + '/mood';
+    return this.http.get<DailyMood[]>(url);
+  }
 
   public updateMood(mood: DailyMood): Observable<DailyMood> {
-    console.log(mood);
     const url = `${this.url}` + '/update-mood';
-    console.log(url);
     return this.http.put<DailyMood>(url, mood);
   }
 

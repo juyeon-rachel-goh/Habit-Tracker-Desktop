@@ -37,10 +37,8 @@ export class HabitMoodSelectorComponent implements OnInit {
   }
 
   onSubmitMood() {
-    console.log(this.moodToday.value);
     this.moodService.updateMood(this.moodToday.value).subscribe();
     this.MoodDataService.setMood(this.moodToday.value);
-
     //send data to the server//
     this.router.navigate(['/habit-tracker']);
   }

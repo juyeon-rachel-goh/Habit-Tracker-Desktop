@@ -1,10 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { DailyMood } from 'src/app/shared/models/daily-mood';
-import { MoodDataService } from 'src/app/shared/services/mood-data.service';
 import { HabitService } from 'src/app/shared/services/habit.service';
 import { Habit } from 'src/app/shared/models/habit';
 import { format, getDaysInMonth } from 'date-fns';
+import { Select, Store } from '@ngxs/store';
+import { GetDailyMoods } from 'src/app/store/mood.action';
+import { Observable } from 'rxjs';
+import { MoodState } from 'src/app/store/mood.state';
 
 @Component({
   selector: 'app-habit-table',
@@ -12,16 +15,16 @@ import { format, getDaysInMonth } from 'date-fns';
   styleUrls: ['./habit-table.component.scss'],
 })
 export class HabitTableComponent implements OnInit {
+  @Select(MoodState.dailyMoodList) dailyMoodList?: Observable<DailyMood[]>;
   public currentFullDate = new Date();
   public daysInMonth: number = 0;
 
-  moodImage: DailyMood[] = [];
   habits: Habit[] = [];
 
   constructor(
     private router: Router,
-    private moodDataService: MoodDataService,
-    private habitService: HabitService
+    private habitService: HabitService,
+    private store: Store
   ) {}
 
   ngOnInit(): void {
@@ -32,13 +35,9 @@ export class HabitTableComponent implements OnInit {
         this.currentFullDate.getMonth()
       )
     );
-    // Get habits
+
+    this.store.dispatch(new GetDailyMoods());
     this.habitService.getHabits().subscribe((data) => (this.habits = data));
-    //Mood Icons -> why logging multiple times though?//
-    this.moodDataService.dailyMood.subscribe((value) => {
-      this.moodImage = value;
-      console.log(this.moodImage);
-    });
   }
 
   public changeMonth(direction: number) {
@@ -59,12 +58,12 @@ export class HabitTableComponent implements OnInit {
   }
 
   public findMatchingObj(year: number, month: number, date: number) {
-    const eventDate = format(new Date(year, month, date), 'MM/dd/yyyy');
-    const arr = this.moodImage.filter((obj) => obj.eventDate === eventDate);
-    if (arr) {
-      return arr[0]?.mood;
-    } else {
-      return null;
-    }
+    // const eventDate = format(new Date(year, month, date), 'MM/dd/yyyy');
+    // const arr = this.moodImage.filter((obj) => obj.eventDate === eventDate);
+    // if (arr) {
+    //   return arr[0]?.mood;
+    // } else {
+    //   return null;
+    // }
   }
 }

@@ -18,6 +18,7 @@ import { HabitTrackerModule } from './habit-tracker/habit-tracker.module';
 import { NgxsModule } from '@ngxs/store';
 import { AuthState } from './store/auth.state';
 import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
+import { MoodState } from './store/mood.state';
 
 @NgModule({
   declarations: [AppComponent, HomeComponent, ContactUsComponent],
@@ -35,7 +36,7 @@ import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
     BrowserAnimationsModule,
     MatFormFieldModule,
     MatInputModule,
-    NgxsModule.forRoot([AuthState], {
+    NgxsModule.forRoot([AuthState, MoodState], {
       developmentMode: false,
     }),
     NgxsReduxDevtoolsPluginModule.forRoot(),
