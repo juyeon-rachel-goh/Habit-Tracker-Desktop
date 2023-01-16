@@ -35,8 +35,25 @@
           style="cursor: pointer"
           *ngFor="let n of daysInMonth | range; let i = index"
         >
-          <a (click)="onOpenMoodSelector(i)">
-            <mat-icon>{{ moodImage ? findMatchingObj(i) : "" }}</mat-icon></a
+          <!-- need to pass fulldate  -->
+          <a
+            (click)="
+              onOpenMoodSelector(
+                currentFullDate.getFullYear(),
+                currentFullDate.getMonth(),
+                i + 1
+              )
+            "
+          >
+            <mat-icon>{{
+              moodImage
+                ? findMatchingObj(
+                    currentFullDate.getFullYear(),
+                    currentFullDate.getMonth(),
+                    i + 1
+                  )
+                : ""
+            }}</mat-icon></a
           >
         </td>
       </tr>
