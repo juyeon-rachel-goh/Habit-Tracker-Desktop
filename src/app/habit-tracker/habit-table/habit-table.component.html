@@ -43,16 +43,22 @@
 
       <!-- 3rd Row -->
       <tr>
-        <th>Habit List</th>
+        <th>Days</th>
         <td class="right" *ngFor="let n of daysInMonth | range; let i = index">
-          mon
+          {{
+            n
+              | getDay
+                : currentFullDate.getMonth()
+                : currentFullDate.getFullYear()
+          }}
         </td>
       </tr>
+
       <!-- 4th Row : Habit list starts -->
-      <tr *ngFor="let number of 5 | range">
-        <th>Habit {{ number }}</th>
+      <tr *ngFor="let habit of habits">
+        <th>{{ habit.habitName }}</th>
         <td class="right" *ngFor="let n of daysInMonth | range; let i = index">
-          double-click!
+          c
         </td>
       </tr>
     </ng-container>

@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { DailyMood } from 'src/app/shared/models/daily-mood';
-import { HabitDataService } from 'src/app/shared/services/habit-data.service';
+import { MoodDataService } from 'src/app/shared/services/mood-data.service';
 import { HabitService } from 'src/app/shared/services/habit.service';
+import { Habit } from 'src/app/shared/models/habit';
 
 @Component({
   selector: 'app-habit-table',
@@ -14,10 +15,13 @@ export class HabitTableComponent implements OnInit {
   daysInMonth: number = 0;
 
   moodImage: DailyMood[] = [];
+  habits: Habit[] = [];
+
+  habitComplete = false;
 
   constructor(
     private router: Router,
-    private habitDataService: HabitDataService,
+    private moodDataService: MoodDataService,
     private habitService: HabitService
   ) {}
 
@@ -29,9 +33,9 @@ export class HabitTableComponent implements OnInit {
     );
     this.daysInMonth = daysInMonth;
     // Get habits
-    this.habitService.getContacts().subscribe((data) => console.log(data));
+    this.habitService.getHabits().subscribe((data) => (this.habits = data));
     //Mood Icons -> why logging multiple times though?//
-    this.habitDataService.dailyMood.subscribe((value) => {
+    this.moodDataService.dailyMood.subscribe((value) => {
       this.moodImage = value;
     });
   }
@@ -46,6 +50,7 @@ export class HabitTableComponent implements OnInit {
     );
     this.daysInMonth = daysInMonth;
   }
+
   private getDaysInMonth(year: number, month: number) {
     return new Date(year, month, 0).getDate();
   }

@@ -6,7 +6,7 @@ import { DailyMood } from '../models/daily-mood';
 @Injectable({
   providedIn: 'root',
 })
-export class HabitDataService {
+export class MoodDataService {
   private dailyMoodCollection = new Array<DailyMood>();
   private dailyMoodData = new BehaviorSubject<Array<DailyMood>>([]);
   public dailyMood = this.dailyMoodData.asObservable();

@@ -11,7 +11,7 @@ export class HabitService {
   private url = 'http://localhost:4200/api/habit-tracker';
   constructor(private http: HttpClient) {}
 
-  public getContacts(): Observable<Habit[]> {
+  public getHabits(): Observable<Habit[]> {
     return this.http.get<Habit[]>(this.url);
   }
 
