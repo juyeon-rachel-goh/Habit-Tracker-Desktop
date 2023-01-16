@@ -12,7 +12,7 @@ import { MoodDataService } from 'src/app/shared/services/mood-data.service';
 export class HabitMoodSelectorComponent implements OnInit {
   public enumMood = Mood;
   public moodToday = new FormGroup({});
-  id: number = 0;
+  eventDate: string = '';
 
   constructor(
     private formBuilder: FormBuilder,
@@ -24,12 +24,13 @@ export class HabitMoodSelectorComponent implements OnInit {
   ngOnInit(): void {
     this.route.paramMap.subscribe((params: ParamMap) => {
       if (params) {
-        this.id = +(params.get('id') || '');
+        console.log(params);
+        this.eventDate = params.get('id') || '';
       }
     });
 
     this.moodToday = this.formBuilder?.group({
-      eventIndex: [this.id],
+      eventDate: [this.eventDate],
       mood: [null, [Validators.required]],
     });
   }

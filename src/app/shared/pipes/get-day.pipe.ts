@@ -17,7 +17,6 @@ export class GetDayPipe implements PipeTransform {
     ];
 
     const dayIndex = getDay(new Date(year, month, date));
-    console.log(month);
     const result = days[dayIndex];
 
     return result;

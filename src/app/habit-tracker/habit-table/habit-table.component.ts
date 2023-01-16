@@ -4,6 +4,7 @@ import { DailyMood } from 'src/app/shared/models/daily-mood';
 import { MoodDataService } from 'src/app/shared/services/mood-data.service';
 import { HabitService } from 'src/app/shared/services/habit.service';
 import { Habit } from 'src/app/shared/models/habit';
+import { format, getDaysInMonth } from 'date-fns';
 
 @Component({
   selector: 'app-habit-table',
@@ -12,12 +13,10 @@ import { Habit } from 'src/app/shared/models/habit';
 })
 export class HabitTableComponent implements OnInit {
   public currentFullDate = new Date();
-  daysInMonth: number = 0;
+  public daysInMonth: number = 0;
 
   moodImage: DailyMood[] = [];
   habits: Habit[] = [];
-
-  habitComplete = false;
 
   constructor(
     private router: Router,
@@ -27,11 +26,12 @@ export class HabitTableComponent implements OnInit {
 
   ngOnInit(): void {
     // run to get currentMonth's daysInMonth
-    let daysInMonth = this.getDaysInMonth(
-      this.currentFullDate.getFullYear(),
-      this.currentFullDate.getMonth() + 1
+    this.daysInMonth = getDaysInMonth(
+      new Date(
+        this.currentFullDate.getFullYear(),
+        this.currentFullDate.getMonth()
+      )
     );
-    this.daysInMonth = daysInMonth;
     // Get habits
     this.habitService.getHabits().subscribe((data) => (this.habits = data));
     //Mood Icons -> why logging multiple times though?//
@@ -44,23 +44,22 @@ export class HabitTableComponent implements OnInit {
     this.currentFullDate = new Date(
       this.currentFullDate.setMonth(this.currentFullDate.getMonth() + direction)
     );
-    let daysInMonth = this.getDaysInMonth(
-      this.currentFullDate.getFullYear(),
-      this.currentFullDate.getMonth() + 1
+    this.daysInMonth = getDaysInMonth(
+      new Date(
+        this.currentFullDate.getFullYear(),
+        this.currentFullDate.getMonth()
+      )
     );
-    this.daysInMonth = daysInMonth;
   }
 
-  private getDaysInMonth(year: number, month: number) {
-    return new Date(year, month, 0).getDate();
+  public onOpenMoodSelector(year: number, month: number, date: number) {
+    const id = format(new Date(year, month, date), 'MM/dd/yyyy'); // String format
+    this.router.navigate(['habit-tracker/mood-selector', id]);
   }
 
-  public onOpenMoodSelector(index: number) {
-    this.router.navigate(['habit-tracker/mood-selector', index]);
-  }
-
-  public findMatchingObj(i: number) {
-    const arr = this.moodImage.filter((obj) => obj.eventIndex === i);
+  public findMatchingObj(year: number, month: number, date: number) {
+    const eventDate = format(new Date(year, month, date), 'MM/dd/yyyy');
+    const arr = this.moodImage.filter((obj) => obj.eventDate === eventDate);
     if (arr) {
       return arr[0]?.mood;
     } else {
