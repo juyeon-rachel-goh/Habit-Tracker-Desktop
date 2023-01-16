@@ -37,6 +37,7 @@ export class HabitTableComponent implements OnInit {
     //Mood Icons -> why logging multiple times though?//
     this.moodDataService.dailyMood.subscribe((value) => {
       this.moodImage = value;
+      console.log(this.moodImage);
     });
   }
 

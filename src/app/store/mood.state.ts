@@ -1,14 +1,24 @@
 import { Injectable } from '@angular/core';
-import { State } from '@ngxs/store';
+import { Action, State, StateContext } from '@ngxs/store';
+import { SetDailyMood } from './mood.action';
 
-interface AuthStateInterface {}
+interface MoodStateInterface {
+  dailyMood?: DailyMood;
+}
 
-export interface DailyMood {}
+export interface DailyMood {
+  id?: string;
+  eventDate: string;
+  mood: string;
+}
 
 // State = Class definition
-@State<AuthStateInterface>({
+@State<MoodStateInterface>({
   name: 'mood',
   defaults: {},
 })
 @Injectable()
-export class MoodState {}
+export class MoodState {
+  @Action(SetDailyMood)
+  setDailyMood(ctx: StateContext<MoodStateInterface>) {}
+}
