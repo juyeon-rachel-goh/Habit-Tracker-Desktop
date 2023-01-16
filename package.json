@@ -25,6 +25,7 @@
     "@ngxs/store": "^3.7.6",
     "@popperjs/core": "^2.10.2",
     "bootstrap": "^5.0.0",
+    "date-fns": "^2.29.3",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
     "typescript-cookie": "^1.0.4",
