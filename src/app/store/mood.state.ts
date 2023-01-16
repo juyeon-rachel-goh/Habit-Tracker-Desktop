@@ -1,24 +1,37 @@
 import { Injectable } from '@angular/core';
-import { Action, State, StateContext } from '@ngxs/store';
-import { SetDailyMood } from './mood.action';
+import { Action, Selector, State, StateContext } from '@ngxs/store';
+import { GetDailyMoods } from './mood.action';
+import { MoodService } from '../shared/services/mood.service';
+import { tap } from 'rxjs';
+import { DailyMood } from '../shared/models/daily-mood';
 
-interface MoodStateInterface {
-  dailyMood?: DailyMood;
-}
-
-export interface DailyMood {
-  id?: string;
-  eventDate: string;
-  mood: string;
+export class DailyMoodInterface {
+  dailyMoods?: DailyMood[];
 }
 
 // State = Class definition
-@State<MoodStateInterface>({
+@State<DailyMoodInterface>({
   name: 'mood',
-  defaults: {},
+  defaults: { dailyMoods: [] },
 })
 @Injectable()
 export class MoodState {
-  @Action(SetDailyMood)
-  setDailyMood(ctx: StateContext<MoodStateInterface>) {}
+  constructor(private moodService: MoodService) {}
+  @Action(GetDailyMoods)
+  getDailyMoods(ctx: StateContext<DailyMoodInterface>) {
+    return this.moodService.getDailyMoods().pipe(
+      tap((result) => {
+        const state = ctx.getState();
+        ctx.setState({
+          ...state,
+          dailyMoods: result,
+        });
+      })
+    );
+  }
+
+  @Selector()
+  static dailyMoodList(state: DailyMoodInterface) {
+    return state.dailyMoods;
+  }
 }

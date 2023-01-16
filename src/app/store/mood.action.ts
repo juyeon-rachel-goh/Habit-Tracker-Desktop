@@ -1,4 +1,4 @@
-export class SetDailyMood {
-  static readonly type = '[Mood] Set DailyMood';
+export class GetDailyMoods {
+  static readonly type = '[Mood] Get DailyMoods';
   constructor() {}
 }
