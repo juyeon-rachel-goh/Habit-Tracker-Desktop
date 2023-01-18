@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, ParamMap, Route, Router } from '@angular/router';
 import { Mood } from 'src/app/habit-tracker/enums/mood';
-import { MoodDataService } from 'src/app/shared/services/mood-data.service';
 import { MoodService } from 'src/app/shared/services/mood.service';
 
 @Component({
@@ -17,7 +16,6 @@ export class HabitMoodSelectorComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private MoodDataService: MoodDataService,
     private moodService: MoodService,
     private route: ActivatedRoute,
     private router: Router
@@ -38,8 +36,6 @@ export class HabitMoodSelectorComponent implements OnInit {
 
   onSubmitMood() {
     this.moodService.updateMood(this.moodToday.value).subscribe();
-    this.MoodDataService.setMood(this.moodToday.value);
-    //send data to the server//
     this.router.navigate(['/habit-tracker']);
   }
 }
