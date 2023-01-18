@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
-import { GetDailyMoods, UpdateDailyMood } from './mood.action';
+import { DeleteDailyMood, GetDailyMoods, UpdateDailyMood } from './mood.action';
 import { MoodService } from '../shared/services/mood.service';
 import { iif, tap } from 'rxjs';
 import { DailyMood } from '../shared/models/daily-mood';
@@ -33,7 +33,7 @@ export class MoodState {
   }
 
   @Action(UpdateDailyMood) //UPSERTING
-  updateDailyMoods(
+  updateDailyMood(
     ctx: StateContext<DailyMoodInterface>,
     { dailyMood }: UpdateDailyMood
   ) {
@@ -51,16 +51,14 @@ export class MoodState {
     );
   }
 
+  @Action(DeleteDailyMood) //RESET button
+  deleteDailyMood(
+    ctx: StateContext<DailyMoodInterface>,
+    { dailyMood }: UpdateDailyMood
+  ) {}
+
   @Selector()
   static dailyMoodList(state: DailyMoodInterface) {
     return state.dailyMoods;
   }
-
-  // private insertOrUpdateDailyMood(dailyMood?: DailyMood) {
-  //   return iif<DailyMood[]>(
-  //     (dailyMoodList) => dailyMoodList.some((contract) => contract.id === id),
-  //     updateItem((contract) => contract.id === id, patch(loadedContract)),
-  //     insertItem(loadedContract)
-  //   );
-  // }
 }

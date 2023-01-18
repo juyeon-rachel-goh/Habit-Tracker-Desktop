@@ -1,12 +1,17 @@
-<form [formGroup]="moodToday" (ngSubmit)="onSubmitMood()">
+<form [formGroup]="moodForm" (ngSubmit)="onSubmitMood()">
   <h1>Select Today's Mood</h1>
   <span class="px-1" *ngFor="let mood of enumMood | keys">
     <app-icon-selector
-      [iconFormControl]="moodToday.get('mood') | asFormControl"
+      [iconFormControl]="moodForm.get('mood') | asFormControl"
       name="mood"
       value="{{ mood }}"
       icon="{{ mood }}"
     ></app-icon-selector>
   </span>
-  <div><button mat-flat-button color="primary">Save</button></div>
+  <div><button mat-flat-button color="primary" type="submit">Save</button></div>
+  <div>
+    <button mat-flat-button color="warn" type="button" (click)="onResetMood()">
+      Reset
+    </button>
+  </div>
 </form>

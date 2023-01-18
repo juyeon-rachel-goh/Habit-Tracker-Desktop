@@ -11,17 +11,20 @@ export class MoodService {
   constructor(private http: HttpClient) {}
 
   public getDailyMoods(): Observable<DailyMood[]> {
-    const url = `${this.url}` + '/mood';
+    const url = `${this.url}/mood`;
     return this.http.get<DailyMood[]>(url);
   }
 
-  public updateMood(dailyMood: DailyMood): Observable<DailyMood> {
-    const url = `${this.url}` + '/update-mood';
+  //Upserting
+  public updateMood(dailyMood: DailyMood) {
+    const url = `${this.url}/update-mood`;
     return this.http.put<DailyMood>(url, dailyMood);
   }
 
-  //   public updateMood(habit: Habit): Observable<Habit> {
-  //     const url = `${this.url}`;
-  //     return this.http.post<Habit>(url, habit);
-  //   }
+  public deleteMood(dailyMood: DailyMood[]) {
+    const id = dailyMood[0].id;
+    const url = `${this.url}/delete-mood/${id}`;
+    console.log(url);
+    return this.http.delete<DailyMood[]>(url);
+  }
 }
