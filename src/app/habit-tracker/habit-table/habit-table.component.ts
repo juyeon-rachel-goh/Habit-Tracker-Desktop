@@ -59,9 +59,8 @@ export class HabitTableComponent implements OnInit {
     this.router.navigate(['habit-tracker/mood-selector', id]);
   }
 
-  public findMoodImage(year: number, month: number, date: number) {
+  public findMatchingDate(year: number, month: number, date: number) {
     const eventDate = format(new Date(year, month, date), 'MM/dd/yyyy');
-
     this.dailyMoodList
       ?.pipe(
         map((res) => {

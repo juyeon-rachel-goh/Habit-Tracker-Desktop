@@ -3,6 +3,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, ParamMap, Route, Router } from '@angular/router';
 import { Mood } from 'src/app/habit-tracker/enums/mood';
 import { MoodService } from 'src/app/shared/services/mood.service';
+import { Store } from '@ngxs/store';
+import { UpdateDailyMood } from 'src/app/store/mood.action';
 
 @Component({
   selector: 'app-habit-mood-selector',
@@ -18,7 +20,8 @@ export class HabitMoodSelectorComponent implements OnInit {
     private formBuilder: FormBuilder,
     private moodService: MoodService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private store: Store
   ) {}
 
   ngOnInit(): void {
@@ -35,7 +38,8 @@ export class HabitMoodSelectorComponent implements OnInit {
   }
 
   onSubmitMood() {
-    this.moodService.updateMood(this.moodToday.value).subscribe();
+    this.store.dispatch(new UpdateDailyMood(this.moodToday.value));
+    // this.moodService.updateMood(this.moodToday.value).subscribe();
     this.router.navigate(['/habit-tracker']);
   }
 }

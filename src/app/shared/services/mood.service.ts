@@ -15,9 +15,9 @@ export class MoodService {
     return this.http.get<DailyMood[]>(url);
   }
 
-  public updateMood(mood: DailyMood): Observable<DailyMood> {
+  public updateMood(dailyMood: DailyMood): Observable<DailyMood> {
     const url = `${this.url}` + '/update-mood';
-    return this.http.put<DailyMood>(url, mood);
+    return this.http.put<DailyMood>(url, dailyMood);
   }
 
   //   public updateMood(habit: Habit): Observable<Habit> {
