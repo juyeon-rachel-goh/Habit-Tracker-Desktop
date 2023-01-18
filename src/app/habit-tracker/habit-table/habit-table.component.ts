@@ -6,7 +6,7 @@ import { Habit } from 'src/app/shared/models/habit';
 import { format, getDaysInMonth } from 'date-fns';
 import { Select, Store } from '@ngxs/store';
 import { GetDailyMoods } from 'src/app/store/mood.action';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { MoodState } from 'src/app/store/mood.state';
 
 @Component({
@@ -16,9 +16,10 @@ import { MoodState } from 'src/app/store/mood.state';
 })
 export class HabitTableComponent implements OnInit {
   @Select(MoodState.dailyMoodList) dailyMoodList?: Observable<DailyMood[]>;
+  public moodImage: string = '';
+  public foundMatchingEventDate: boolean = false;
   public currentFullDate = new Date();
   public daysInMonth: number = 0;
-
   habits: Habit[] = [];
 
   constructor(
@@ -36,6 +37,7 @@ export class HabitTableComponent implements OnInit {
       )
     );
 
+    // GET DAILY MOODS AND HABITS
     this.store.dispatch(new GetDailyMoods());
     this.habitService.getHabits().subscribe((data) => (this.habits = data));
   }
@@ -57,13 +59,24 @@ export class HabitTableComponent implements OnInit {
     this.router.navigate(['habit-tracker/mood-selector', id]);
   }
 
-  public findMatchingObj(year: number, month: number, date: number) {
-    // const eventDate = format(new Date(year, month, date), 'MM/dd/yyyy');
-    // const arr = this.moodImage.filter((obj) => obj.eventDate === eventDate);
-    // if (arr) {
-    //   return arr[0]?.mood;
-    // } else {
-    //   return null;
-    // }
+  public findMoodImage(year: number, month: number, date: number) {
+    const eventDate = format(new Date(year, month, date), 'MM/dd/yyyy');
+
+    this.dailyMoodList
+      ?.pipe(
+        map((res) => {
+          const result = res.filter((mood) => mood.eventDate === eventDate);
+          if (result.length === 1) {
+            this.moodImage = result[0].mood;
+            return true;
+          } else {
+            return false;
+          }
+        })
+      )
+      .subscribe((result) => {
+        this.foundMatchingEventDate = result;
+      });
+    return this.foundMatchingEventDate;
   }
 }
