@@ -9,3 +9,8 @@ export class UpdateDailyMood {
   static readonly type = '[Mood] Update DailyMoods';
   constructor(public dailyMood: DailyMood) {}
 }
+
+export class DeleteDailyMood {
+  static readonly type = '[Mood] Update DailyMoods';
+  constructor(public dailyMood: DailyMood) {}
+}

@@ -3,8 +3,11 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, ParamMap, Route, Router } from '@angular/router';
 import { Mood } from 'src/app/habit-tracker/enums/mood';
 import { MoodService } from 'src/app/shared/services/mood.service';
-import { Store } from '@ngxs/store';
+import { Select, Store } from '@ngxs/store';
 import { UpdateDailyMood } from 'src/app/store/mood.action';
+import { MoodState } from 'src/app/store/mood.state';
+import { Observable, map, tap } from 'rxjs';
+import { DailyMood } from 'src/app/shared/models/daily-mood';
 
 @Component({
   selector: 'app-habit-mood-selector',
@@ -12,9 +15,12 @@ import { UpdateDailyMood } from 'src/app/store/mood.action';
   styleUrls: ['./habit-mood-selector.component.scss'],
 })
 export class HabitMoodSelectorComponent implements OnInit {
-  public enumMood = Mood;
-  public moodToday = new FormGroup({});
+  @Select(MoodState.dailyMoodList) dailyMoodList?: Observable<DailyMood[]>;
+  enumMood = Mood;
+  moodForm = new FormGroup({});
+  moodToReset: DailyMood[] = [];
   eventDate: string = '';
+  moodFound: string = '';
 
   constructor(
     private formBuilder: FormBuilder,
@@ -30,16 +36,52 @@ export class HabitMoodSelectorComponent implements OnInit {
         this.eventDate = params.get('id') || '';
       }
     });
-
-    this.moodToday = this.formBuilder?.group({
-      eventDate: [this.eventDate],
-      mood: [null, [Validators.required]],
-    });
+    this.initForm();
   }
 
   onSubmitMood() {
-    this.store.dispatch(new UpdateDailyMood(this.moodToday.value));
-    // this.moodService.updateMood(this.moodToday.value).subscribe();
+    this.store.dispatch(new UpdateDailyMood(this.moodForm.value));
     this.router.navigate(['/habit-tracker']);
+  }
+
+  onResetMood() {
+    //send found data[index].id to service //
+    this.dailyMoodList
+      ?.pipe(
+        map((res) => {
+          const result = res.filter(
+            (mood) => mood.eventDate === this.eventDate
+          );
+          return result;
+        })
+      )
+      .subscribe((res) => (this.moodToReset = res));
+    this.moodService.deleteMood(this.moodToReset).subscribe();
+    //redirect when complete
+  }
+
+  private initForm() {
+    // Find existing mood
+    this.dailyMoodList
+      ?.pipe(
+        map((res) => {
+          const result = res.filter(
+            (mood) => mood.eventDate === this.eventDate
+          );
+          return result;
+        })
+      )
+      .subscribe((res) => {
+        if (!res[0].mood) {
+          return (this.moodFound = '');
+        } else {
+          return (this.moodFound = res[0].mood);
+        }
+      });
+    this.moodForm = this.formBuilder?.group({
+      eventDate: [this.eventDate],
+      mood: [this.moodFound, [Validators.required]],
+    });
+    console.log(this.moodForm.value);
   }
 }
