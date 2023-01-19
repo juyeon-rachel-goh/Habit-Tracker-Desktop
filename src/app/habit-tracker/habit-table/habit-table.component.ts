@@ -8,6 +8,8 @@ import { Select, Store } from '@ngxs/store';
 import { GetDailyMoods } from 'src/app/store/mood.action';
 import { Observable, map } from 'rxjs';
 import { MoodState } from 'src/app/store/mood.state';
+import { GetHabits } from 'src/app/store/habit.action';
+import { HabitState } from 'src/app/store/habit.state';
 
 @Component({
   selector: 'app-habit-table',
@@ -16,17 +18,13 @@ import { MoodState } from 'src/app/store/mood.state';
 })
 export class HabitTableComponent implements OnInit {
   @Select(MoodState.dailyMoodList) dailyMoodList?: Observable<DailyMood[]>;
+  @Select(HabitState.habitsList) habitsList?: Observable<Habit[]>;
   public moodImage: string = '';
   public foundMatchingEventDate: boolean = false;
   public currentFullDate = new Date();
   public daysInMonth: number = 0;
-  habits: Habit[] = [];
 
-  constructor(
-    private router: Router,
-    private habitService: HabitService,
-    private store: Store
-  ) {}
+  constructor(private router: Router, private store: Store) {}
 
   ngOnInit(): void {
     // run to get currentMonth's daysInMonth
@@ -38,8 +36,8 @@ export class HabitTableComponent implements OnInit {
     );
 
     // GET DAILY MOODS AND HABITS
+    this.store.dispatch(new GetHabits());
     this.store.dispatch(new GetDailyMoods());
-    this.habitService.getHabits().subscribe((data) => (this.habits = data));
   }
 
   public changeMonth(direction: number) {

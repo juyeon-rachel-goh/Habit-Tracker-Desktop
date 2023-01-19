@@ -2,9 +2,8 @@ import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { DeleteDailyMood, GetDailyMoods, UpdateDailyMood } from './mood.action';
 import { MoodService } from '../shared/services/mood.service';
-import { iif, tap } from 'rxjs';
+import { tap } from 'rxjs';
 import { DailyMood } from '../shared/models/daily-mood';
-import { Mood } from '../habit-tracker/enums/mood';
 import { patch, updateItem } from '@ngxs/store/operators';
 
 export class DailyMoodInterface {
@@ -42,8 +41,8 @@ export class MoodState {
         ctx.setState(
           patch<DailyMoodInterface>({
             dailyMoods: updateItem<DailyMood>(
-              (data) => data?.eventDate === result.eventDate,
-              patch({ mood: result.mood })
+              (data) => data?.eventDate === result?.eventDate,
+              patch({ mood: result?.mood })
             ),
           })
         );
@@ -54,8 +53,21 @@ export class MoodState {
   @Action(DeleteDailyMood) //RESET button
   deleteDailyMood(
     ctx: StateContext<DailyMoodInterface>,
-    { dailyMood }: UpdateDailyMood
-  ) {}
+    { dailyMoodId }: DeleteDailyMood
+  ) {
+    return this.moodService.deleteMood(dailyMoodId).pipe(
+      tap(() => {
+        const state = ctx.getState();
+        const filteredArray = state.dailyMoods?.filter(
+          (item) => item.id !== dailyMoodId
+        );
+        ctx.setState({
+          ...state,
+          dailyMoods: filteredArray,
+        });
+      })
+    );
+  }
 
   @Selector()
   static dailyMoodList(state: DailyMoodInterface) {

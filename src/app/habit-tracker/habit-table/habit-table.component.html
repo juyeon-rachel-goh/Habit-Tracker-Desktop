@@ -11,9 +11,13 @@
       <mat-icon matTooltip="Display Next Month">navigate_next</mat-icon>
     </button>
   </div>
-  <div class="py-2">
+  <div class="py-2 d-flex flex-row justify-content-between">
     <button mat-flat-button color="primary" [routerLink]="['habit-new']">
       Add New Habit
+    </button>
+    <!-- TODO: Display archived habits only (to delete, unarchive or just view) -->
+    <button mat-flat-button color="primary" [routerLink]="['/']">
+      Archived Habits
     </button>
   </div>
 
@@ -72,11 +76,11 @@
       </tr>
 
       <!-- 4th Row : Habit list starts -->
-      <tr *ngFor="let habit of habits">
-        <th>{{ habit.habitName }}</th>
-        <td class="right" *ngFor="let n of daysInMonth | range; let i = index">
-          c
-        </td>
+      <tr *ngFor="let habit of habitsList | async">
+        <th [routerLink]="'habit-detail/' + habit.id" style="cursor: pointer">
+          {{ habit.habitName }}
+        </th>
+        <td class="right" *ngFor="let n of daysInMonth | range">V</td>
       </tr>
     </ng-container>
   </table>

@@ -21,10 +21,8 @@ export class MoodService {
     return this.http.put<DailyMood>(url, dailyMood);
   }
 
-  public deleteMood(dailyMood: DailyMood[]) {
-    const id = dailyMood[0].id;
+  public deleteMood(id: string) {
     const url = `${this.url}/delete-mood/${id}`;
-    console.log(url);
     return this.http.delete<DailyMood[]>(url);
   }
 }
