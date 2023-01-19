@@ -9,7 +9,7 @@
     ></app-icon-selector>
   </span>
   <div><button mat-flat-button color="primary" type="submit">Save</button></div>
-  <div>
+  <div *ngIf="showResetButton">
     <button mat-flat-button color="warn" type="button" (click)="onResetMood()">
       Reset
     </button>

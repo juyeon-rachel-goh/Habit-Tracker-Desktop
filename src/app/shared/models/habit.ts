@@ -1,7 +1,7 @@
 import { Freqeuncy } from 'src/app/habit-tracker/enums/frequency';
 
 export interface Habit {
-  habitId?: string;
+  id?: string;
   habitName: string;
   frequency: Freqeuncy;
   countPerFreq: number;

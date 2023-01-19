@@ -4,7 +4,7 @@ import { ActivatedRoute, ParamMap, Route, Router } from '@angular/router';
 import { Mood } from 'src/app/habit-tracker/enums/mood';
 import { MoodService } from 'src/app/shared/services/mood.service';
 import { Select, Store } from '@ngxs/store';
-import { UpdateDailyMood } from 'src/app/store/mood.action';
+import { DeleteDailyMood, UpdateDailyMood } from 'src/app/store/mood.action';
 import { MoodState } from 'src/app/store/mood.state';
 import { Observable, map, tap } from 'rxjs';
 import { DailyMood } from 'src/app/shared/models/daily-mood';
@@ -18,13 +18,13 @@ export class HabitMoodSelectorComponent implements OnInit {
   @Select(MoodState.dailyMoodList) dailyMoodList?: Observable<DailyMood[]>;
   enumMood = Mood;
   moodForm = new FormGroup({});
-  moodToReset: DailyMood[] = [];
+  moodToResetId?: string = '';
   eventDate: string = '';
   moodFound: string = '';
+  showResetButton = false;
 
   constructor(
     private formBuilder: FormBuilder,
-    private moodService: MoodService,
     private route: ActivatedRoute,
     private router: Router,
     private store: Store
@@ -45,7 +45,7 @@ export class HabitMoodSelectorComponent implements OnInit {
   }
 
   onResetMood() {
-    //send found data[index].id to service //
+    // //send found data[index].id to service //
     this.dailyMoodList
       ?.pipe(
         map((res) => {
@@ -55,9 +55,13 @@ export class HabitMoodSelectorComponent implements OnInit {
           return result;
         })
       )
-      .subscribe((res) => (this.moodToReset = res));
-    this.moodService.deleteMood(this.moodToReset).subscribe();
-    //redirect when complete
+      .subscribe((res) => (this.moodToResetId = res[0]?.id));
+    if (this.moodToResetId !== undefined) {
+      this.store.dispatch(new DeleteDailyMood(this.moodToResetId));
+      this.router.navigate(['/habit-tracker']);
+    } else {
+      console.warn('error!!');
+    }
   }
 
   private initForm() {
@@ -72,9 +76,10 @@ export class HabitMoodSelectorComponent implements OnInit {
         })
       )
       .subscribe((res) => {
-        if (!res[0].mood) {
+        if (!res[0]?.mood) {
           return (this.moodFound = '');
         } else {
+          this.showResetButton = true;
           return (this.moodFound = res[0].mood);
         }
       });
@@ -82,6 +87,5 @@ export class HabitMoodSelectorComponent implements OnInit {
       eventDate: [this.eventDate],
       mood: [this.moodFound, [Validators.required]],
     });
-    console.log(this.moodForm.value);
   }
 }

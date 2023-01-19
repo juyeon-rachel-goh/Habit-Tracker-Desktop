@@ -19,6 +19,7 @@ import { NgxsModule } from '@ngxs/store';
 import { AuthState } from './store/auth.state';
 import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
 import { MoodState } from './store/mood.state';
+import { HabitState } from './store/habit.state';
 
 @NgModule({
   declarations: [AppComponent, HomeComponent, ContactUsComponent],
@@ -36,7 +37,7 @@ import { MoodState } from './store/mood.state';
     BrowserAnimationsModule,
     MatFormFieldModule,
     MatInputModule,
-    NgxsModule.forRoot([AuthState, MoodState], {
+    NgxsModule.forRoot([AuthState, MoodState, HabitState], {
       developmentMode: false,
     }),
     NgxsReduxDevtoolsPluginModule.forRoot(),
