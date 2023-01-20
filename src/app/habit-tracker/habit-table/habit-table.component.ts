@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { DailyMood } from 'src/app/shared/models/daily-mood';
-import { HabitService } from 'src/app/shared/services/habit.service';
 import { Habit } from 'src/app/shared/models/habit';
 import { format, getDaysInMonth } from 'date-fns';
 import { Select, Store } from '@ngxs/store';
@@ -19,10 +18,10 @@ import { HabitState } from 'src/app/store/habit.state';
 export class HabitTableComponent implements OnInit {
   @Select(MoodState.dailyMoodList) dailyMoodList?: Observable<DailyMood[]>;
   @Select(HabitState.habitsList) habitsList?: Observable<Habit[]>;
-  public moodImage: string = '';
-  public foundMatchingEventDate: boolean = false;
   public currentFullDate = new Date();
   public daysInMonth: number = 0;
+  public foundMatchingEventDate: boolean = false;
+  public moodImage: string = '';
 
   constructor(private router: Router, private store: Store) {}
 
