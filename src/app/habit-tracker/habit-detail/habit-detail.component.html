@@ -10,8 +10,8 @@
     <p>{{ data.iconImage }}</p>
     <p>{{ data.createdOn }}</p>
     <p>{{ data.archiveStatus }}</p>
-    <button mat-raised-button color="accent" (click)="onArchive()">
-      {{ data.archiveStatus ? "Unarchive This Habit" : "Archive This Habit" }}
+    <button mat-raised-button color="accent" (click)="onClickArchive()">
+      {{ isArchived ? "Unarchive This Habit" : "Archive This Habit" }}
     </button>
   </div>
 </div>

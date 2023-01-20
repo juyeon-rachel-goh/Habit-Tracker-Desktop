@@ -1,8 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { Select, Store } from '@ngxs/store';
-import { Observable, Subject, map, switchMap, takeUntil } from 'rxjs';
+import { Observable, Subject, switchMap, takeUntil } from 'rxjs';
 import { Habit } from 'src/app/shared/models/habit';
+import { HabitService } from 'src/app/shared/services/habit.service';
 import { HabitState } from 'src/app/store/habit.state';
 
 @Component({
@@ -15,8 +16,13 @@ export class HabitDetailComponent implements OnInit, OnDestroy {
   public habitData?: Observable<Habit>;
   public habitId: string = '';
   public ngDestroyed = new Subject<void>();
-
-  constructor(private store: Store, private route: ActivatedRoute) {}
+  public currentArchiveStatus: string = '';
+  public isArchived!: string;
+  constructor(
+    private store: Store,
+    private route: ActivatedRoute,
+    private habitService: HabitService
+  ) {}
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((params: ParamMap) => {
@@ -39,8 +45,18 @@ export class HabitDetailComponent implements OnInit, OnDestroy {
     //store values into a form
   }
 
-  onArchive(): void {
+  onClickArchive(): void {
     // button to patch value inside of the form and dispatch update action
+    this.habitData?.subscribe(
+      (data) => (this.currentArchiveStatus = data.archiveStatus)
+    );
+    if (this.currentArchiveStatus == '0') {
+      this.isArchived = '1';
+    } else {
+      this.isArchived = '0';
+    }
+
+    this.habitService.archiveHabit(this.isArchived, this.habitId);
   }
 
   onEdit(): void {
