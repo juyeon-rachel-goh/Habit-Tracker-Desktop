@@ -75,7 +75,27 @@
         <th [routerLink]="'habit-detail/' + habit.id" style="cursor: pointer">
           {{ habit.habitName }}
         </th>
-        <td class="right" *ngFor="let n of daysInMonth | range">V</td>
+        <td
+          class="right"
+          style="cursor: pointer"
+          *ngFor="let n of daysInMonth | range; let i = index"
+        >
+          <a
+            (dblclick)="
+              onChangeCompletionStatus(
+                currentFullDate.getFullYear(),
+                currentFullDate.getMonth(),
+                i + 1,
+                habit.id!
+              )
+            "
+          >
+            <mat-icon [ngStyle]="{ color: habit.iconColor }">{{
+              currentFullDate.getFullYear()
+                | iconImage : currentFullDate.getMonth() : i + 1 : habit.id!
+            }}</mat-icon>
+          </a>
+        </td>
       </tr>
     </ng-container>
   </table>

@@ -5,6 +5,8 @@ import { KeysPipe } from './key.pipe';
 import { RangePipe } from './range.pipe';
 import { GetDayPipe } from './get-day.pipe';
 import { MoodImagePipe } from './mood-image.pipe';
+import { IconImagePipe } from './icon-image.pipe';
+// import { IconImagePipe } from './icon-image.pipe';
 
 @NgModule({
   declarations: [
@@ -13,8 +15,16 @@ import { MoodImagePipe } from './mood-image.pipe';
     RangePipe,
     GetDayPipe,
     MoodImagePipe,
+    IconImagePipe,
   ],
   imports: [CommonModule],
-  exports: [AsFormControlPipe, KeysPipe, RangePipe, GetDayPipe, MoodImagePipe],
+  exports: [
+    AsFormControlPipe,
+    KeysPipe,
+    RangePipe,
+    GetDayPipe,
+    MoodImagePipe,
+    IconImagePipe,
+  ],
 })
 export class PipesModule {}
