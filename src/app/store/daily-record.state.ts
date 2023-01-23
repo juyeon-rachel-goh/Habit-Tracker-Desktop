@@ -3,9 +3,10 @@
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { tap } from 'rxjs';
-import { ChangeDailyRecords, GetDailyRecords } from './daily-record.action';
+import { ChangeCompletionStatus, GetDailyRecords } from './daily-record.action';
 import { DailyHabitRecord } from '../shared/models/daily-habit-record';
 import { HabitService } from '../shared/services/habit.service';
+import { patch, updateItem } from '@ngxs/store/operators';
 
 export class DailyCompletionStatusInterface {
   dailyRecords?: DailyHabitRecord[];
@@ -28,6 +29,26 @@ export class DailyHabitRecordState {
           ...state,
           dailyRecords: result,
         });
+      })
+    );
+  }
+
+  @Action(ChangeCompletionStatus) //UPSERTING
+  changeCompletionStatus(
+    ctx: StateContext<DailyCompletionStatusInterface>,
+    { record }: ChangeCompletionStatus
+  ) {
+    return this.habitService.changeCompletionStatus(record).pipe(
+      tap((result) => {
+        ctx.setState(
+          patch<DailyCompletionStatusInterface>({
+            dailyRecords: updateItem<DailyHabitRecord>(
+              (data) =>
+                data?.date === result?.date && data.habitId === result.habitId,
+              patch({ completionStatus: result?.completionStatus })
+            ),
+          })
+        );
       })
     );
   }

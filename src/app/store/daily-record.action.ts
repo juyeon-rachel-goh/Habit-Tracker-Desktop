@@ -5,7 +5,7 @@ export class GetDailyRecords {
   constructor() {}
 }
 
-export class ChangeDailyRecords {
-  static readonly type = '[Record] Update DailyRecord';
+export class ChangeCompletionStatus {
+  static readonly type = '[Record] Update CompletionStatus';
   constructor(public record: DailyHabitRecord) {}
 }
