@@ -5,7 +5,7 @@ import { Habit } from 'src/app/shared/models/habit';
 import { format, getDaysInMonth } from 'date-fns';
 import { Select, Store } from '@ngxs/store';
 import { GetDailyMoods } from 'src/app/store/mood.action';
-import { Observable, map, tap } from 'rxjs';
+import { Observable, map, take, tap } from 'rxjs';
 import { MoodState } from 'src/app/store/mood.state';
 import { GetHabits } from 'src/app/store/habit.action';
 import { HabitState } from 'src/app/store/habit.state';
@@ -14,7 +14,10 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { DailyHabitRecord } from 'src/app/shared/models/daily-habit-record';
 import { HabitService } from 'src/app/shared/services/habit.service';
 import { DailyHabitRecordState } from 'src/app/store/daily-record.state';
-import { GetDailyRecords } from 'src/app/store/daily-record.action';
+import {
+  ChangeCompletionStatus,
+  GetDailyRecords,
+} from 'src/app/store/daily-record.action';
 
 @Component({
   selector: 'app-habit-table',
@@ -78,7 +81,14 @@ export class HabitTableComponent implements OnInit {
       habitId: habitId,
     };
     // look through state and if record exist, grab that value and assign to completionStatus
-    this.habitService.changeCompletionStatus(recordSource).subscribe();
+    this.store
+      .dispatch(new ChangeCompletionStatus(recordSource))
+      .pipe(
+        take(1),
+        tap(() => window.location.reload())
+      )
+      .subscribe();
+    // this.habitService.changeCompletionStatus(recordSource).subscribe();
   }
   //pass dailyhabitrecord to state
 }
