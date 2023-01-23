@@ -11,6 +11,7 @@ import { HabitMoodSelectorComponent } from './habit-tracker/habit-mood-selector/
 import { HabitMainComponent } from './habit-tracker/habit-main/habit-main.component';
 import { AuthGuard } from './guards/auth.guard';
 import { DailyMoodsResolverService } from './shared/services/daily-moods-resolver.service';
+import { CompletionStatusResolver } from './shared/services/completion-status.resolver';
 
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -32,7 +33,10 @@ const routes: Routes = [
           {
             path: '',
             component: HabitTableComponent,
-            resolve: { dailyMood: DailyMoodsResolverService },
+            resolve: {
+              dailyMood: DailyMoodsResolverService,
+              dailyRecord: CompletionStatusResolver,
+            },
           },
           { path: 'habit-new', component: HabitEditComponent }, // Add new habit
           { path: 'habit-edit/:id', component: HabitEditComponent }, // Edit + Delete
