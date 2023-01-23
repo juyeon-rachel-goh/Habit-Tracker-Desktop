@@ -9,6 +9,7 @@ import { Observable, map } from 'rxjs';
 import { MoodState } from 'src/app/store/mood.state';
 import { GetHabits } from 'src/app/store/habit.action';
 import { HabitState } from 'src/app/store/habit.state';
+import { MoodService } from 'src/app/shared/services/mood.service';
 
 @Component({
   selector: 'app-habit-table',
@@ -16,7 +17,6 @@ import { HabitState } from 'src/app/store/habit.state';
   styleUrls: ['./habit-table.component.scss'],
 })
 export class HabitTableComponent implements OnInit {
-  @Select(MoodState.dailyMoodList) dailyMoodList?: Observable<DailyMood[]>;
   @Select(HabitState.habitsList) habitsList?: Observable<Habit[]>;
   public currentFullDate = new Date();
   public daysInMonth: number = 0;
@@ -26,7 +26,6 @@ export class HabitTableComponent implements OnInit {
   constructor(private router: Router, private store: Store) {}
 
   ngOnInit(): void {
-    // run to get currentMonth's daysInMonth
     this.daysInMonth = getDaysInMonth(
       new Date(
         this.currentFullDate.getFullYear(),
@@ -34,10 +33,10 @@ export class HabitTableComponent implements OnInit {
       )
     );
 
-    // GET DAILY MOODS AND HABITS
     this.store.dispatch(new GetHabits());
-    this.store.dispatch(new GetDailyMoods());
   }
+
+  ngAfterViewInit() {}
 
   public changeMonth(direction: number) {
     this.currentFullDate = new Date(
@@ -54,25 +53,5 @@ export class HabitTableComponent implements OnInit {
   public onOpenMoodSelector(year: number, month: number, date: number) {
     const id = format(new Date(year, month, date), 'MM/dd/yyyy'); // String format
     this.router.navigate(['habit-tracker/mood-selector', id]);
-  }
-
-  public findMatchingDate(year: number, month: number, date: number) {
-    const eventDate = format(new Date(year, month, date), 'MM/dd/yyyy');
-    this.dailyMoodList
-      ?.pipe(
-        map((res) => {
-          const result = res.filter((mood) => mood.eventDate === eventDate);
-          if (result.length === 1) {
-            this.moodImage = result[0].mood;
-            return true;
-          } else {
-            return false;
-          }
-        })
-      )
-      .subscribe((result) => {
-        this.foundMatchingEventDate = result;
-      });
-    return this.foundMatchingEventDate;
   }
 }

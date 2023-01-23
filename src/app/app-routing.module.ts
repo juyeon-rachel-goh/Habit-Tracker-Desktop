@@ -10,6 +10,7 @@ import { HabitDetailComponent } from './habit-tracker/habit-detail/habit-detail.
 import { HabitMoodSelectorComponent } from './habit-tracker/habit-mood-selector/habit-mood-selector.component';
 import { HabitMainComponent } from './habit-tracker/habit-main/habit-main.component';
 import { AuthGuard } from './guards/auth.guard';
+import { DailyMoodsResolverService } from './shared/services/daily-moods-resolver.service';
 
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -28,7 +29,11 @@ const routes: Routes = [
       {
         path: '',
         children: [
-          { path: '', component: HabitTableComponent },
+          {
+            path: '',
+            component: HabitTableComponent,
+            resolve: { dailyMood: DailyMoodsResolverService },
+          },
           { path: 'habit-new', component: HabitEditComponent }, // Add new habit
           { path: 'habit-edit/:id', component: HabitEditComponent }, // Edit + Delete
           { path: 'habit-detail/:id', component: HabitDetailComponent }, // View selected habit
@@ -43,7 +48,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, { onSameUrlNavigation: 'reload' })],
   exports: [RouterModule],
 })
 export class AppRoutingModule {}

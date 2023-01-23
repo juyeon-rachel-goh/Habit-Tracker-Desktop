@@ -11,11 +11,10 @@ import { HabitState } from 'src/app/store/habit.state';
   templateUrl: './habit-detail.component.html',
   styleUrls: ['./habit-detail.component.scss'],
 })
-export class HabitDetailComponent implements OnInit, OnDestroy {
+export class HabitDetailComponent implements OnInit {
   @Select(HabitState.habitsList) habitsList?: Observable<Habit[]>;
-  public habitData?: Observable<Habit>;
+  public habitData?: Habit;
   public habitId: string = '';
-  public ngDestroyed = new Subject<void>();
   public currentArchiveStatus: string = '';
   public isArchived!: string;
   constructor(
@@ -30,13 +29,10 @@ export class HabitDetailComponent implements OnInit, OnDestroy {
         this.habitId = params.get('id') || '';
       }
 
-      this.habitData = this.store.select(HabitState.getHabitbyId).pipe(
-        switchMap((filterFn) => filterFn(this.habitId)),
-        takeUntil(this.ngDestroyed)
+      this.habitData = this.store.selectSnapshot(HabitState.getHabitbyId)(
+        this.habitId
       );
     });
-
-    this.habitData?.subscribe((data) => console.log(data));
 
     // call transform data function for habitForm
     // this.setHabitFormbyID(this.habitId)
@@ -47,16 +43,15 @@ export class HabitDetailComponent implements OnInit, OnDestroy {
 
   onClickArchive(): void {
     // button to patch value inside of the form and dispatch update action
-    this.habitData?.subscribe(
-      (data) => (this.currentArchiveStatus = data.archiveStatus)
-    );
-    if (this.currentArchiveStatus == '0') {
-      this.isArchived = '1';
-    } else {
-      this.isArchived = '0';
-    }
-
-    this.habitService.archiveHabit(this.isArchived, this.habitId);
+    // this.habitData?.subscribe(
+    //   (data) => (this.currentArchiveStatus = data.archiveStatus)
+    // );
+    // if (this.currentArchiveStatus == '0') {
+    //   this.isArchived = '1';
+    // } else {
+    //   this.isArchived = '0';
+    // }
+    // this.habitService.archiveHabit(this.isArchived, this.habitId);
   }
 
   onEdit(): void {
@@ -67,9 +62,5 @@ export class HabitDetailComponent implements OnInit, OnDestroy {
     // ask are you sure you want to delete this? All history and data will be deleted from server
     // if yes, call service to delete and pass
     // if no, back out (route.navigate(['../']))
-  }
-
-  ngOnDestroy() {
-    this.ngDestroyed.next();
   }
 }

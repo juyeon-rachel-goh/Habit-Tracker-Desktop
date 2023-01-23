@@ -6,7 +6,7 @@ import { MoodService } from 'src/app/shared/services/mood.service';
 import { Select, Store } from '@ngxs/store';
 import { DeleteDailyMood, UpdateDailyMood } from 'src/app/store/mood.action';
 import { MoodState } from 'src/app/store/mood.state';
-import { Observable, map, tap } from 'rxjs';
+import { Observable, catchError, map, switchMap, take, tap } from 'rxjs';
 import { DailyMood } from 'src/app/shared/models/daily-mood';
 
 @Component({
@@ -20,7 +20,6 @@ export class HabitMoodSelectorComponent implements OnInit {
   moodForm = new FormGroup({});
   moodToResetId?: string = '';
   eventDate: string = '';
-  moodFound: string = '';
   showResetButton = false;
 
   constructor(
@@ -40,52 +39,63 @@ export class HabitMoodSelectorComponent implements OnInit {
   }
 
   onSubmitMood() {
-    this.store.dispatch(new UpdateDailyMood(this.moodForm.value));
-    this.router.navigate(['/habit-tracker']);
+    this.store
+      .dispatch(new UpdateDailyMood(this.moodForm.value))
+      .pipe(
+        take(1),
+        tap(() => this.router.navigate(['/habit-tracker']))
+      )
+      .subscribe();
   }
 
   onResetMood() {
-    // //send found data[index].id to service //
-    this.dailyMoodList
-      ?.pipe(
-        map((res) => {
-          const result = res.filter(
-            (mood) => mood.eventDate === this.eventDate
-          );
-          return result;
+    const dailyMoodList = this.store.selectSnapshot(MoodState.dailyMoodList);
+    const result = dailyMoodList!.find(
+      (mood) => mood.eventDate === this.eventDate
+    );
+    this.store
+      .dispatch(new DeleteDailyMood(result?.id!))
+      .pipe(
+        take(1),
+        tap(() => this.router.navigate(['/habit-tracker'])),
+        catchError((err) => {
+          throw alert(err.message);
         })
       )
-      .subscribe((res) => (this.moodToResetId = res[0]?.id));
-    if (this.moodToResetId !== undefined) {
-      this.store.dispatch(new DeleteDailyMood(this.moodToResetId));
-      this.router.navigate(['/habit-tracker']);
-    } else {
-      console.warn('error!!');
-    }
+      .subscribe();
+    // switchMap //
+    // this.dailyMoodList
+    //   ?.pipe(
+    //     take(1),
+    //     map((res) => {
+    //       const result = res.filter(
+    //         (mood) => mood.eventDate === this.eventDate
+    //       );
+    //       return result;
+    //     }),
+    //     switchMap((result) =>
+    //       this.store.dispatch(new DeleteDailyMood(result[0].id!))
+    //     ),
+    //     tap(() => this.router.navigate(['/habit-tracker']))
+    //   )
+    //   .subscribe(); // add catchError
   }
 
   private initForm() {
-    // Find existing mood
-    this.dailyMoodList
-      ?.pipe(
-        map((res) => {
-          const result = res.filter(
-            (mood) => mood.eventDate === this.eventDate
-          );
-          return result;
-        })
-      )
-      .subscribe((res) => {
-        if (!res[0]?.mood) {
-          return (this.moodFound = '');
-        } else {
-          this.showResetButton = true;
-          return (this.moodFound = res[0].mood);
-        }
-      });
+    const dailyMoodList = this.store.selectSnapshot(MoodState.dailyMoodList);
+    const result = dailyMoodList!.find(
+      (mood) => mood.eventDate === this.eventDate
+    );
+    let moodFound = '';
+    if (!result) {
+      moodFound;
+    } else {
+      this.showResetButton = true;
+      moodFound = result?.mood;
+    }
     this.moodForm = this.formBuilder?.group({
       eventDate: [this.eventDate],
-      mood: [this.moodFound, [Validators.required]],
+      mood: [moodFound, [Validators.required]],
     });
   }
 }
