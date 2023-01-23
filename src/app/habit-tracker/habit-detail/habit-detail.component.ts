@@ -1,9 +1,10 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, ParamMap } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { Select, Store } from '@ngxs/store';
-import { Observable, Subject, switchMap, takeUntil } from 'rxjs';
+import { Observable, catchError, take, tap } from 'rxjs';
 import { Habit } from 'src/app/shared/models/habit';
 import { HabitService } from 'src/app/shared/services/habit.service';
+import { DeleteHabit } from 'src/app/store/habit.action';
 import { HabitState } from 'src/app/store/habit.state';
 
 @Component({
@@ -20,6 +21,7 @@ export class HabitDetailComponent implements OnInit {
   constructor(
     private store: Store,
     private route: ActivatedRoute,
+    private router: Router,
     private habitService: HabitService
   ) {}
 
@@ -59,8 +61,22 @@ export class HabitDetailComponent implements OnInit {
   }
 
   onDelete() {
-    // ask are you sure you want to delete this? All history and data will be deleted from server
-    // if yes, call service to delete and pass
-    // if no, back out (route.navigate(['../']))
+    if (window.confirm('Are you sure you want to delete this habit?')) {
+      const habitsList = this.store.selectSnapshot(HabitState.habitsList);
+      const result = habitsList!.find((mood) => mood.id === this.habitId);
+      this.store
+        .dispatch(new DeleteHabit(result?.id!))
+        .pipe(
+          take(1),
+          tap(() => this.router.navigate(['/habit-tracker'])),
+          catchError((err) => {
+            throw alert(err.message);
+          })
+        )
+        .subscribe();
+      return true;
+    } else {
+      return false;
+    }
   }
 }

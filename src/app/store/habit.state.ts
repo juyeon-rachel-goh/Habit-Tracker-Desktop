@@ -1,22 +1,15 @@
 import { Injectable } from '@angular/core';
-import {
-  Action,
-  Selector,
-  State,
-  StateContext,
-  createSelector,
-} from '@ngxs/store';
+import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { tap } from 'rxjs';
 import { patch, updateItem } from '@ngxs/store/operators';
 import { Habit } from '../shared/models/habit';
 import { HabitService } from '../shared/services/habit.service';
-import { GetHabits } from './habit.action';
+import { DeleteHabit, GetHabits } from './habit.action';
 
 export class HabitInterface {
   habits?: Habit[];
 }
 
-// State = Class definition
 @State<HabitInterface>({
   name: 'habit',
   defaults: { habits: [] },
@@ -37,31 +30,34 @@ export class HabitState {
       })
     );
   }
+  //   @Action(UpdateDailyMood) //UPSERTING
+  //   updateDailyMood(ctx: StateContext<DailyMoodInterface>) {}
 
-  // static getHabitbyId(habitId: string) {
-  //   return createSelector([HabitState], (state: HabitInterface) => {
-  //     return state.habits!.filter((habit: Habit) => habit.id === habitId);
-  //   });
-  // }
+  @Action(DeleteHabit)
+  deleteDailyMood(ctx: StateContext<HabitInterface>, { habitId }: DeleteHabit) {
+    return this.habitService.deleteHabit(habitId).pipe(
+      tap(() => {
+        const state = ctx.getState();
+        const filteredArray = state.habits?.filter(
+          (item) => item.id !== habitId
+        );
+        ctx.setState({
+          ...state,
+          habits: filteredArray,
+        });
+      })
+    );
+  }
+
   @Selector()
   static getHabitbyId(state: HabitInterface) {
     return (habitId: string) => {
       return state.habits!.find((habit: Habit) => habit.id === habitId);
     };
   }
-  //   @Action(UpdateDailyMood) //UPSERTING
-  //   updateDailyMood(ctx: StateContext<DailyMoodInterface>) {}
-
-  //   @Action(DeleteDailyMood) //RESET button
-  //   deleteDailyMood(ctx: StateContext<DailyMoodInterface>) {}
 
   @Selector()
   static habitsList(state: HabitInterface) {
     return state.habits;
-  }
-
-  @Selector()
-  static archivedHabits(state: HabitInterface) {
-    // return archivedHabits only
   }
 }

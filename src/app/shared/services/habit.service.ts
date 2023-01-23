@@ -21,6 +21,12 @@ export class HabitService {
     return this.http.post<Habit>(url, habit);
   }
 
+  public deleteHabit(id: string) {
+    console.log('delete habit service called!' + id);
+    const url = `${this.url}/delete-habit/${id}`;
+    return this.http.delete<Habit>(url);
+  }
+
   public archiveHabit(value: string, id: string): Observable<Habit> {
     const url = `${this.url}/archive/${id}`;
     console.log(value);
