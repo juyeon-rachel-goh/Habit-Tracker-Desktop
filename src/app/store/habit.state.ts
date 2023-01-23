@@ -46,7 +46,7 @@ export class HabitState {
   @Selector()
   static getHabitbyId(state: HabitInterface) {
     return (habitId: string) => {
-      return state.habits!.filter((habit: Habit) => habit.id === habitId);
+      return state.habits!.find((habit: Habit) => habit.id === habitId);
     };
   }
   //   @Action(UpdateDailyMood) //UPSERTING

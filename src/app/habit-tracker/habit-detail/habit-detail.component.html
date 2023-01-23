@@ -1,8 +1,6 @@
 <div class="container">
-  <button (click)="onEdit()">Edit this habit</button>
-  <button (click)="onDelete()">Delete this habit</button>
   <!-- HabitData = object {} -->
-  <div *ngIf="habitData | async; let data">
+  <div *ngIf="habitData; let data">
     <p>{{ data.habitName }}</p>
     <p>{{ data.frequency }}</p>
     <p>{{ data.countPerFreq }}</p>
@@ -10,8 +8,14 @@
     <p>{{ data.iconImage }}</p>
     <p>{{ data.createdOn }}</p>
     <p>{{ data.archiveStatus }}</p>
+    <button mat-raised-button color="primary" (click)="onEdit()">
+      Edit this habit
+    </button>
     <button mat-raised-button color="accent" (click)="onClickArchive()">
       {{ isArchived ? "Unarchive This Habit" : "Archive This Habit" }}
+    </button>
+    <button mat-raised-button color="warn" (click)="onDelete()">
+      Delete this habit
     </button>
   </div>
 </div>

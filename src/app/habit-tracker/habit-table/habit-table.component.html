@@ -50,15 +50,10 @@
             "
           >
             <mat-icon>{{
-              findMatchingDate(
-                currentFullDate.getFullYear(),
-                currentFullDate.getMonth(),
-                i + 1
-              )
-                ? moodImage
-                : ""
-            }}</mat-icon></a
-          >
+              currentFullDate.getFullYear()
+                | moodImage : currentFullDate.getMonth() : i + 1
+            }}</mat-icon>
+          </a>
         </td>
       </tr>
 

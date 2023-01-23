@@ -25,5 +25,6 @@ export class HabitService {
     const url = `${this.url}/archive/${id}`;
     console.log(value);
     return this.http.patch<Habit>(url, value);
+    // value = json object
   }
 }
