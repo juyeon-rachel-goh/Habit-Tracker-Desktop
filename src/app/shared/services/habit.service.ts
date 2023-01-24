@@ -40,14 +40,18 @@ export class HabitService {
 
   public changeCompletionStatus(recordSource: any) {
     const url = `${this.url}/change-habit-record`;
-    console.log(recordSource);
     return this.http.put<DailyHabitRecord>(url, recordSource);
   }
 
-  // public archiveHabit(value: string, id: string): Observable<Habit> {
-  //   const url = `${this.url}/archive/${id}`;
-  //   console.log(value);
-  //   return this.http.patch<Habit>(url, value);
-  //   // value = json object
-  // }
+  public archiveHabit(value: boolean, id: string) {
+    const url = `${this.url}/change-habit-record/${id}`;
+    const patchObject = [
+      {
+        op: 'replace',
+        path: 'archiveStatus',
+        value: value,
+      },
+    ];
+    return this.http.patch(url, patchObject);
+  }
 }

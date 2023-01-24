@@ -1,23 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { DailyMood } from 'src/app/shared/models/daily-mood';
 import { Habit } from 'src/app/shared/models/habit';
 import { format, getDaysInMonth } from 'date-fns';
 import { Select, Store } from '@ngxs/store';
-import { GetDailyMoods } from 'src/app/store/mood.action';
 import { Observable, map, take, tap } from 'rxjs';
-import { MoodState } from 'src/app/store/mood.state';
-import { GetHabits } from 'src/app/store/habit.action';
 import { HabitState } from 'src/app/store/habit.state';
-import { MoodService } from 'src/app/shared/services/mood.service';
-import { FormBuilder, Validators } from '@angular/forms';
-import { DailyHabitRecord } from 'src/app/shared/models/daily-habit-record';
-import { HabitService } from 'src/app/shared/services/habit.service';
-import { DailyHabitRecordState } from 'src/app/store/daily-record.state';
-import {
-  ChangeCompletionStatus,
-  GetDailyRecords,
-} from 'src/app/store/daily-record.action';
+
+import { ChangeCompletionStatus } from 'src/app/store/daily-record.action';
 
 @Component({
   selector: 'app-habit-table',
@@ -32,12 +21,7 @@ export class HabitTableComponent implements OnInit {
   public foundMatchingEventDate: boolean = false;
   public moodImage: string = '';
 
-  constructor(
-    private router: Router,
-    private store: Store,
-    private formBuilder: FormBuilder,
-    private habitService: HabitService
-  ) {}
+  constructor(private router: Router, private store: Store) {}
 
   ngOnInit(): void {
     this.daysInMonth = getDaysInMonth(
@@ -46,8 +30,6 @@ export class HabitTableComponent implements OnInit {
         this.currentFullDate.getMonth()
       )
     );
-
-    this.store.dispatch(new GetHabits());
   }
 
   ngAfterViewInit() {}
@@ -80,7 +62,6 @@ export class HabitTableComponent implements OnInit {
       date: eventDate,
       habitId: habitId,
     };
-    // look through state and if record exist, grab that value and assign to completionStatus
     this.store
       .dispatch(new ChangeCompletionStatus(recordSource))
       .pipe(
@@ -88,7 +69,6 @@ export class HabitTableComponent implements OnInit {
         tap(() => window.location.reload())
       )
       .subscribe();
-    // this.habitService.changeCompletionStatus(recordSource).subscribe();
   }
   //pass dailyhabitrecord to state
 }
