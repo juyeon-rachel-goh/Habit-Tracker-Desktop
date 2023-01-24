@@ -8,5 +8,5 @@ export interface Habit {
   iconColor: string;
   iconImage: string;
   createdOn: Date;
-  archiveStatus: string;
+  archiveStatus: boolean;
 }

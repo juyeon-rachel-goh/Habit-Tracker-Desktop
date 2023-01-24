@@ -12,6 +12,7 @@ import { HabitMainComponent } from './habit-tracker/habit-main/habit-main.compon
 import { AuthGuard } from './guards/auth.guard';
 import { DailyMoodsResolverService } from './shared/services/daily-moods-resolver.service';
 import { CompletionStatusResolver } from './shared/services/completion-status.resolver';
+import { HabitListResolver } from './shared/services/habit-list.resolver';
 
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -36,6 +37,7 @@ const routes: Routes = [
             resolve: {
               dailyMood: DailyMoodsResolverService,
               dailyRecord: CompletionStatusResolver,
+              habitList: HabitListResolver,
             },
           },
           { path: 'habit-new', component: HabitEditComponent }, // Add new habit

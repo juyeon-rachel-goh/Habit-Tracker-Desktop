@@ -13,11 +13,10 @@ import { HabitState } from 'src/app/store/habit.state';
   styleUrls: ['./habit-detail.component.scss'],
 })
 export class HabitDetailComponent implements OnInit {
-  @Select(HabitState.habitsList) habitsList?: Observable<Habit[]>;
   public habitData?: Habit;
   public habitId: string = '';
   public currentArchiveStatus: string = '';
-  public isArchived!: string;
+  public isArchived!: boolean;
   constructor(
     private store: Store,
     private route: ActivatedRoute,
@@ -35,25 +34,20 @@ export class HabitDetailComponent implements OnInit {
         this.habitId
       );
     });
-
-    // call transform data function for habitForm
-    // this.setHabitFormbyID(this.habitId)
-
-    //getHabitbyId -> display values
-    //store values into a form
   }
 
   onClickArchive(): void {
     // button to patch value inside of the form and dispatch update action
-    // this.habitData?.subscribe(
-    //   (data) => (this.currentArchiveStatus = data.archiveStatus)
-    // );
-    // if (this.currentArchiveStatus == '0') {
-    //   this.isArchived = '1';
-    // } else {
-    //   this.isArchived = '0';
-    // }
-    // this.habitService.archiveHabit(this.isArchived, this.habitId);
+    const currentStatus = this.store.selectSnapshot(HabitState.getHabitbyId)(
+      this.habitId
+    )?.archiveStatus;
+    console.log(currentStatus);
+    if (currentStatus == false) {
+      this.isArchived = true;
+    } else {
+      this.isArchived = false;
+    }
+    this.habitService.archiveHabit(this.isArchived, this.habitId).subscribe();
   }
 
   onEdit(): void {
