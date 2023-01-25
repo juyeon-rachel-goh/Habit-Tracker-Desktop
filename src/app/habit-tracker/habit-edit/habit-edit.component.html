@@ -1,6 +1,6 @@
 <div class="container w-50">
   <form
-    [formGroup]="newHabitForm"
+    [formGroup]="habitForm"
     (ngSubmit)="onSaveHabit()"
     class="form-width mx-auto"
   >
@@ -11,7 +11,7 @@
       <app-textfield
         label="Name"
         id="habitName"
-        [inputFormControl]="newHabitForm.get('habitName') | asFormControl"
+        [inputFormControl]="habitForm.get('habitName') | asFormControl"
       ></app-textfield>
     </div>
 
@@ -22,7 +22,7 @@
         <input
           type="radio"
           value="{{ frequency }}"
-          [formControl]="newHabitForm.get('frequency') | asFormControl"
+          [formControl]="habitForm.get('frequency') | asFormControl"
         />
         <label for="{{ frequency }}">{{ frequency }}</label>
       </div>
@@ -30,7 +30,7 @@
       <app-textfield
         label="Count per Frequency"
         type="number"
-        [inputFormControl]="newHabitForm.get('countPerFreq') | asFormControl"
+        [inputFormControl]="habitForm.get('countPerFreq') | asFormControl"
       ></app-textfield>
     </div>
 
@@ -39,7 +39,7 @@
       <div class="sub-heading">Pick an Icon</div>
       <span class="px-1" *ngFor="let img of enumIconImage | keys">
         <app-icon-selector
-          [iconFormControl]="newHabitForm.get('iconImage') | asFormControl"
+          [iconFormControl]="habitForm.get('iconImage') | asFormControl"
           name="iconImage"
           value="{{ img }}"
           icon="{{ img }}"
@@ -53,7 +53,7 @@
       <div class="sub-heading">Pick a Color</div>
       <span class="px-1" *ngFor="let color of enumIconColor | keys">
         <app-icon-selector
-          [iconFormControl]="newHabitForm.get('iconColor') | asFormControl"
+          [iconFormControl]="habitForm.get('iconColor') | asFormControl"
           name="iconColor"
           value="{{ color }}"
           style.color="{{ color }}"
