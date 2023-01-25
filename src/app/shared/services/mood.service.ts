@@ -16,13 +16,13 @@ export class MoodService {
   }
 
   //Upserting
-  public updateMood(dailyMood: DailyMood) {
-    const url = `${this.url}/update-mood`;
+  public upsertMood(dailyMood: DailyMood) {
+    const url = `${this.url}/mood/upsert`;
     return this.http.put<DailyMood>(url, dailyMood);
   }
 
   public deleteMood(id: string) {
-    const url = `${this.url}/delete-mood/${id}`;
+    const url = `${this.url}/mood/delete/${id}`;
     return this.http.delete<DailyMood[]>(url);
   }
 }

@@ -9,10 +9,12 @@ import { HabitService } from 'src/app/shared/services/habit.service';
 import { Freqeuncy } from 'src/app/habit-tracker/enums/frequency';
 import { IconColor } from 'src/app/habit-tracker/enums/icon-color';
 import { IconImage } from 'src/app/habit-tracker/enums/icon-image';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Habit } from 'src/app/shared/models/habit';
 import { Store } from '@ngxs/store';
 import { HabitState } from 'src/app/store/habit.state';
+import { UpsertHabit } from 'src/app/store/habit.action';
+import { catchError, take, tap } from 'rxjs';
 
 @Component({
   selector: 'app-habit-edit',
@@ -25,35 +27,43 @@ export class HabitEditComponent implements OnInit {
   public enumFrequency = Freqeuncy;
   public enumIconColor = IconColor;
   public enumIconImage = IconImage;
-  private editMode: boolean = false; // html button = "submit"
   private id?: string;
 
   constructor(
     private formBuilder: FormBuilder,
     private habitService: HabitService,
     private activatedroute: ActivatedRoute,
-    private store: Store
+    private store: Store,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
     this.id = this.activatedroute.snapshot.paramMap.get('id') || '';
     console.log(this.id);
     if (this.id) {
-      this.editMode = true; // html button = "save the change"
       this.habitData = this.store.selectSnapshot(HabitState.getHabitbyId)(
         this.id
       );
       this.initForm(this.habitData);
-      this.habitForm.addControl('id', new FormControl(this.id)); // form automatically pass ID when editMode
+      this.habitForm.addControl('id', new FormControl(this.id));
       console.log(this.habitData);
     } else {
       this.initForm();
     }
   }
 
-  onSaveHabit() {
-    console.log(this.habitForm);
-    // this.habitService.upsertHabit(this.habitForm.value).subscribe();
+  onSubmit() {
+    // disable button
+    this.store
+      .dispatch(new UpsertHabit(this.habitForm.value))
+      .pipe(
+        take(1),
+        tap(() => this.router.navigate(['/habit-tracker'])),
+        catchError((err) => {
+          throw alert(err.message);
+        })
+      )
+      .subscribe();
     // loading spinner -> submission successful! ->
     // this.habitForm.reset(); -> redirect to mainpage after 3 sec (countdown)
   }

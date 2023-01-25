@@ -5,7 +5,7 @@ export class GetDailyMoods {
   constructor() {}
 }
 
-export class UpdateDailyMood {
+export class UpsertDailyMood {
   static readonly type = '[Mood] Update DailyMoods';
   constructor(public dailyMood: DailyMood) {}
 }
