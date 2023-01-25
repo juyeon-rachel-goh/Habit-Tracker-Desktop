@@ -22,15 +22,10 @@ export class HabitService {
     return this.http.get<DailyHabitRecord[]>(url);
   }
 
-  public addHabit(habit: Habit): Observable<Habit> {
-    const url = `${this.url}/new-habit`;
-    return this.http.post<Habit>(url, habit);
+  public upsertHabit(habit: Habit) {
+    const url = `${this.url}/upsert-habit`;
+    return this.http.put<Habit>(url, habit);
   }
-
-  // public updateHabit(habit: Habit) {
-  //   const url = `${this.url}/update-habit`;
-  //   return this.http.put<Habit>(url, habit);
-  // }
 
   public deleteHabit(id: string) {
     console.log('delete habit service called!' + id);

@@ -4,10 +4,10 @@ import { tap } from 'rxjs';
 import { patch, updateItem } from '@ngxs/store/operators';
 import { Habit } from '../shared/models/habit';
 import { HabitService } from '../shared/services/habit.service';
-import { DeleteHabit, GetHabits } from './habit.action';
-
+import { DeleteHabit, GetHabits, UpsertHabit } from './habit.action';
+import { produce } from 'immer';
 export class HabitInterface {
-  habits?: Habit[];
+  habits: Habit[] = [];
 }
 
 @State<HabitInterface>({
@@ -30,8 +30,25 @@ export class HabitState {
       })
     );
   }
-  //   @Action(UpdateDailyMood) //UPSERTING
-  //   updateDailyMood(ctx: StateContext<DailyMoodInterface>) {}
+
+  @Action(UpsertHabit)
+  upsertHabit(ctx: StateContext<HabitInterface>, { habit }: UpsertHabit) {
+    return this.habitService.upsertHabit(habit).pipe(
+      tap(() => {
+        const state = produce(ctx.getState(), (draft) => {
+          // draft = copy of state
+          const index = draft.habits.findIndex((data) => data.id === habit.id);
+          // It exists then let's update
+          if (index > -1) {
+            draft.habits[index] = habit;
+          } else {
+            draft.habits.push(habit);
+          }
+        });
+        ctx.setState(state);
+      })
+    );
+  }
 
   @Action(DeleteHabit)
   deleteDailyMood(ctx: StateContext<HabitInterface>, { habitId }: DeleteHabit) {

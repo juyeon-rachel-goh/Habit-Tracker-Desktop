@@ -50,8 +50,8 @@ export class HabitDetailComponent implements OnInit {
     this.habitService.archiveHabit(this.isArchived, this.habitId).subscribe();
   }
 
-  onEdit(): void {
-    // redirect to edit/add page and do something there
+  onEdit(id: string) {
+    this.router.navigate([`/habit-tracker/habit-edit/${id}`]);
   }
 
   onDelete() {
