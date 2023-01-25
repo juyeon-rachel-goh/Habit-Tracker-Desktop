@@ -14,8 +14,7 @@ import { ChangeCompletionStatus } from 'src/app/store/daily-record.action';
   styleUrls: ['./habit-table.component.scss'],
 })
 export class HabitTableComponent implements OnInit {
-  @Select(HabitState.habitsList) habitsList?: Observable<Habit[]>;
-
+  public habitsList: Habit[] = [];
   public currentFullDate = new Date();
   public daysInMonth: number = 0;
   public foundMatchingEventDate: boolean = false;
@@ -30,9 +29,9 @@ export class HabitTableComponent implements OnInit {
         this.currentFullDate.getMonth()
       )
     );
-  }
 
-  ngAfterViewInit() {}
+    this.habitsList = this.store.selectSnapshot(HabitState.habitsList);
+  }
 
   public changeMonth(direction: number) {
     this.currentFullDate = new Date(
@@ -47,8 +46,9 @@ export class HabitTableComponent implements OnInit {
   }
 
   public onOpenMoodSelector(year: number, month: number, date: number) {
-    const id = format(new Date(year, month, date), 'MM/dd/yyyy'); // String format
-    this.router.navigate(['habit-tracker/mood-selector', id]);
+    // find real mood id based on year/month/date
+    const eventDate = format(new Date(year, month, date), 'MM/dd/yyyy'); // String format
+    this.router.navigate(['habit-tracker/mood-selector', eventDate]);
   }
 
   public onChangeCompletionStatus(

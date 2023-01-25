@@ -71,7 +71,7 @@
       </tr>
 
       <!-- 4th Row : Habit list starts -->
-      <tr *ngFor="let habit of habitsList | async">
+      <tr *ngFor="let habit of habitsList">
         <th [routerLink]="'habit-detail/' + habit.id" style="cursor: pointer">
           {{ habit.habitName }}
         </th>

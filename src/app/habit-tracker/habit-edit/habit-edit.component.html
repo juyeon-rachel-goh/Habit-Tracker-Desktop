@@ -1,7 +1,7 @@
 <div class="container w-50">
   <form
     [formGroup]="habitForm"
-    (ngSubmit)="onSaveHabit()"
+    (ngSubmit)="onSubmit()"
     class="form-width mx-auto"
   >
     <div class="heading">Add A New Habit</div>
@@ -64,11 +64,23 @@
     </div>
 
     <div class="py-5">
-      <button mat-flat-button color="accent" [routerLink]="['../']">
+      <button
+        mat-flat-button
+        type="button"
+        color="accent"
+        [routerLink]="['../']"
+      >
         Cancel
       </button>
       <span class="px-2"></span>
-      <button mat-flat-button color="primary">Save</button>
+      <button
+        mat-flat-button
+        type="submit"
+        color="primary"
+        [disabled]="!habitForm.valid"
+      >
+        Save
+      </button>
     </div>
   </form>
 </div>

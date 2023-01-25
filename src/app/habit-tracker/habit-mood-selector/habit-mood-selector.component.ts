@@ -1,13 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, ParamMap, Route, Router } from '@angular/router';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { Mood } from 'src/app/habit-tracker/enums/mood';
-import { MoodService } from 'src/app/shared/services/mood.service';
-import { Select, Store } from '@ngxs/store';
-import { DeleteDailyMood, UpdateDailyMood } from 'src/app/store/mood.action';
+import { Store } from '@ngxs/store';
+import { DeleteDailyMood, UpsertDailyMood } from 'src/app/store/mood.action';
 import { MoodState } from 'src/app/store/mood.state';
 import { Observable, catchError, map, switchMap, take, tap } from 'rxjs';
-import { DailyMood } from 'src/app/shared/models/daily-mood';
 
 @Component({
   selector: 'app-habit-mood-selector',
@@ -15,12 +18,12 @@ import { DailyMood } from 'src/app/shared/models/daily-mood';
   styleUrls: ['./habit-mood-selector.component.scss'],
 })
 export class HabitMoodSelectorComponent implements OnInit {
-  @Select(MoodState.dailyMoodList) dailyMoodList?: Observable<DailyMood[]>;
   enumMood = Mood;
   moodForm = new FormGroup({});
   moodToResetId?: string = '';
   eventDate: string = '';
   showResetButton = false;
+  id?: string;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -35,12 +38,20 @@ export class HabitMoodSelectorComponent implements OnInit {
         this.eventDate = params.get('id') || '';
       }
     });
+
+    this.id = this.store
+      .selectSnapshot(MoodState.dailyMoodList)
+      ?.find((data) => data.eventDate === this.eventDate)?.id;
+
     this.initForm();
   }
 
   onSubmitMood() {
+    if (this.id) {
+      this.moodForm.addControl('id', new FormControl(this.id));
+    }
     this.store
-      .dispatch(new UpdateDailyMood(this.moodForm.value))
+      .dispatch(new UpsertDailyMood(this.moodForm.value))
       .pipe(
         take(1),
         tap(() => this.router.navigate(['/habit-tracker']))

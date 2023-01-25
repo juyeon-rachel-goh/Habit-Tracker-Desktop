@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
-import { DeleteDailyMood, GetDailyMoods, UpdateDailyMood } from './mood.action';
+import { DeleteDailyMood, GetDailyMoods, UpsertDailyMood } from './mood.action';
 import { MoodService } from '../shared/services/mood.service';
 import { tap } from 'rxjs';
 import { DailyMood } from '../shared/models/daily-mood';
@@ -31,12 +31,12 @@ export class MoodState {
     );
   }
 
-  @Action(UpdateDailyMood) //UPSERTING
-  updateDailyMood(
+  @Action(UpsertDailyMood) //UPSERTING
+  upsertDailyMood(
     ctx: StateContext<DailyMoodInterface>,
-    { dailyMood }: UpdateDailyMood
+    { dailyMood }: UpsertDailyMood
   ) {
-    return this.moodService.updateMood(dailyMood).pipe(
+    return this.moodService.upsertMood(dailyMood).pipe(
       tap((result) => {
         ctx.setState(
           patch<DailyMoodInterface>({
