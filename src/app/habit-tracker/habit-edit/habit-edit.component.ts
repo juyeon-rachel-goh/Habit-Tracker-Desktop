@@ -5,7 +5,6 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { HabitService } from 'src/app/shared/services/habit.service';
 import { Freqeuncy } from 'src/app/habit-tracker/enums/frequency';
 import { IconColor } from 'src/app/habit-tracker/enums/icon-color';
 import { IconImage } from 'src/app/habit-tracker/enums/icon-image';
@@ -31,7 +30,6 @@ export class HabitEditComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private habitService: HabitService,
     private activatedroute: ActivatedRoute,
     private store: Store,
     private router: Router
@@ -46,7 +44,14 @@ export class HabitEditComponent implements OnInit {
       );
       this.initForm(this.habitData);
       this.habitForm.addControl('id', new FormControl(this.id));
-      console.log(this.habitData);
+      this.habitForm.addControl(
+        'archiveStatus',
+        new FormControl(this.habitData?.archiveStatus)
+      );
+      this.habitForm.addControl(
+        'createdOn',
+        new FormControl(this.habitData?.createdOn)
+      );
     } else {
       this.initForm();
     }

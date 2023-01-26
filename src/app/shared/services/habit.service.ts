@@ -28,7 +28,6 @@ export class HabitService {
   }
 
   public deleteHabit(id: string) {
-    console.log('delete habit service called!' + id);
     const url = `${this.url}/delete-habit/${id}`;
     return this.http.delete<Habit>(url);
   }
