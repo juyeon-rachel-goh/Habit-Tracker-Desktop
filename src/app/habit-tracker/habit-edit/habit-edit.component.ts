@@ -96,7 +96,7 @@ export class HabitEditComponent implements OnInit {
       frequency: [habit?.frequency ?? '', [Validators.required]],
       countPerFreq: [
         habit?.countPerFreq ?? '',
-        [Validators.required, Validators.min(1), Validators.max(7)],
+        [Validators.required, Validators.min(1)],
       ],
       iconImage: [habit?.iconImage ?? '', [Validators.required]],
       iconColor: [habit?.iconColor ?? '', [Validators.required]],
