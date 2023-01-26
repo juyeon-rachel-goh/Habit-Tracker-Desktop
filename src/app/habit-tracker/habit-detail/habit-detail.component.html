@@ -1,13 +1,40 @@
 <div class="container">
   <!-- HabitData = object {} -->
   <div *ngIf="habitData; let data">
-    <p>{{ data.habitName }}</p>
-    <p>{{ data.frequency }}</p>
-    <p>{{ data.countPerFreq }}</p>
-    <p>{{ data.iconColor }}</p>
-    <p>{{ data.iconImage }}</p>
-    <p>{{ data.createdOn }}</p>
-    <p>{{ data.archiveStatus }}</p>
+    <!-- Habit Information -->
+    <div class="container">
+      <h1>{{ data.habitName }}</h1>
+      <h4>Target: {{ data.countPerFreq }}x/{{ data.frequency }}</h4>
+      <h4>Start Date: {{ data.createdOn | date : "MMMM d, y" }}</h4>
+    </div>
+
+    <!-- Box for Number of Complete and Streaks -->
+    <div class="container">
+      <div class="d-flex flex-row p-2">
+        <div class="card" style="width: 18rem">
+          <div class="card-body">
+            <h2 class="">{{ numOfCompletion }}</h2>
+            <p class="card-text">Number of Completion</p>
+          </div>
+        </div>
+        <div class="card" style="width: 18rem">
+          <div class="card-body">
+            <h2 class="">{{ currentStreak }}</h2>
+            <p class="card-text">Current Streak</p>
+          </div>
+        </div>
+        <div class="card" style="width: 18rem">
+          <div class="card-body">
+            <h2 class="">{{ bestStreak }}</h2>
+            <p class="card-text">Best Streak</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Habit Score Pie Chart  -->
+
+    <!-- Events -->
     <button mat-raised-button color="primary" (click)="onEdit(data.id!)">
       Edit this habit
     </button>
