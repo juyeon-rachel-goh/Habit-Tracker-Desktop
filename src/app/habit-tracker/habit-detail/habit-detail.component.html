@@ -8,8 +8,8 @@
       <h4>Start Date: {{ data.createdOn | date : "MMMM d, y" }}</h4>
     </div>
 
-    <!-- Box for Number of Complete and Streaks -->
     <div class="container">
+      <!-- Box for Number of Complete and Streaks -->
       <div class="d-flex flex-row p-2">
         <div class="card" style="width: 18rem">
           <div class="card-body">
@@ -30,9 +30,41 @@
           </div>
         </div>
       </div>
+      <!-- Current Goal Pie Chart  -->
+      <div class="d-flex flex-row flex-wrap">
+        <circle-progress
+          [percent]="progress"
+          [radius]="75"
+          [outerStrokeWidth]="10"
+          [innerStrokeWidth]="5"
+          [outerStrokeColor]="'#78C000'"
+          [innerStrokeColor]="'#C7E596'"
+          [backgroundPadding]="40"
+          [unitsFontSize]="'15'"
+          [titleFontWeight]="'700'"
+          [subtitleFontSize]="'12'"
+          [animation]="true"
+          [animationDuration]="300"
+          [subtitle]="'Goal Met'"
+        ></circle-progress>
+        <!-- Habit Score Pie Chart  -->
+        <circle-progress
+          [percent]="habitScore"
+          [radius]="75"
+          [outerStrokeWidth]="10"
+          [innerStrokeWidth]="5"
+          [outerStrokeColor]="'#fa8107'"
+          [innerStrokeColor]="'#fcc388'"
+          [backgroundPadding]="40"
+          [unitsFontSize]="'15'"
+          [titleFontWeight]="'700'"
+          [subtitleFontSize]="'12'"
+          [animation]="true"
+          [animationDuration]="300"
+          [subtitle]="'Overall Score'"
+        ></circle-progress>
+      </div>
     </div>
-
-    <!-- Habit Score Pie Chart  -->
 
     <!-- Events -->
     <button mat-raised-button color="primary" (click)="onEdit(data.id!)">
