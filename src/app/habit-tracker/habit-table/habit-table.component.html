@@ -2,12 +2,12 @@
   <h1 class="">Habit Tracker Main Page</h1>
 
   <div class="d-flex flex-row">
-    <button type="button" (click)="changeMonth(-1)">
+    <button type="button" (click)="changeMonth('prev')">
       <mat-icon matTooltip="Display Previous Month">navigate_before</mat-icon>
     </button>
     <h2>{{ currentFullDate | date : "MMMM YYYY" }}</h2>
 
-    <button type="button" (click)="changeMonth(1)">
+    <button type="button" (click)="changeMonth('next')">
       <mat-icon matTooltip="Display Next Month">navigate_next</mat-icon>
     </button>
   </div>
@@ -20,83 +20,95 @@
       Archived Habits
     </button>
   </div>
+  <div style="overflow-x: auto">
+    <table>
+      <ng-container>
+        <!-- 1st row -->
+        <tr>
+          <th>Date</th>
+          <td class="" *ngFor="let n of daysInMonth | range; let i = index">
+            {{ n }}
+          </td>
+        </tr>
+        <!-- 2nd row -->
+        <tr>
+          <th>Mood</th>
 
-  <table style="width: 100%; margin-top: 10pt">
-    <ng-container>
-      <!-- 1st row -->
-      <tr>
-        <th>Date</th>
-        <td class="right" *ngFor="let n of daysInMonth | range; let i = index">
-          {{ n }}
-        </td>
-      </tr>
-      <!-- 2nd row -->
-      <tr>
-        <th>Mood</th>
-
-        <td
-          class="right"
-          style="cursor: pointer"
-          *ngFor="let n of daysInMonth | range; let i = index"
-        >
-          <!-- need to pass fulldate  -->
-          <a
-            (click)="
-              onOpenMoodSelector(
-                currentFullDate.getFullYear(),
-                currentFullDate.getMonth(),
-                i + 1
-              )
-            "
+          <td
+            class=""
+            style="cursor: pointer"
+            *ngFor="let n of daysInMonth | range; let i = index"
           >
-            <mat-icon>{{
-              currentFullDate.getFullYear()
-                | moodImage : currentFullDate.getMonth() : i + 1
-            }}</mat-icon>
-          </a>
-        </td>
-      </tr>
+            <!-- need to pass fulldate  -->
+            <a
+              (click)="
+                onOpenMoodSelector(
+                  currentFullDate.getFullYear(),
+                  currentFullDate.getMonth(),
+                  i + 1
+                )
+              "
+            >
+              <mat-icon class="material-icons">{{
+                currentFullDate.getFullYear()
+                  | moodImage : currentFullDate.getMonth() : i + 1
+              }}</mat-icon>
+            </a>
+          </td>
+        </tr>
 
-      <!-- 3rd Row -->
-      <tr>
-        <th>Days</th>
-        <td class="right" *ngFor="let n of daysInMonth | range; let i = index">
-          {{
-            n
-              | getDay
-                : currentFullDate.getMonth()
-                : currentFullDate.getFullYear()
-          }}
-        </td>
-      </tr>
+        <!-- 3rd Row -->
+        <tr>
+          <th>Days</th>
+          <td class="" *ngFor="let n of daysInMonth | range; let i = index">
+            {{
+              n
+                | getDay
+                  : currentFullDate.getMonth()
+                  : currentFullDate.getFullYear()
+                | slice : 0 : 3
+            }}
+          </td>
+        </tr>
 
-      <!-- 4th Row : Habit list starts -->
-      <tr *ngFor="let habit of habitsList">
-        <th [routerLink]="'habit-detail/' + habit.id" style="cursor: pointer">
-          {{ habit.habitName }}
-        </th>
-        <td
-          class="right"
-          style="cursor: pointer"
-          *ngFor="let n of daysInMonth | range; let i = index"
-        >
-          <a
-            (dblclick)="
-              onChangeCompletionStatus(
+        <!-- 4th Row : Habit list starts -->
+
+        <tr *ngFor="let habit of habitsList">
+          <th [routerLink]="'habit-detail/' + habit.id" style="cursor: pointer">
+            {{ habit.habitName }}
+          </th>
+          <td
+            class=""
+            style="cursor: pointer"
+            *ngFor="let n of daysInMonth | range; let i = index"
+            [ngStyle]="{
+              'background-color': enableButtonAndStyle(
                 currentFullDate.getFullYear(),
                 currentFullDate.getMonth(),
                 i + 1,
                 habit.id!
               )
-            "
+            }"
           >
-            <mat-icon [ngStyle]="{ color: habit.iconColor }">{{
-              currentFullDate.getFullYear()
-                | iconImage : currentFullDate.getMonth() : i + 1 : habit.id!
-            }}</mat-icon>
-          </a>
-        </td>
-      </tr>
-    </ng-container>
-  </table>
+            <button
+              [disabled]="!enableClick"
+              (dblclick)="
+                onChangeCompletionStatus(
+                  currentFullDate.getFullYear(),
+                  currentFullDate.getMonth(),
+                  i + 1,
+                  habit.id!
+                )
+              "
+            >
+              <mat-icon [ngStyle]="{ color: habit.iconColor }">{{
+                currentFullDate.getFullYear()
+                  | iconImage : currentFullDate.getMonth() : i + 1 : habit.id!
+              }}</mat-icon>
+            </button>
+          </td>
+        </tr>
+      </ng-container>
+    </table>
+  </div>
 </div>
