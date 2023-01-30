@@ -70,5 +70,4 @@ export class HabitTableComponent implements OnInit {
       )
       .subscribe();
   }
-  //pass dailyhabitrecord to state
 }
