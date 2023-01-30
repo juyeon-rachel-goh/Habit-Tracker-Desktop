@@ -11,13 +11,16 @@ import {
   differenceInDays,
   differenceInMonths,
   differenceInWeeks,
+  endOfDay,
   endOfMonth,
   endOfWeek,
+  endOfYesterday,
   format,
   getDaysInMonth,
   isWithinInterval,
   startOfMonth,
   startOfWeek,
+  subDays,
 } from 'date-fns';
 import { start } from 'repl';
 import { Observable, catchError, take, tap } from 'rxjs';
@@ -162,7 +165,6 @@ export class HabitDetailComponent implements OnInit {
     let delta: (date: Date) => number;
     let startDateFunction: (date: Date) => Date;
     let frequency: (startDate: Date, endDate: Date) => number;
-
     switch (this.habitData?.frequency) {
       case Freqeuncy.Day:
         delta = (date: Date) => {
@@ -206,43 +208,50 @@ export class HabitDetailComponent implements OnInit {
     const records = this.store
       .selectSnapshot(DailyHabitRecordState.dailyCompletionStatus)
       ?.filter((record) => record.habitId === this.habitData?.id);
-    // sort records by date
     if (records && records?.length === 0) {
       return 0;
     } else if (records) {
-      const earliestDate = new Date(records[0].date);
+      const earliestDate = new Date(records[0].date); // CANNOT be before creation date for accurate value or just grayout cells before creation date (unclickable)
       console.log(records);
       let startDate = startDateFunction(earliestDate);
-      let endDate = new Date(records[records.length - 1].date);
+      // let endDate = new Date(records[records.length - 1].date);
+      // As of 1/30, Currentstreak should be reset to 0 between 1/26~1/30 if user did not perform the task since 1/25.
+      // Streakcount won't reset until it checks the date against record.date
+      let endDate = new Date();
 
       const diffInTime = frequency(endDate, startDate);
-      // console.log(startDate);
-      // console.log(endDate);
-      // console.log(diffInTime);
       let currentStreak = 0;
-      for (let i = 0; i < diffInTime; i++) {
+      for (let i = 0; i <= diffInTime; i++) {
+        // i <= diffInTime to include last record
         let startDateofInterval = startDate;
-        let endDateofInterval = addDays(
+        let nextStartDateofInterval = addDays(
+          // need new Date starting at 00:00:00
           startDateofInterval,
           delta(startDateofInterval)
         );
+        let endDateTimeofInterval = endOfDay(
+          // endDateTime is 23:59:59 of last day of cycle
+          subDays(nextStartDateofInterval, 1)
+        );
         let filteredArray = records.filter(
           (item) =>
+            item.completionStatus &&
             isWithinInterval(new Date(item.date), {
               start: startDateofInterval,
-              end: endDateofInterval,
-            }) && item.completionStatus
+              end: endDateTimeofInterval, //need 23:59:59 of the previouse date (if previous date record is included legnth will be 1 min. all the time),
+            })
         );
-        // console.log(filteredArray.length);
-        // console.log(this.habitData.countPerFreq);
+        console.log('interval starts: ' + startDateofInterval);
+        console.log('interval ends: ' + endDateTimeofInterval);
+        console.log('Records found within the interval: ');
+        console.log(filteredArray);
         if (filteredArray.length >= this.habitData.countPerFreq) {
           currentStreak += 1;
         } else {
           currentStreak = 0;
         }
-        startDate = endDateofInterval;
-        // console.log(filteredArray);
-        // console.log(currentStreak);
+        startDate = nextStartDateofInterval;
+        console.log('next interval starts at: ' + startDate);
       }
       return currentStreak;
     }

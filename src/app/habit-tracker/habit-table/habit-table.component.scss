@@ -1,8 +1,31 @@
 table {
   empty-cells: show;
+  width: 100%;
+  margin-top: 10pt;
+  margin-bottom: 30pt;
 }
 th,
 td {
-  border: 1px solid gray;
-  padding: 10px;
+  margin: auto;
+  text-align: center;
+  border-bottom: 1px solid #ddd;
+}
+
+td:hover {
+  background-color: rgb(245, 245, 121);
+}
+
+button {
+  padding: 0;
+  border: none;
+  background: none;
+  margin: auto;
+  display: block;
+}
+
+.material-icons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
 }
