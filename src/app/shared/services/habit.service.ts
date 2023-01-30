@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { Habit } from '../models/habit';
 import { id } from 'date-fns/locale';
 import { DailyHabitRecord } from '../models/daily-habit-record';
+import { CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY_PROVIDER_FACTORY } from '@angular/cdk/overlay/overlay-directives';
 
 @Injectable({
   providedIn: 'root',
@@ -38,11 +39,12 @@ export class HabitService {
   }
 
   public archiveHabit(value: boolean, id: string) {
-    const url = `${this.url}/change-habit-record/${id}`;
+    const url = `${this.url}/archive/${id}`;
+    // send over true or false instead of patch doc
     const patchObject = [
       {
         op: 'replace',
-        path: 'archiveStatus',
+        path: '/archiveStatus',
         value: value,
       },
     ];
