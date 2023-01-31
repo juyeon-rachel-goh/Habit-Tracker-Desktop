@@ -1,0 +1,23 @@
+<h1 mat-dialog-title>Archived Habits</h1>
+<mat-list mat-dialog-content *ngFor="let habit of archivedHabits">
+  <div class="d-flex flex-row justify-content-between align-items-center py-2">
+    <div matListItemTitle>{{ habit.habitName }}</div>
+    <div>
+      <button mat-raised-button color="accent" (click)="onClick(habit.id!)">
+        Unarchive
+      </button>
+    </div>
+  </div>
+
+  <mat-divider></mat-divider>
+</mat-list>
+<mat-paginator
+  [length]="100"
+  [pageSize]="10"
+  [pageSizeOptions]="[5, 10, 25, 100]"
+  aria-label="Select page"
+>
+</mat-paginator>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Close</button>
+</mat-dialog-actions>

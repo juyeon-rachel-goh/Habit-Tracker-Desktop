@@ -13,6 +13,7 @@ import { AuthGuard } from './guards/auth.guard';
 import { DailyMoodsResolverService } from './shared/services/daily-moods-resolver.service';
 import { CompletionStatusResolver } from './shared/services/completion-status.resolver';
 import { HabitListResolver } from './shared/services/habit-list.resolver';
+import { HabitArchiveComponent } from './habit-tracker/habit-archive/habit-archive.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -40,13 +41,14 @@ const routes: Routes = [
               habitList: HabitListResolver,
             },
           },
-          { path: 'habit-new', component: HabitEditComponent }, // Add new habit
-          { path: 'habit-edit/:id', component: HabitEditComponent }, // Edit + Delete
-          { path: 'habit-detail/:id', component: HabitDetailComponent }, // View selected habit
+          { path: 'new', component: HabitEditComponent }, // Add new habit
+          { path: 'edit/:id', component: HabitEditComponent }, // Edit + Delete
+          { path: 'detail/:id', component: HabitDetailComponent }, // View selected habit
+          { path: 'archive', component: HabitArchiveComponent },
           {
             path: 'mood-selector/:id',
             component: HabitMoodSelectorComponent,
-          }, // Daily Mood Selector - grab id of Date?
+          },
         ],
       },
     ],

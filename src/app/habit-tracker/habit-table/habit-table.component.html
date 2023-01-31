@@ -2,21 +2,21 @@
   <h1 class="">Habit Tracker Main Page</h1>
 
   <div class="d-flex flex-row">
-    <button type="button" (click)="changeMonth('prev')">
+    <button type="button" (click)="loadMonth('prev')">
       <mat-icon matTooltip="Display Previous Month">navigate_before</mat-icon>
     </button>
     <h2>{{ currentFullDate | date : "MMMM YYYY" }}</h2>
 
-    <button type="button" (click)="changeMonth('next')">
+    <button type="button" (click)="loadMonth('next')">
       <mat-icon matTooltip="Display Next Month">navigate_next</mat-icon>
     </button>
   </div>
   <div class="py-2 d-flex flex-row justify-content-between">
-    <button mat-flat-button color="primary" [routerLink]="['habit-new']">
+    <button mat-flat-button color="primary" [routerLink]="['new']">
       Add New Habit
     </button>
     <!-- TODO: Display archived habits only (to delete, unarchive or just view) -->
-    <button mat-flat-button color="primary" [routerLink]="['/']">
+    <button mat-flat-button color="primary" (click)="onOpenArchive()">
       Archived Habits
     </button>
   </div>
@@ -74,7 +74,7 @@
         <!-- 4th Row : Habit list starts -->
 
         <tr *ngFor="let habit of habitsList">
-          <th [routerLink]="'habit-detail/' + habit.id" style="cursor: pointer">
+          <th [routerLink]="'detail/' + habit.id" style="cursor: pointer">
             {{ habit.habitName }}
           </th>
           <td
