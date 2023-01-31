@@ -4,7 +4,12 @@ import { tap } from 'rxjs';
 import { patch, updateItem } from '@ngxs/store/operators';
 import { Habit } from '../shared/models/habit';
 import { HabitService } from '../shared/services/habit.service';
-import { DeleteHabit, GetHabits, UpsertHabit } from './habit.action';
+import {
+  ArchiveHabit,
+  DeleteHabit,
+  GetHabits,
+  UpsertHabit,
+} from './habit.action';
 import { produce } from 'immer';
 export class HabitInterface {
   habits: Habit[] = [];
@@ -62,6 +67,23 @@ export class HabitState {
           ...state,
           habits: filteredArray,
         });
+      })
+    );
+  }
+
+  @Action(ArchiveHabit)
+  archiveHabit(
+    ctx: StateContext<HabitInterface>,
+    { status, habitId }: ArchiveHabit
+  ) {
+    return this.habitService.archiveHabit(status, habitId).pipe(
+      tap(() => {
+        const state = produce(ctx.getState(), (draft) => {
+          // draft = copy of state
+          const index = draft.habits.findIndex((data) => data.id === habitId);
+          draft.habits[index].archiveStatus = status;
+        });
+        ctx.setState(state);
       })
     );
   }

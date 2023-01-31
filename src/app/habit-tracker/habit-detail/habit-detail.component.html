@@ -64,17 +64,20 @@
           [subtitle]="'Overall Score'"
         ></circle-progress>
       </div>
+      <!-- Events -->
+      <div class="container py-3">
+        <button mat-raised-button color="primary" (click)="onEdit(data.id!)">
+          Edit
+        </button>
+        <span class="px-2"></span>
+        <button mat-raised-button color="accent" (click)="onClickArchive()">
+          {{ isArchived ? "Unarchive" : "Archive" }}
+        </button>
+        <span class="px-2"></span>
+        <button mat-raised-button color="warn" (click)="onDelete()">
+          Delete
+        </button>
+      </div>
     </div>
-
-    <!-- Events -->
-    <button mat-raised-button color="primary" (click)="onEdit(data.id!)">
-      Edit this habit
-    </button>
-    <button mat-raised-button color="accent" (click)="onClickArchive()">
-      {{ isArchived ? "Unarchive This Habit" : "Archive This Habit" }}
-    </button>
-    <button mat-raised-button color="warn" (click)="onDelete()">
-      Delete this habit
-    </button>
   </div>
 </div>

@@ -3,17 +3,18 @@ import { Router } from '@angular/router';
 import { Habit } from 'src/app/shared/models/habit';
 import {
   addMonths,
+  endOfMonth,
   format,
   getDaysInMonth,
   isBefore,
   subMonths,
 } from 'date-fns';
-import { Select, Store } from '@ngxs/store';
-import { Observable, map, take, tap } from 'rxjs';
+import { Store } from '@ngxs/store';
+import { take, tap } from 'rxjs';
 import { HabitState } from 'src/app/store/habit.state';
-
 import { ChangeCompletionStatus } from 'src/app/store/daily-record.action';
-
+import { MatDialog } from '@angular/material/dialog';
+import { HabitArchiveComponent } from '../habit-archive/habit-archive.component';
 @Component({
   selector: 'app-habit-table',
   templateUrl: './habit-table.component.html',
@@ -30,7 +31,8 @@ export class HabitTableComponent implements OnInit {
   constructor(
     private router: Router,
     private store: Store,
-    private ref: ChangeDetectorRef
+    private ref: ChangeDetectorRef,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -41,32 +43,37 @@ export class HabitTableComponent implements OnInit {
       )
     );
 
-    this.habitsList = this.store.selectSnapshot(HabitState.habitsList).filter(
-      (data) => isBefore(new Date(data.createdOn), this.currentFullDate) // add archive status filter
-    );
+    this.habitsList = this.store
+      .selectSnapshot(HabitState.habitsList)
+      .filter(
+        (data) =>
+          isBefore(new Date(data.createdOn), this.currentFullDate) &&
+          data.archiveStatus === false
+      );
   }
 
-  public changeMonth(direction: string) {
+  public loadMonth(direction: string) {
     if (direction === 'prev') {
-      this.currentFullDate = subMonths(this.currentFullDate, 1);
+      this.currentFullDate = endOfMonth(subMonths(this.currentFullDate, 1));
     } else if (direction === 'next') {
-      this.currentFullDate = addMonths(this.currentFullDate, 1);
+      this.currentFullDate = endOfMonth(addMonths(this.currentFullDate, 1)); // use lastday of month!! without endOfMonth, Feb -> Jan sets date to 1/28
     } else {
       console.warn('Not a valid action!!');
     }
     this.daysInMonth = getDaysInMonth(new Date(this.currentFullDate));
     this.habitsList = this.store
       .selectSnapshot(HabitState.habitsList)
-      .filter((data) =>
-        isBefore(new Date(data.createdOn), this.currentFullDate)
+      .filter(
+        (data) =>
+          isBefore(new Date(data.createdOn), this.currentFullDate) &&
+          data.archiveStatus === false
       );
-
+    console.log(this.currentFullDate);
     console.log(this.habitsList);
   }
 
   public onOpenMoodSelector(year: number, month: number, date: number) {
-    // find real mood id based on year/month/date
-    const eventDate = format(new Date(year, month, date), 'MM/dd/yyyy'); // String format
+    const eventDate = format(new Date(year, month, date), 'MM/dd/yyyy');
     this.router.navigate(['habit-tracker/mood-selector', eventDate]);
   }
 
@@ -76,7 +83,7 @@ export class HabitTableComponent implements OnInit {
     date: number,
     habitId: string
   ) {
-    const eventDate = format(new Date(year, month, date), 'MM/dd/yyyy'); // String format
+    const eventDate = format(new Date(year, month, date), 'MM/dd/yyyy');
     const recordSource = {
       date: eventDate,
       habitId: habitId,
@@ -87,7 +94,7 @@ export class HabitTableComponent implements OnInit {
         take(1),
         tap(() => window.location.reload())
       )
-      .subscribe(() => this.ref.detectChanges());
+      .subscribe();
   }
 
   public enableButtonAndStyle(
@@ -110,5 +117,12 @@ export class HabitTableComponent implements OnInit {
       this.enableClick = true;
       return 'null';
     }
+  }
+
+  onOpenArchive() {
+    this.dialog.open(HabitArchiveComponent, {
+      height: '600px',
+      width: '500px',
+    });
   }
 }

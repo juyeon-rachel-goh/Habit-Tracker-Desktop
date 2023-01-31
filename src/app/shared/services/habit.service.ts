@@ -48,6 +48,7 @@ export class HabitService {
         value: value,
       },
     ];
+    console.log(patchObject);
     return this.http.patch(url, patchObject);
   }
 }

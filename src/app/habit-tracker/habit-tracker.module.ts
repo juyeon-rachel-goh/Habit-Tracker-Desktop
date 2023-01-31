@@ -17,6 +17,11 @@ import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { NgCircleProgressModule } from 'ng-circle-progress';
+import { HabitArchiveComponent } from './habit-archive/habit-archive.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatListModule } from '@angular/material/list';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @NgModule({
   declarations: [
@@ -25,6 +30,7 @@ import { NgCircleProgressModule } from 'ng-circle-progress';
     HabitDetailComponent,
     HabitMoodSelectorComponent,
     HabitMainComponent,
+    HabitArchiveComponent,
   ],
   imports: [
     CommonModule,
@@ -33,10 +39,14 @@ import { NgCircleProgressModule } from 'ng-circle-progress';
     MatIconModule,
     MatTableModule,
     MatTooltipModule,
+    MatPaginatorModule,
+    MatDividerModule,
     MatButtonModule,
+    MatListModule,
     InputModule,
     PipesModule,
     MatButtonToggleModule,
+    MatDialogModule,
     NgCircleProgressModule.forRoot({}),
   ],
   exports: [

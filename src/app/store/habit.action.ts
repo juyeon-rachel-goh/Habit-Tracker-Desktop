@@ -14,3 +14,8 @@ export class DeleteHabit {
   static readonly type = '[Habit] Delete Habit';
   constructor(public habitId: string) {}
 }
+
+export class ArchiveHabit {
+  static readonly type = '[Habit] Archive Habit';
+  constructor(public status: boolean, public habitId: string) {}
+}

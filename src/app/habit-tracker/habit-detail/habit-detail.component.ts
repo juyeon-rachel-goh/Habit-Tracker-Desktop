@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
-import { Select, Store } from '@ngxs/store';
+import { Store } from '@ngxs/store';
 import {
   addDays,
   addMonths,
-  addWeeks,
   differenceInCalendarDays,
   differenceInCalendarMonths,
   differenceInCalendarWeeks,
@@ -14,7 +13,6 @@ import {
   endOfDay,
   endOfMonth,
   endOfWeek,
-  endOfYesterday,
   format,
   getDaysInMonth,
   isWithinInterval,
@@ -22,15 +20,12 @@ import {
   startOfWeek,
   subDays,
 } from 'date-fns';
-import { start } from 'repl';
-import { Observable, catchError, take, tap } from 'rxjs';
+import { catchError, take, tap } from 'rxjs';
 import { Habit } from 'src/app/shared/models/habit';
-import { HabitService } from 'src/app/shared/services/habit.service';
 import { DailyHabitRecordState } from 'src/app/store/daily-record.state';
-import { DeleteHabit } from 'src/app/store/habit.action';
+import { ArchiveHabit, DeleteHabit } from 'src/app/store/habit.action';
 import { HabitState } from 'src/app/store/habit.state';
 import { Freqeuncy } from '../enums/frequency';
-import { endOfDecadeWithOptions } from 'date-fns/fp';
 
 @Component({
   selector: 'app-habit-detail',
@@ -51,8 +46,7 @@ export class HabitDetailComponent implements OnInit {
   constructor(
     private store: Store,
     private route: ActivatedRoute,
-    private router: Router,
-    private habitService: HabitService
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -79,17 +73,26 @@ export class HabitDetailComponent implements OnInit {
     const currentStatus = this.store.selectSnapshot(HabitState.getHabitbyId)(
       this.habitId
     )?.archiveStatus;
-    console.log(currentStatus);
     if (currentStatus == false) {
       this.isArchived = true;
     } else {
       this.isArchived = false;
     }
-    this.habitService.archiveHabit(this.isArchived, this.habitId).subscribe();
+    this.store
+      .dispatch(new ArchiveHabit(this.isArchived, this.habitId))
+      .pipe(
+        take(1),
+        tap(() => console.log('update success!')),
+        catchError((err) => {
+          throw alert(err.message);
+        })
+      )
+      .subscribe();
+    // this.habitService.archiveHabit(this.isArchived, this.habitId).subscribe();
   }
 
   onEdit(id: string) {
-    this.router.navigate([`/habit-tracker/habit-edit/${id}`]);
+    this.router.navigate([`/habit-tracker/edit/${id}`]);
   }
 
   onDelete() {
