@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -8,12 +8,12 @@ import {
 import { Freqeuncy } from 'src/app/habit-tracker/enums/frequency';
 import { IconColor } from 'src/app/habit-tracker/enums/icon-color';
 import { IconImage } from 'src/app/habit-tracker/enums/icon-image';
-import { ActivatedRoute, Router } from '@angular/router';
 import { Habit } from 'src/app/shared/models/habit';
 import { Store } from '@ngxs/store';
 import { HabitState } from 'src/app/store/habit.state';
 import { UpsertHabit } from 'src/app/store/habit.action';
 import { catchError, take, tap } from 'rxjs';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-habit-edit',
@@ -26,18 +26,15 @@ export class HabitEditComponent implements OnInit {
   public enumFrequency = Freqeuncy;
   public enumIconColor = IconColor;
   public enumIconImage = IconImage;
-  private id?: string;
 
   constructor(
     private formBuilder: FormBuilder,
-    private activatedroute: ActivatedRoute,
     private store: Store,
-    private router: Router
+    private dialogRef: MatDialogRef<HabitEditComponent>,
+    @Inject(MAT_DIALOG_DATA) public id: string // value passed from Mat-dialog
   ) {}
 
   ngOnInit(): void {
-    this.id = this.activatedroute.snapshot.paramMap.get('id') || '';
-    console.log(this.id);
     if (this.id) {
       this.habitData = this.store.selectSnapshot(HabitState.getHabitbyId)(
         this.id
@@ -58,19 +55,17 @@ export class HabitEditComponent implements OnInit {
   }
 
   onSubmit() {
-    // disable button
     this.store
       .dispatch(new UpsertHabit(this.habitForm.value))
       .pipe(
         take(1),
-        tap(() => this.router.navigate(['/habit-tracker'])),
+        tap(() => this.dialogRef.close()),
         catchError((err) => {
           throw alert(err.message);
         })
       )
-      .subscribe();
+      .subscribe(() => window.location.reload());
     // loading spinner -> submission successful! ->
-    // this.habitForm.reset(); -> redirect to mainpage after 3 sec (countdown)
   }
 
   onSelectRandIconImg() {

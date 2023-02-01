@@ -1,12 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { Store } from '@ngxs/store';
 import {
   addDays,
-  addMonths,
-  differenceInCalendarDays,
-  differenceInCalendarMonths,
-  differenceInCalendarWeeks,
   differenceInDays,
   differenceInMonths,
   differenceInWeeks,
@@ -27,6 +23,12 @@ import { DailyHabitRecordState } from 'src/app/store/daily-record.state';
 import { ArchiveHabit, DeleteHabit } from 'src/app/store/habit.action';
 import { HabitState } from 'src/app/store/habit.state';
 import { Freqeuncy } from '../enums/frequency';
+import {
+  MAT_DIALOG_DATA,
+  MatDialog,
+  MatDialogRef,
+} from '@angular/material/dialog';
+import { HabitEditComponent } from '../habit-edit/habit-edit.component';
 
 @Component({
   selector: 'app-habit-detail',
@@ -35,7 +37,6 @@ import { Freqeuncy } from '../enums/frequency';
 })
 export class HabitDetailComponent implements OnInit {
   public habitData?: Habit;
-  public habitId: string = '';
   public currentArchiveStatus: string = '';
   public isArchived!: boolean;
   public numOfCompletion: number = 0;
@@ -47,19 +48,16 @@ export class HabitDetailComponent implements OnInit {
   constructor(
     private store: Store,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private dialog: MatDialog,
+    private dialogRef: MatDialogRef<HabitDetailComponent>,
+    @Inject(MAT_DIALOG_DATA) public habitId: string // value passed from Mat-dialog
   ) {}
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe((params: ParamMap) => {
-      if (params) {
-        this.habitId = params.get('id') || '';
-      }
-
-      this.habitData = this.store.selectSnapshot(HabitState.getHabitbyId)(
-        this.habitId
-      );
-    });
+    this.habitData = this.store.selectSnapshot(HabitState.getHabitbyId)(
+      this.habitId
+    );
 
     this.findnumOfCompletion(this.habitId);
     // this.findStreaks(this.habitId);
@@ -83,17 +81,23 @@ export class HabitDetailComponent implements OnInit {
       .dispatch(new ArchiveHabit(this.isArchived, this.habitId))
       .pipe(
         take(1),
-        tap(() => console.log('update success!')),
+        tap(() => {
+          window.alert('This habit has been archived');
+          this.dialogRef.close();
+        }),
         catchError((err) => {
           throw alert(err.message);
         })
       )
-      .subscribe();
-    // this.habitService.archiveHabit(this.isArchived, this.habitId).subscribe();
+      .subscribe(() => window.location.reload());
   }
 
   onEdit(id: string) {
-    this.router.navigate([`/habit-tracker/edit/${id}`]);
+    this.dialog.open(HabitEditComponent, {
+      width: '50%',
+      height: '55%',
+      data: id,
+    });
   }
 
   onDelete() {
@@ -104,12 +108,12 @@ export class HabitDetailComponent implements OnInit {
         .dispatch(new DeleteHabit(result?.id!))
         .pipe(
           take(1),
-          tap(() => this.router.navigate(['/habit-tracker'])),
+          tap(() => this.dialogRef.close()),
           catchError((err) => {
             throw alert(err.message);
           })
         )
-        .subscribe();
+        .subscribe(() => window.location.reload());
       return true;
     } else {
       return false;
@@ -358,7 +362,7 @@ export class HabitDetailComponent implements OnInit {
     const records = this.store
       .selectSnapshot(DailyHabitRecordState.dailyCompletionStatus)
       ?.filter((record) => record.habitId === this.habitId);
-    if (records) {
+    if (records && records.length >= 1) {
       let startDate = startDateFunction(new Date(records[0].date)); //start date of calculating range
       let endDate = endDateFunction(new Date()); //end date of calculating range
       let maxStreaks = maxStreaksFunction(endDate, startDate);

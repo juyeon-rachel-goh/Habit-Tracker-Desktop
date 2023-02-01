@@ -16,6 +16,8 @@ import { ChangeCompletionStatus } from 'src/app/store/daily-record.action';
 import { MatDialog } from '@angular/material/dialog';
 import { HabitArchiveComponent } from '../habit-archive/habit-archive.component';
 import { HabitMoodSelectorComponent } from '../habit-mood-selector/habit-mood-selector.component';
+import { HabitDetailComponent } from '../habit-detail/habit-detail.component';
+import { HabitEditComponent } from '../habit-edit/habit-edit.component';
 @Component({
   selector: 'app-habit-table',
   templateUrl: './habit-table.component.html',
@@ -78,9 +80,17 @@ export class HabitTableComponent implements OnInit {
     this.dialog.open(HabitMoodSelectorComponent, {
       data: eventDate,
     });
-    // this.router.navigate(['habit-tracker/mood-selector', eventDate]);
   }
 
+  public onAddHabit() {
+    this.dialog.open(HabitEditComponent, {});
+  }
+
+  public onViewDetail(habitId: string) {
+    this.dialog.open(HabitDetailComponent, {
+      data: habitId,
+    });
+  }
   public onChangeCompletionStatus(
     year: number,
     month: number,

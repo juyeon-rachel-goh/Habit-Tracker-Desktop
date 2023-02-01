@@ -13,7 +13,8 @@
 
 /* CHECKED ICON STYLES */
 .hiddenradio [type="radio"]:checked + mat-icon {
-  outline: 2px solid #f00;
+  border: 2px solid rgb(0, 119, 255);
+  border-radius: 15px;
 }
 
 .icon-display {
