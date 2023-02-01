@@ -74,8 +74,13 @@
         <!-- 4th Row : Habit list starts -->
 
         <tr *ngFor="let habit of habitsList">
-          <th [routerLink]="'detail/' + habit.id" style="cursor: pointer">
-            {{ habit.habitName }}
+          <th
+            [routerLink]="'detail/' + habit.id"
+            style="cursor: pointer"
+            [matTooltip]="habit.habitName"
+            matTooltipPosition="right"
+          >
+            {{ habit.habitName | slice : 0 : 30 }}
           </th>
           <td
             class=""

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -11,6 +11,7 @@ import { Store } from '@ngxs/store';
 import { DeleteDailyMood, UpsertDailyMood } from 'src/app/store/mood.action';
 import { MoodState } from 'src/app/store/mood.state';
 import { Observable, catchError, map, switchMap, take, tap } from 'rxjs';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-habit-mood-selector',
@@ -21,7 +22,6 @@ export class HabitMoodSelectorComponent implements OnInit {
   enumMood = Mood;
   moodForm = new FormGroup({});
   moodToResetId?: string = '';
-  eventDate: string = '';
   showResetButton = false;
   id?: string;
 
@@ -29,16 +29,12 @@ export class HabitMoodSelectorComponent implements OnInit {
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private store: Store
+    private store: Store,
+    private dialogRef: MatDialogRef<HabitMoodSelectorComponent>,
+    @Inject(MAT_DIALOG_DATA) public eventDate?: string // value passed from Mat-dialog
   ) {}
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe((params: ParamMap) => {
-      if (params) {
-        this.eventDate = params.get('id') || '';
-      }
-    });
-
     this.id = this.store
       .selectSnapshot(MoodState.dailyMoodList)
       ?.find((data) => data.eventDate === this.eventDate)?.id;
@@ -54,9 +50,9 @@ export class HabitMoodSelectorComponent implements OnInit {
       .dispatch(new UpsertDailyMood(this.moodForm.value))
       .pipe(
         take(1),
-        tap(() => this.router.navigate(['/habit-tracker']))
+        tap(() => this.dialogRef.close())
       )
-      .subscribe();
+      .subscribe(() => window.location.reload());
   }
 
   onResetMood() {
@@ -68,28 +64,12 @@ export class HabitMoodSelectorComponent implements OnInit {
       .dispatch(new DeleteDailyMood(result?.id!))
       .pipe(
         take(1),
-        tap(() => this.router.navigate(['/habit-tracker'])),
+        tap(() => this.dialogRef.close()),
         catchError((err) => {
           throw alert(err.message);
         })
       )
-      .subscribe();
-    // switchMap //
-    // this.dailyMoodList
-    //   ?.pipe(
-    //     take(1),
-    //     map((res) => {
-    //       const result = res.filter(
-    //         (mood) => mood.eventDate === this.eventDate
-    //       );
-    //       return result;
-    //     }),
-    //     switchMap((result) =>
-    //       this.store.dispatch(new DeleteDailyMood(result[0].id!))
-    //     ),
-    //     tap(() => this.router.navigate(['/habit-tracker']))
-    //   )
-    //   .subscribe(); // add catchError
+      .subscribe(() => window.location.reload());
   }
 
   private initForm() {

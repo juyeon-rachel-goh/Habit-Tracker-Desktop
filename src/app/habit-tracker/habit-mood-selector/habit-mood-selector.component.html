@@ -1,5 +1,5 @@
 <form [formGroup]="moodForm" (ngSubmit)="onSubmitMood()">
-  <h1>Select Today's Mood</h1>
+  <h1 mat-dialog-title>Select Today's Mood</h1>
   <span class="px-1" *ngFor="let mood of enumMood | keys">
     <app-icon-selector
       [iconFormControl]="moodForm.get('mood') | asFormControl"
@@ -8,10 +8,17 @@
       icon="{{ mood }}"
     ></app-icon-selector>
   </span>
-  <div><button mat-flat-button color="primary" type="submit">Save</button></div>
-  <div *ngIf="showResetButton">
-    <button mat-flat-button color="warn" type="button" (click)="onResetMood()">
-      Reset
-    </button>
+  <div class="d-flex flex-row justify-content-between">
+    <button mat-flat-button color="primary" type="submit">Save</button>
+    <ng-template [ngIf]="showResetButton">
+      <button
+        mat-flat-button
+        color="warn"
+        type="button"
+        (click)="onResetMood()"
+      >
+        Reset
+      </button>
+    </ng-template>
   </div>
 </form>
