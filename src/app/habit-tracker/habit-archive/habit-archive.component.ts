@@ -6,6 +6,7 @@ import { Habit } from 'src/app/shared/models/habit';
 import { ArchiveHabit } from 'src/app/store/habit.action';
 import { HabitState } from 'src/app/store/habit.state';
 import { MatDialogRef } from '@angular/material/dialog';
+import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-habit-archive',
@@ -14,9 +15,10 @@ import { MatDialogRef } from '@angular/material/dialog';
 })
 export class HabitArchiveComponent implements OnInit {
   public archivedHabits: Habit[] = [];
+  lowValue: number = 0;
+  highValue: number = 5;
   constructor(
     private store: Store,
-    private router: Router,
     public dialogRef: MatDialogRef<HabitArchiveComponent>
   ) {}
 
@@ -38,5 +40,11 @@ export class HabitArchiveComponent implements OnInit {
         })
       )
       .subscribe(() => window.location.reload());
+  }
+
+  public getPaginatorData(event: PageEvent): PageEvent {
+    this.lowValue = event.pageIndex * event.pageSize;
+    this.highValue = this.lowValue + event.pageSize;
+    return event;
   }
 }
