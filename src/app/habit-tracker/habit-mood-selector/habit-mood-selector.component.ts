@@ -5,7 +5,6 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { Mood } from 'src/app/habit-tracker/enums/mood';
 import { Store } from '@ngxs/store';
 import { DeleteDailyMood, UpsertDailyMood } from 'src/app/store/mood.action';
@@ -27,8 +26,6 @@ export class HabitMoodSelectorComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private route: ActivatedRoute,
-    private router: Router,
     private store: Store,
     private dialogRef: MatDialogRef<HabitMoodSelectorComponent>,
     @Inject(MAT_DIALOG_DATA) public eventDate?: string // value passed from Mat-dialog

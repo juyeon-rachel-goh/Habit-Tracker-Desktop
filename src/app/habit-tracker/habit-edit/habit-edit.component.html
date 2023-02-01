@@ -1,4 +1,4 @@
-<div class="container w-50">
+<div class="container">
   <form
     [formGroup]="habitForm"
     (ngSubmit)="onSubmit()"
@@ -16,54 +16,59 @@
     </div>
 
     <!-- Frequency  -->
-    <div class="sub-heading">Frequency</div>
-    <div>
-      <div *ngFor="let frequency of enumFrequency | keys">
-        <input
-          type="radio"
-          value="{{ frequency }}"
-          [formControl]="habitForm.get('frequency') | asFormControl"
-        />
-        <label for="{{ frequency }}">{{ frequency }}</label>
+    <div class="d-flex flex-row justify-content-around">
+      <div>
+        <div class="sub-heading">Frequency</div>
+        <div *ngFor="let frequency of enumFrequency | keys">
+          <input
+            type="radio"
+            value="{{ frequency }}"
+            [formControl]="habitForm.get('frequency') | asFormControl"
+          />
+          <label for="{{ frequency }}">{{ frequency }}</label>
+        </div>
       </div>
-      <div class="sub-heading">Goal</div>
-      <app-textfield
-        label="Count per Frequency"
-        type="number"
-        [inputFormControl]="habitForm.get('countPerFreq') | asFormControl"
-      ></app-textfield>
+      <div>
+        <div class="sub-heading">Goal</div>
+        <app-textfield
+          label="Count per Frequency"
+          type="number"
+          [inputFormControl]="habitForm.get('countPerFreq') | asFormControl"
+        ></app-textfield>
+      </div>
     </div>
 
     <!-- Icon Picker -->
-    <div>
-      <div class="sub-heading">Pick an Icon</div>
-      <span class="px-1" *ngFor="let img of enumIconImage | keys">
-        <app-icon-selector
-          [iconFormControl]="habitForm.get('iconImage') | asFormControl"
-          name="iconImage"
-          value="{{ img }}"
-          icon="{{ img }}"
-        ></app-icon-selector>
-      </span>
-      <button type="button" (click)="onSelectRandIconImg()">Random</button>
-    </div>
+    <div class="d-flex flex-row">
+      <div>
+        <div class="sub-heading">Pick an Icon</div>
+        <span class="px-1" *ngFor="let img of enumIconImage | keys">
+          <app-icon-selector
+            [iconFormControl]="habitForm.get('iconImage') | asFormControl"
+            name="iconImage"
+            value="{{ img }}"
+            icon="{{ img }}"
+          ></app-icon-selector>
+        </span>
+        <button type="button" (click)="onSelectRandIconImg()">Random</button>
+      </div>
 
-    <!-- Color Picker -->
-    <div>
-      <div class="sub-heading">Pick a Color</div>
-      <span class="px-1" *ngFor="let color of enumIconColor | keys">
-        <app-icon-selector
-          [iconFormControl]="habitForm.get('iconColor') | asFormControl"
-          name="iconColor"
-          value="{{ color }}"
-          style.color="{{ color }}"
-          icon="lens"
-        ></app-icon-selector>
-      </span>
-      <button type="button" (click)="onSelectRandIconColor()">Random</button>
+      <!-- Color Picker -->
+      <div>
+        <div class="sub-heading">Pick a Color</div>
+        <span class="px-1" *ngFor="let color of enumIconColor | keys">
+          <app-icon-selector
+            [iconFormControl]="habitForm.get('iconColor') | asFormControl"
+            name="iconColor"
+            value="{{ color }}"
+            style.color="{{ color }}"
+            icon="lens"
+          ></app-icon-selector>
+        </span>
+        <button type="button" (click)="onSelectRandIconColor()">Random</button>
+      </div>
     </div>
-
-    <div class="py-5">
+    <div class="pt-5">
       <button
         mat-flat-button
         type="button"
