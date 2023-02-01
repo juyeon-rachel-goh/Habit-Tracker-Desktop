@@ -42,7 +42,7 @@ export class HabitDetailComponent implements OnInit {
   public currentStreak: number = 0;
   public bestStreak: number = 0;
   public currentScore: number = 0;
-  public habitScore: number = 100;
+  public avgScore: number = 100;
 
   constructor(
     private store: Store,
@@ -66,7 +66,7 @@ export class HabitDetailComponent implements OnInit {
     // this.findBestStreak();
     this.currentStreak = this.findCurrentStreak();
     this.currentScore = this.calculateGoalMet();
-    this.calculateOverallScore(this.habitId);
+    this.avgScore = this.calculateAvgScore();
   }
 
   onClickArchive(): void {
@@ -242,18 +242,12 @@ export class HabitDetailComponent implements OnInit {
               end: endDateTimeofInterval, //need 23:59:59 of the previouse date
             })
         );
-        console.log('interval starts: ' + startDateofInterval);
-        console.log('interval ends: ' + endDateTimeofInterval);
-        console.log('Records found within the interval: ');
-        console.log(filteredArray);
-        let str1 = '';
         if (filteredArray.length >= this.habitData.countPerFreq) {
           currentStreak += 1;
         } else {
           currentStreak = 0;
         }
         startDate = nextStartDateofInterval;
-        console.log('next interval starts at: ' + startDate);
       }
       return currentStreak;
     }
@@ -311,78 +305,82 @@ export class HabitDetailComponent implements OnInit {
     return result;
   }
 
-  private calculateOverallScore(habitId: string) {
-    const frequency = this.habitData?.frequency;
-    if (frequency === 'Day') {
-      //When frequency = Daily
-      const endDate = addDays(new Date(), 1); // add +1 for today
-      const startDate = new Date(this.habitData?.createdOn!); // add +1 for today
-
-      const maxStreaks = differenceInCalendarDays(endDate, startDate);
-      //countTRUE
-      const countTrue = this.store
-        .selectSnapshot(DailyHabitRecordState.dailyCompletionStatus)!
-        .filter(
-          (record) =>
-            record.habitId === habitId &&
-            record.completionStatus === true &&
-            record.date < format(endDate, 'MM/dd/yyyy')
-        ).length;
-      // CountTRUE / maxStreaks * 100 = score
-      this.habitScore = (countTrue / maxStreaks) * 100;
-    } else if (frequency === 'Week') {
-      const startDate = startOfWeek(new Date(this.habitData?.createdOn!), {
-        weekStartsOn: 1,
-      });
-      const endDate = endOfWeek(new Date(), { weekStartsOn: 1 });
-      const maxStreaks = differenceInCalendarWeeks(
-        new Date(endDate),
-        new Date(startDate),
-        { weekStartsOn: 1 }
-      );
-      // Find 100% streak week (if goal / target = 1 => streak +=1)
-      let earnedStreak = 0;
-      for (let d = startDate; d <= endDate; d.setDate(d.getDate() + 7)) {
-        // find true's within the date range
-        const findTrue = this.store
-          .selectSnapshot(DailyHabitRecordState.dailyCompletionStatus)!
-          .filter(
-            (record) =>
-              record.habitId === habitId &&
-              record.completionStatus === true &&
-              record.date <= format(addDays(startDate, 6), 'MM/dd/yyyy') &&
-              record.date >= format(startDate, 'MM/dd/yyyy')
-          );
-        if (findTrue.length / this.habitData?.countPerFreq! >= 1) {
-          earnedStreak += 1; // earn 1 point of weekly goal has met
-        }
-      }
-      this.habitScore = (earnedStreak / maxStreaks) * 100;
-    } else if (frequency === 'Month') {
-      const startDate = startOfMonth(new Date(this.habitData?.createdOn!));
-      const endDate = endOfMonth(new Date());
-      const maxStreaks = differenceInCalendarMonths(
-        new Date(endDate),
-        new Date(startDate)
-      );
-      // Find 100% streak week (if goal / target = 1 => streak +=1)
-      let earnedStreak = 0;
-      for (let d = startDate; d <= endDate; d.setMonth(d.getMonth() + 1)) {
-        // find true's within the date range
-        const findTrue = this.store
-          .selectSnapshot(DailyHabitRecordState.dailyCompletionStatus)!
-          .filter(
-            (record) =>
-              record.habitId === habitId &&
-              record.completionStatus === true &&
-              record.date <= format(addMonths(startDate, 1), 'MM/dd/yyyy') &&
-              record.date >= format(startDate, 'MM/dd/yyyy')
-          );
-        if (findTrue.length / this.habitData?.countPerFreq! >= 1) {
-          earnedStreak += 1; // earn 1 point of weekly goal has met
-        }
-      }
-      this.habitScore = (earnedStreak / maxStreaks) * 100;
+  private calculateAvgScore() {
+    let delta: (date: Date) => number;
+    let startDateFunction: (date: Date) => Date;
+    let endDateFunction: (date: Date) => Date;
+    let maxStreaksFunction: (endDate: Date, startDate: Date) => number;
+    switch (this.habitData?.frequency) {
+      case Freqeuncy.Day:
+        delta = (date: Date) => {
+          return 1;
+        };
+        startDateFunction = (date: Date) => {
+          return startOfDay(date); //should return 00:00
+        };
+        endDateFunction = (date: Date) => {
+          return addDays(endOfDay(date), 1);
+        };
+        maxStreaksFunction = (endDate: Date, startDate: Date) =>
+          differenceInDays(endDate, startDate);
+        break;
+      case Freqeuncy.Week:
+        delta = (date: Date) => {
+          return 7;
+        };
+        startDateFunction = (date: Date) => {
+          // to return 1/30/2023 00:00AM
+          return startOfWeek(date, { weekStartsOn: 1 });
+        };
+        endDateFunction = (date: Date) => {
+          return addDays(endOfWeek(date, { weekStartsOn: 1 }), 1); // Mon~Sun
+        };
+        maxStreaksFunction = (endDate: Date, startDate: Date) =>
+          differenceInWeeks(endDate, startDate, { roundingMethod: 'ceil' });
+        break;
+      case Freqeuncy.Month:
+        delta = (date: Date) => {
+          return getDaysInMonth(date);
+        };
+        startDateFunction = (date: Date) => {
+          return startOfMonth(date);
+        };
+        endDateFunction = (date: Date) => {
+          return addDays(endOfMonth(date), 1);
+        };
+        maxStreaksFunction = (endDate: Date, startDate: Date) =>
+          differenceInMonths(endDate, startDate);
+        break;
+      default:
+        return 0;
     }
+
+    const records = this.store
+      .selectSnapshot(DailyHabitRecordState.dailyCompletionStatus)
+      ?.filter((record) => record.habitId === this.habitId);
+    if (records) {
+      let startDate = startDateFunction(new Date(records[0].date)); //start date of calculating range
+      let endDate = endDateFunction(new Date()); //end date of calculating range
+      let maxStreaks = maxStreaksFunction(endDate, startDate);
+      // Find 100% streak period (if goal / target = 1 => streak +=1)
+      let earnedStreaks = 0;
+      let intervalStart = startDate;
+      for (let i = 0; i < maxStreaks; i++) {
+        let intervalEnd = addDays(intervalStart, delta(intervalStart));
+        const trueWithinInterval = records.filter(
+          (record) =>
+            record.completionStatus === true &&
+            record.date >= format(intervalStart, 'MM/dd/yyyy') &&
+            record.date < format(intervalEnd, 'MM/dd/yyyy')
+        );
+        intervalStart = intervalEnd; //update value of intervalStart after 1 loop
+        if (trueWithinInterval.length / this.habitData?.countPerFreq! >= 1) {
+          earnedStreaks += 1; // earn 1 point of weekly goal has met
+        }
+      }
+      let result = (earnedStreaks / maxStreaks) * 100;
+      return result >= 100 ? 100 : result;
+    }
+    return 0;
   }
 }
