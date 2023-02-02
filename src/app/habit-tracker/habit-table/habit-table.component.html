@@ -102,10 +102,20 @@
             >
               <div *ngIf="findCompletionStatus(i + 1, habit.id!)">
                 <button
-                  class="cell-container complete-habit"
+                  class="cell-container"
+                  [ngClass]="[
+                    habit.frequency === 'Day' &&
+                    habit.countPerFreq > completionCount
+                      ? 'incomplete-habit'
+                      : 'complete-habit'
+                  ]"
                   [ngStyle]="{ backgroundColor: habit.iconColor }"
                 >
-                  {{ completionCount }}
+                  {{
+                    habit.frequency === "Day" && habit.countPerFreq > 1
+                      ? completionCount
+                      : ""
+                  }}
                 </button>
               </div>
             </button>
