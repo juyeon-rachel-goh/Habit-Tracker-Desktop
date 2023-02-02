@@ -2,9 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Habit } from '../models/habit';
-import { id } from 'date-fns/locale';
 import { DailyHabitRecord } from '../models/daily-habit-record';
-import { CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY_PROVIDER_FACTORY } from '@angular/cdk/overlay/overlay-directives';
 
 @Injectable({
   providedIn: 'root',
@@ -18,8 +16,8 @@ export class HabitService {
     return this.http.get<Habit[]>(url);
   }
 
-  public getCompletionStatus(): Observable<DailyHabitRecord[]> {
-    const url = `${this.url}/history`;
+  public getDailyRecords(): Observable<DailyHabitRecord[]> {
+    const url = `${this.url}/records`;
     return this.http.get<DailyHabitRecord[]>(url);
   }
 
@@ -33,9 +31,14 @@ export class HabitService {
     return this.http.delete<Habit>(url);
   }
 
-  public changeCompletionStatus(recordSource: any) {
-    const url = `${this.url}/change-habit-record`;
-    return this.http.put<DailyHabitRecord>(url, recordSource);
+  public addDailyRecord(record: DailyHabitRecord) {
+    const url = `${this.url}/records/complete`;
+    return this.http.post<DailyHabitRecord>(url, record);
+  }
+
+  public deleteDailyRecord(id: string) {
+    const url = `${this.url}/records/delete/${id}`;
+    return this.http.delete<DailyHabitRecord>(url);
   }
 
   public archiveHabit(value: boolean, id: string) {
@@ -48,7 +51,6 @@ export class HabitService {
         value: value,
       },
     ];
-    console.log(patchObject);
     return this.http.patch(url, patchObject);
   }
 }

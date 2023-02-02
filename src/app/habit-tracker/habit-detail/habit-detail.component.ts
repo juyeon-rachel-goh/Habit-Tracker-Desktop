@@ -29,6 +29,11 @@ import {
   MatDialogRef,
 } from '@angular/material/dialog';
 import { HabitEditComponent } from '../habit-edit/habit-edit.component';
+interface Streak {
+  streak: number;
+  startDate: Date;
+  endDate?: Date;
+}
 
 @Component({
   selector: 'app-habit-detail',
@@ -40,10 +45,12 @@ export class HabitDetailComponent implements OnInit {
   public currentArchiveStatus: string = '';
   public isArchived!: boolean;
   public numOfCompletion: number = 0;
-  public currentStreak: number = 0;
+  public currentStreak: Streak = { streak: 0, startDate: new Date() };
   public bestStreak: number = 0;
   public currentScore: number = 0;
   public avgScore: number = 100;
+  public streaks: Streak[] = [];
+  public dateFormat: string = 'MMMM d, y';
 
   constructor(
     private store: Store,
@@ -60,11 +67,13 @@ export class HabitDetailComponent implements OnInit {
     );
 
     this.findnumOfCompletion(this.habitId);
-    // this.findStreaks(this.habitId);
-    // this.findBestStreak();
+    this.calculateStreaks();
+    this.bestStreak = this.findBestStreak();
     this.currentStreak = this.findCurrentStreak();
     this.currentScore = this.calculateGoalMet();
     this.avgScore = this.calculateAvgScore();
+
+    console.log(this.streaks);
   }
 
   onClickArchive(): void {
@@ -133,46 +142,11 @@ export class HabitDetailComponent implements OnInit {
     this.numOfCompletion = count;
   }
 
-  /////////////////////////////NEED NEW LOGIC FOR WEEK/MONTH Calculations ////////////////////////////
-  private findStreaks(habitId: string) {
-    const records = this.store
-      .selectSnapshot(DailyHabitRecordState.dailyCompletionStatus)!
-      .filter((record) => record.habitId === habitId);
-    // dateRange to loop = createdOn~today
-    const startDate = new Date(this.habitData!.createdOn);
-    const endDate = new Date();
-
-    let resultArr = [];
-    for (let i = startDate; startDate <= endDate; i.setDate(i.getDate() + 1)) {
-      let date = format(new Date(i), 'MM/dd/yyyy');
-      // find matching date from [records]
-      const matching = records.find((record) => record.date === date);
-      if (matching) {
-        resultArr.push(matching?.completionStatus);
-      } else {
-        resultArr.push(false);
-      }
-    }
-    // Find CURRENT streak
-    const index = resultArr.lastIndexOf(false);
-    const currentStreak = resultArr.slice(index + 1).length;
-    console.log(currentStreak);
-    this.currentStreak = currentStreak;
-    // Find BEST streak
-    let valueStr = resultArr.join('');
-    const countTrue = valueStr.split('false').filter(Boolean);
-    if (countTrue.length > 0) {
-      const numOfStreaks = countTrue.map((x) => x.length / 4);
-      this.bestStreak = Math.max(...numOfStreaks);
-    } else {
-      this.bestStreak = 0;
-    }
-  }
-
-  private findCurrentStreak(): number {
+  public calculateStreaks(): void {
     let delta: (date: Date) => number;
     let startDateFunction: (date: Date) => Date;
     let frequency: (startDate: Date, endDate: Date) => number;
+    let findStartDateFunction: (date: Date, streak: number) => Date;
     switch (this.habitData?.frequency) {
       case Freqeuncy.Day:
         delta = (date: Date) => {
@@ -184,6 +158,9 @@ export class HabitDetailComponent implements OnInit {
         frequency = (endDate: Date, startDate: Date) => {
           return differenceInDays(addDays(endDate, 1), startDate);
         };
+        findStartDateFunction = (date: Date, streak: number) => {
+          return subDays(date, streak);
+        };
         break;
       case Freqeuncy.Week:
         delta = (date: Date) => {
@@ -191,12 +168,15 @@ export class HabitDetailComponent implements OnInit {
         };
         startDateFunction = (date: Date) => {
           // to return 1/30/2023 00:00AM
-          return startOfWeek(date, { weekStartsOn: 1 });
+          return date;
         };
         frequency = (endDate: Date, startDate: Date) => {
           return differenceInWeeks(endDate, startDate, {
             roundingMethod: 'ceil',
           });
+        };
+        findStartDateFunction = (date: Date, streak: number) => {
+          return date;
         };
         break;
       case Freqeuncy.Month:
@@ -204,34 +184,35 @@ export class HabitDetailComponent implements OnInit {
           return getDaysInMonth(date);
         };
         startDateFunction = (date: Date) => {
-          return startOfMonth(date);
+          return date;
         };
         frequency = (startDate: Date, endDate: Date) => {
           return differenceInMonths(startDate, endDate);
         };
+        findStartDateFunction = (date: Date, streak: number) => {
+          return date;
+        };
         break;
       default:
-        return 0;
+        return;
     }
 
     const records = this.store
       .selectSnapshot(DailyHabitRecordState.dailyCompletionStatus)
       ?.filter((record) => record.habitId === this.habitData?.id);
     if (records && records?.length === 0) {
-      return 0;
+      return;
     } else if (records) {
       const earliestDate = new Date(records[0].date);
       let startDate = startDateFunction(earliestDate);
-      // endDate = if date = last record, day currentstreak count becomes off
       let endDate = endOfDay(new Date());
-      // diffInTime = must return 1 if 0 to get day count right
       let diffInTime =
         frequency(endDate, startDate) === 0 ? 1 : frequency(endDate, startDate);
       let currentStreak = 0;
+      let startDateofInterval = startDate;
+
       for (let i = 0; i < diffInTime; i++) {
-        let startDateofInterval = startDate;
         let nextStartDateofInterval = addDays(
-          // need new Date starting at 00:00:00
           startDateofInterval,
           delta(startDateofInterval)
         );
@@ -243,21 +224,43 @@ export class HabitDetailComponent implements OnInit {
             item.completionStatus &&
             isWithinInterval(new Date(item.date), {
               start: startDateofInterval,
-              end: endDateTimeofInterval, //need 23:59:59 of the previouse date
+              end: endDateTimeofInterval,
             })
         );
         if (filteredArray.length >= this.habitData.countPerFreq) {
           currentStreak += 1;
         } else {
+          this.streaks.push({
+            streak: currentStreak,
+            startDate: findStartDateFunction(
+              startDateofInterval,
+              currentStreak
+            ),
+            endDate: endDateTimeofInterval,
+          });
           currentStreak = 0;
         }
-        startDate = nextStartDateofInterval;
+        if (i !== diffInTime - 1) {
+          startDateofInterval = nextStartDateofInterval;
+          console.log(startDateofInterval);
+        }
       }
-      return currentStreak;
+      console.log(startDateofInterval);
+      this.streaks.push({
+        streak: currentStreak,
+        startDate: findStartDateFunction(startDateofInterval, currentStreak),
+        // endDate: endDateTimeofInterval,
+      });
     }
-    return 0;
   }
-  private findBestStreak() {}
+  private findCurrentStreak() {
+    let currentStreak = this.streaks[this.streaks.length - 1];
+    return currentStreak;
+  }
+  private findBestStreak() {
+    let bestStreak = Math.max(...this.streaks.map((x) => x.streak));
+    return bestStreak;
+  }
 
   private calculateGoalMet() {
     let startDateFunction: (date: Date) => Date;

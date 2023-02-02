@@ -1,5 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
 import { Habit } from 'src/app/shared/models/habit';
 import {
   addMonths,
@@ -12,12 +11,14 @@ import {
 import { Store } from '@ngxs/store';
 import { take, tap } from 'rxjs';
 import { HabitState } from 'src/app/store/habit.state';
-import { ChangeCompletionStatus } from 'src/app/store/daily-record.action';
+import { AddRecord, DeleteLastRecord } from 'src/app/store/daily-record.action';
 import { MatDialog } from '@angular/material/dialog';
 import { HabitArchiveComponent } from '../habit-archive/habit-archive.component';
 import { HabitMoodSelectorComponent } from '../habit-mood-selector/habit-mood-selector.component';
 import { HabitDetailComponent } from '../habit-detail/habit-detail.component';
 import { HabitEditComponent } from '../habit-edit/habit-edit.component';
+import { DailyHabitRecordState } from 'src/app/store/daily-record.state';
+import { DailyHabitRecord } from 'src/app/shared/models/daily-habit-record';
 @Component({
   selector: 'app-habit-table',
   templateUrl: './habit-table.component.html',
@@ -25,18 +26,15 @@ import { HabitEditComponent } from '../habit-edit/habit-edit.component';
 })
 export class HabitTableComponent implements OnInit {
   public habitsList: Habit[] = [];
+  public dailyRecords: DailyHabitRecord[] = [];
   public currentFullDate = new Date();
   public daysInMonth: number = 0;
   public foundMatchingEventDate: boolean = false;
   public moodImage: string = '';
   public enableClick!: boolean;
+  public completionCount: number = 0;
 
-  constructor(
-    private router: Router,
-    private store: Store,
-    private ref: ChangeDetectorRef,
-    private dialog: MatDialog
-  ) {}
+  constructor(private store: Store, private dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.daysInMonth = getDaysInMonth(
@@ -53,6 +51,10 @@ export class HabitTableComponent implements OnInit {
           isBefore(new Date(data.createdOn), this.currentFullDate) &&
           data.archiveStatus === false
       );
+
+    this.dailyRecords = this.store.selectSnapshot(
+      DailyHabitRecordState.dailyCompletionStatus
+    )!;
   }
 
   public loadMonth(direction: string) {
@@ -71,8 +73,6 @@ export class HabitTableComponent implements OnInit {
           isBefore(new Date(data.createdOn), this.currentFullDate) &&
           data.archiveStatus === false
       );
-    console.log(this.currentFullDate);
-    console.log(this.habitsList);
   }
 
   public onOpenMoodSelector(year: number, month: number, date: number) {
@@ -82,33 +82,46 @@ export class HabitTableComponent implements OnInit {
     });
   }
 
-  public onAddHabit() {
-    this.dialog.open(HabitEditComponent, {});
-  }
-
-  public onViewDetail(habitId: string) {
-    this.dialog.open(HabitDetailComponent, {
-      data: habitId,
-    });
-  }
-  public onChangeCompletionStatus(
-    year: number,
-    month: number,
+  public changeCompletionStatus(
     date: number,
-    habitId: string
+    habitId: string,
+    event: MouseEvent
   ) {
+    const year = this.currentFullDate.getFullYear();
+    const month = this.currentFullDate.getMonth();
     const eventDate = format(new Date(year, month, date), 'MM/dd/yyyy');
-    const recordSource = {
-      date: eventDate,
-      habitId: habitId,
-    };
-    this.store
-      .dispatch(new ChangeCompletionStatus(recordSource))
-      .pipe(
-        take(1),
-        tap(() => window.location.reload())
-      )
-      .subscribe();
+    if (event.altKey) {
+      // alt + double click -> delete the latest record
+      // find the last record with matching habitId and eventDate
+      const recordId = this.dailyRecords
+        .filter(
+          (habit) => habit.habitId === habitId && habit.date === eventDate
+        )
+        .pop()?.id;
+      console.log(recordId);
+      if (recordId) {
+        this.store
+          .dispatch(new DeleteLastRecord(recordId))
+          .pipe(
+            take(1),
+            tap(() => window.location.reload())
+          )
+          .subscribe();
+      }
+    } else {
+      // double click -> add
+      const record = {
+        date: eventDate,
+        habitId: habitId,
+      };
+      this.store
+        .dispatch(new AddRecord(record))
+        .pipe(
+          take(1),
+          tap(() => window.location.reload())
+        )
+        .subscribe();
+    }
   }
 
   public enableButtonAndStyle(
@@ -132,11 +145,36 @@ export class HabitTableComponent implements OnInit {
       return 'null';
     }
   }
-
-  onOpenArchive() {
+  public onAddHabit() {
+    this.dialog.open(HabitEditComponent, {});
+  }
+  public onViewDetail(habitId: string) {
+    this.dialog.open(HabitDetailComponent, {
+      data: habitId,
+    });
+  }
+  public onViewArchive() {
     this.dialog.open(HabitArchiveComponent, {
       height: '600px',
       width: '500px',
     });
+  }
+
+  findCompletionStatus(date: number, habitId: string): boolean {
+    const year = this.currentFullDate.getFullYear();
+    const month = this.currentFullDate.getMonth();
+    const eventDate = format(new Date(year, month, date), 'MM/dd/yyyy');
+    const habitCompleted = this.dailyRecords.filter(
+      (item) =>
+        item.date === eventDate &&
+        item.habitId === habitId &&
+        item.completionStatus
+    );
+    if (habitCompleted && habitCompleted.length >= 1) {
+      this.completionCount = habitCompleted.length;
+      return true;
+    } else {
+      return false;
+    }
   }
 }

@@ -14,13 +14,25 @@ td {
 tr:hover {
   background-color: rgba(102, 222, 255, 0.3);
 }
-
 button {
   padding: 0;
   border: none;
   background: none;
   margin: auto;
   display: block;
+}
+.cell-container {
+  width: 24px;
+  height: 24px;
+}
+.complete-habit {
+  color: rgba(255, 255, 255, 0.9);
+  text-align: center;
+  padding: 2px;
+  border-radius: 50%;
+  text-align: center;
+  text-decoration: none;
+  font-size: 10px;
 }
 
 .material-icons {
