@@ -1,12 +1,13 @@
-// daily record - completion status
-// GET & ADD or Update only  = upserting (no deletion)
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { tap } from 'rxjs';
-import { ChangeCompletionStatus, GetDailyRecords } from './daily-record.action';
+import {
+  AddRecord,
+  DeleteLastRecord,
+  GetDailyRecords,
+} from './daily-record.action';
 import { DailyHabitRecord } from '../shared/models/daily-habit-record';
 import { HabitService } from '../shared/services/habit.service';
-import { patch, updateItem } from '@ngxs/store/operators';
 
 export class DailyCompletionStatusInterface {
   dailyRecords?: DailyHabitRecord[];
@@ -22,7 +23,7 @@ export class DailyHabitRecordState {
 
   @Action(GetDailyRecords)
   getDailyRecords(ctx: StateContext<DailyCompletionStatusInterface>) {
-    return this.habitService.getCompletionStatus().pipe(
+    return this.habitService.getDailyRecords().pipe(
       tap((result) => {
         const state = ctx.getState();
         ctx.setState({
@@ -33,24 +34,27 @@ export class DailyHabitRecordState {
     );
   }
 
-  @Action(ChangeCompletionStatus) //UPSERTING
-  changeCompletionStatus(
+  @Action(AddRecord) // Keep pushing record (no replace)
+  addRecord(
     ctx: StateContext<DailyCompletionStatusInterface>,
-    { record }: ChangeCompletionStatus
+    { record }: AddRecord
   ) {
-    return this.habitService.changeCompletionStatus(record).pipe(
+    return this.habitService.addDailyRecord(record).pipe(
       tap((result) => {
-        ctx.setState(
-          patch<DailyCompletionStatusInterface>({
-            dailyRecords: updateItem<DailyHabitRecord>(
-              (data) =>
-                data?.date === result?.date && data.habitId === result.habitId,
-              patch({ completionStatus: result?.completionStatus })
-            ),
-          })
-        );
+        const state = ctx.getState();
+        ctx.patchState({
+          dailyRecords: [...state.dailyRecords!, result],
+        });
       })
     );
+  }
+
+  @Action(DeleteLastRecord)
+  deleteLastRecord(
+    ctx: StateContext<DailyCompletionStatusInterface>,
+    { id }: DeleteLastRecord
+  ) {
+    return this.habitService.deleteDailyRecord(id);
   }
 
   @Selector()

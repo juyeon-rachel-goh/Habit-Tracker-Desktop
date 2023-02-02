@@ -21,6 +21,7 @@ import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
 import { MoodState } from './store/mood.state';
 import { HabitState } from './store/habit.state';
 import { DailyHabitRecordState } from './store/daily-record.state';
+import { StoreModule } from './store/store/store.module';
 
 @NgModule({
   declarations: [AppComponent, HomeComponent, ContactUsComponent],
@@ -38,13 +39,7 @@ import { DailyHabitRecordState } from './store/daily-record.state';
     BrowserAnimationsModule,
     MatFormFieldModule,
     MatInputModule,
-    NgxsModule.forRoot(
-      [AuthState, MoodState, HabitState, DailyHabitRecordState],
-      {
-        developmentMode: false,
-      }
-    ),
-    NgxsReduxDevtoolsPluginModule.forRoot(),
+    StoreModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

@@ -1,7 +1,7 @@
 import { Habit } from './habit';
 
 export interface DailyHabitRecord {
-  recordId?: string;
+  id?: string;
   date: string;
   completionStatus?: boolean; // habit done or not
   habitId?: string;

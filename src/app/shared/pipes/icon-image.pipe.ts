@@ -15,7 +15,7 @@ export class IconImagePipe implements PipeTransform {
     month: number,
     date: number,
     habitId: string
-  ): string {
+  ): boolean {
     const eventDate = format(new Date(year, month, date), 'MM/dd/yyyy');
     // access to the selector w/o subscribing
     const statusReport = this.store.selectSnapshot(
@@ -28,9 +28,9 @@ export class IconImagePipe implements PipeTransform {
       (item) => item.date === eventDate && item.habitId === habitId
     );
     if (result?.completionStatus) {
-      return habit.iconImage;
+      return true;
     } else {
-      return '';
+      return false;
     }
   }
 }

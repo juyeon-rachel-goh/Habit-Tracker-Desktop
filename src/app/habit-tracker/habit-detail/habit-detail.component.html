@@ -4,7 +4,7 @@
     <div class="container">
       <h1 mat-dialog-title>{{ data.habitName }}</h1>
       <h4>Target: {{ data.countPerFreq }}x/{{ data.frequency }}</h4>
-      <h4>Start Date: {{ data.createdOn | date : "MMMM d, y" }}</h4>
+      <h4>Start Date: {{ data.createdOn | date : dateFormat }}</h4>
     </div>
 
     <div class="container">
@@ -18,7 +18,9 @@
         </div>
         <div class="card" style="width: 18rem">
           <div class="card-body">
-            <h2 class="">{{ currentStreak }}</h2>
+            <h2 class="">{{ currentStreak.streak }}</h2>
+            <p>{{ currentStreak.startDate | date : dateFormat }}</p>
+            <p>{{ currentStreak.endDate | date : dateFormat }}</p>
             <p class="card-text">Current Streak</p>
           </div>
         </div>
