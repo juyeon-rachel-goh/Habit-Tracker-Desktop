@@ -7,7 +7,6 @@ import {
 } from '@angular/forms';
 import { Freqeuncy } from 'src/app/habit-tracker/enums/frequency';
 import { IconColor } from 'src/app/habit-tracker/enums/icon-color';
-import { IconImage } from 'src/app/habit-tracker/enums/icon-image';
 import { Habit } from 'src/app/shared/models/habit';
 import { Store } from '@ngxs/store';
 import { HabitState } from 'src/app/store/habit.state';
@@ -25,7 +24,6 @@ export class HabitEditComponent implements OnInit {
   private habitData?: Habit;
   public enumFrequency = Freqeuncy;
   public enumIconColor = IconColor;
-  public enumIconImage = IconImage;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -68,14 +66,6 @@ export class HabitEditComponent implements OnInit {
     // loading spinner -> submission successful! ->
   }
 
-  onSelectRandIconImg() {
-    const enumValues = Object.values(this.enumIconImage);
-    let selectedImg = enumValues[Math.floor(Math.random() * enumValues.length)];
-    this.habitForm.patchValue({
-      iconImage: selectedImg,
-    });
-  }
-
   onSelectRandIconColor() {
     const enumValues = Object.values(this.enumIconColor);
     let selectedColor =
@@ -93,7 +83,6 @@ export class HabitEditComponent implements OnInit {
         habit?.countPerFreq ?? '',
         [Validators.required, Validators.min(1)],
       ],
-      iconImage: [habit?.iconImage ?? '', [Validators.required]],
       iconColor: [habit?.iconColor ?? '', [Validators.required]],
     });
   }

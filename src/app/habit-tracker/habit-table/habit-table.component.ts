@@ -6,6 +6,7 @@ import {
   format,
   getDaysInMonth,
   isBefore,
+  startOfDay,
   subMonths,
 } from 'date-fns';
 import { Store } from '@ngxs/store';
@@ -31,7 +32,7 @@ export class HabitTableComponent implements OnInit {
   public daysInMonth: number = 0;
   public foundMatchingEventDate: boolean = false;
   public moodImage: string = '';
-  public enableClick!: boolean;
+  public disabledCell!: boolean;
   public completionCount: number = 0;
 
   constructor(private store: Store, private dialog: MatDialog) {}
@@ -123,26 +124,19 @@ export class HabitTableComponent implements OnInit {
         .subscribe();
     }
   }
+  public greyoutBackGround() {}
+  public disableAddRecord(day: number, createdOn: Date): string {
+    const year = this.currentFullDate.getFullYear();
+    const month = this.currentFullDate.getMonth();
+    const eventDate = new Date(year, month, day);
+    const createdOnStr = startOfDay(new Date(createdOn));
 
-  public enableButtonAndStyle(
-    year: number,
-    month: number,
-    date: number,
-    habitId: string
-  ) {
-    const eventDate = format(new Date(year, month, date), 'MM/dd/yyyy');
-    const createdOnDate = format(
-      new Date(
-        this.habitsList.find((habit) => habit.id === habitId)?.createdOn!
-      ),
-      'MM/dd/yyyy'
-    );
-    if (eventDate < createdOnDate) {
-      this.enableClick = false;
+    if (eventDate < createdOnStr) {
+      this.disabledCell = true;
       return 'rgba(36,36,36,0.2)';
     } else {
-      this.enableClick = true;
-      return 'null';
+      this.disabledCell = false;
+      return '';
     }
   }
   public onAddHabit() {
@@ -165,10 +159,7 @@ export class HabitTableComponent implements OnInit {
     const month = this.currentFullDate.getMonth();
     const eventDate = format(new Date(year, month, date), 'MM/dd/yyyy');
     const habitCompleted = this.dailyRecords.filter(
-      (item) =>
-        item.date === eventDate &&
-        item.habitId === habitId &&
-        item.completionStatus
+      (item) => item.date === eventDate && item.habitId === habitId
     );
     if (habitCompleted && habitCompleted.length >= 1) {
       this.completionCount = habitCompleted.length;

@@ -83,21 +83,15 @@
             {{ habit.habitName | truncate : 25 }}
           </th>
           <td
-            class=""
             style="cursor: pointer"
             *ngFor="let n of daysInMonth | range; let i = index"
             [ngStyle]="{
-              'background-color': enableButtonAndStyle(
-                currentFullDate.getFullYear(),
-                currentFullDate.getMonth(),
-                i + 1,
-                habit.id!
-              )
+              'background-color': disableAddRecord(i + 1, habit.createdOn)
             }"
           >
             <button
               class="cell-container"
-              [disabled]="!enableClick"
+              [disabled]="disabledCell"
               (dblclick)="changeCompletionStatus(i + 1, habit.id!, $event)"
             >
               <div *ngIf="findCompletionStatus(i + 1, habit.id!)">

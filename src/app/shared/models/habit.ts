@@ -6,7 +6,6 @@ export interface Habit {
   frequency: Freqeuncy;
   countPerFreq: number;
   iconColor: string;
-  iconImage: string;
   createdOn: Date;
   archiveStatus: boolean;
 }
