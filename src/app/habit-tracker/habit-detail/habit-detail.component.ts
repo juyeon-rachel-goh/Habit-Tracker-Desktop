@@ -1,5 +1,4 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { Store } from '@ngxs/store';
 import {
   addDays,
@@ -54,8 +53,6 @@ export class HabitDetailComponent implements OnInit {
 
   constructor(
     private store: Store,
-    private route: ActivatedRoute,
-    private router: Router,
     private dialog: MatDialog,
     private dialogRef: MatDialogRef<HabitDetailComponent>,
     @Inject(MAT_DIALOG_DATA) public habitId: string // value passed from Mat-dialog
@@ -66,14 +63,14 @@ export class HabitDetailComponent implements OnInit {
       this.habitId
     );
 
-    this.findnumOfCompletion(this.habitId);
+    console.log(this.habitData);
+
+    this.findnumOfCompletion();
     this.calculateStreaks();
     this.bestStreak = this.findBestStreak();
     this.currentStreak = this.findCurrentStreak();
     this.currentScore = this.calculateGoalMet();
     this.avgScore = this.calculateAvgScore();
-
-    console.log(this.streaks);
   }
 
   onClickArchive(): void {
@@ -100,7 +97,6 @@ export class HabitDetailComponent implements OnInit {
       )
       .subscribe(() => window.location.reload());
   }
-
   onEdit(id: string) {
     this.dialog.open(HabitEditComponent, {
       width: '50%',
@@ -108,7 +104,6 @@ export class HabitDetailComponent implements OnInit {
       data: id,
     });
   }
-
   onDelete() {
     if (window.confirm('Are you sure you want to delete this habit?')) {
       const habitsList = this.store.selectSnapshot(HabitState.habitsList);
@@ -129,17 +124,28 @@ export class HabitDetailComponent implements OnInit {
     }
   }
 
-  private findnumOfCompletion(habitId: string) {
-    const count: number =
-      this.store
-        .selectSnapshot(DailyHabitRecordState.dailyCompletionStatus)
-        ?.filter(
-          (record) =>
-            record.habitId === habitId &&
-            new Date(record.date) <= addDays(new Date(), 1) &&
-            record.completionStatus === true
-        ).length || 0;
-    this.numOfCompletion = count;
+  private findnumOfCompletion() {
+    // find unique dates of record per habitId
+    // find records tied with this habitId
+    const records = this.store
+      .selectSnapshot(DailyHabitRecordState.dailyCompletionStatus)
+      ?.filter((record) => record.habitId === this.habitId);
+
+    if (records) {
+      const uniqueDates = [...new Set(records.map((record) => record.date))];
+      const dateCounts = uniqueDates.map(
+        (date) => records.filter((record) => record.date === date).length
+      );
+      if (this.habitData!.frequency === 'Day') {
+        this.numOfCompletion = dateCounts.filter(
+          (num) => num >= this.habitData!.countPerFreq
+        ).length;
+      } else {
+        this.numOfCompletion = dateCounts.length;
+      }
+    } else {
+      this.numOfCompletion = 0;
+    }
   }
 
   public calculateStreaks(): void {
@@ -242,10 +248,9 @@ export class HabitDetailComponent implements OnInit {
         }
         if (i !== diffInTime - 1) {
           startDateofInterval = nextStartDateofInterval;
-          console.log(startDateofInterval);
         }
       }
-      console.log(startDateofInterval);
+
       this.streaks.push({
         streak: currentStreak,
         startDate: findStartDateFunction(startDateofInterval, currentStreak),

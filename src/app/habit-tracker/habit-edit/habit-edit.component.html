@@ -38,36 +38,21 @@
       </div>
     </div>
 
-    <!-- Icon Picker -->
-    <div class="d-flex flex-row">
-      <div>
-        <div class="sub-heading">Pick an Icon</div>
-        <span class="px-1" *ngFor="let img of enumIconImage | keys">
-          <app-icon-selector
-            [iconFormControl]="habitForm.get('iconImage') | asFormControl"
-            name="iconImage"
-            value="{{ img }}"
-            icon="{{ img }}"
-          ></app-icon-selector>
-        </span>
-        <button type="button" (click)="onSelectRandIconImg()">Random</button>
-      </div>
-
-      <!-- Color Picker -->
-      <div>
-        <div class="sub-heading">Pick a Color</div>
-        <span class="px-1" *ngFor="let color of enumIconColor | keys">
-          <app-icon-selector
-            [iconFormControl]="habitForm.get('iconColor') | asFormControl"
-            name="iconColor"
-            value="{{ color }}"
-            style.color="{{ color }}"
-            icon="lens"
-          ></app-icon-selector>
-        </span>
-        <button type="button" (click)="onSelectRandIconColor()">Random</button>
-      </div>
+    <!-- Color Picker -->
+    <div>
+      <div class="sub-heading">Pick a Color</div>
+      <span class="px-1" *ngFor="let color of enumIconColor | keys">
+        <app-icon-selector
+          [iconFormControl]="habitForm.get('iconColor') | asFormControl"
+          name="iconColor"
+          value="{{ color }}"
+          style.color="{{ color }}"
+          icon="lens"
+        ></app-icon-selector>
+      </span>
+      <button type="button" (click)="onSelectRandIconColor()">Random</button>
     </div>
+
     <div class="pt-5">
       <button
         mat-flat-button
