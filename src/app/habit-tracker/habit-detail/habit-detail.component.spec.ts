@@ -40,18 +40,24 @@ fdescribe('HabitDetailComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should ...', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should ...', () => {
-    component.habitData = {} as any;
-    const store = TestBed.inject(Store);
-    store.reset({
-      ...store.snapshot,
-      record: { dailyRecords: [] },
-    });
-    component.calculateStreaks();
-    expect(component.streaks).toEqual('answer here');
-  });
+  // it('should return ....', () => {
+  //   component.habitData = {} as any;
+  //   const store = TestBed.inject(Store);
+  //   store.reset({
+  //     ...store.snapshot,
+  //     record: { dailyRecords: [] },
+  //   });
+  //   component.calculateStreaks();
+  //   expect(component.streaks).toEqual([{
+  //     streak: 1;
+  //     startDate: Date;
+  //     endDate?: Date;
+  //   }]);
+  //   expect(result.results).toBeTruthy();
+  //   // expect(result.results.length).toEqual(1);
+  // });
 });

@@ -77,7 +77,7 @@ export class HabitTableComponent implements OnInit {
   }
 
   public onOpenMoodSelector(year: number, month: number, date: number) {
-    const eventDate = format(new Date(year, month, date), 'MM/dd/yyyy');
+    const eventDate = format(new Date(year, month, date), 'yyyy/MM/dd');
     this.dialog.open(HabitMoodSelectorComponent, {
       data: eventDate,
     });
@@ -90,7 +90,7 @@ export class HabitTableComponent implements OnInit {
   ) {
     const year = this.currentFullDate.getFullYear();
     const month = this.currentFullDate.getMonth();
-    const eventDate = format(new Date(year, month, date), 'MM/dd/yyyy');
+    const eventDate = format(new Date(year, month, date), 'yyyy/MM/dd');
     if (event.altKey) {
       // alt + double click -> delete the latest record
       // find the last record with matching habitId and eventDate
@@ -99,7 +99,6 @@ export class HabitTableComponent implements OnInit {
           (habit) => habit.habitId === habitId && habit.date === eventDate
         )
         .pop()?.id;
-      console.log(recordId);
       if (recordId) {
         this.store
           .dispatch(new DeleteLastRecord(recordId))
@@ -110,21 +109,25 @@ export class HabitTableComponent implements OnInit {
           .subscribe();
       }
     } else {
-      // double click -> add
-      const record = {
-        date: eventDate,
-        habitId: habitId,
-      };
-      this.store
-        .dispatch(new AddRecord(record))
-        .pipe(
-          take(1),
-          tap(() => window.location.reload())
-        )
-        .subscribe();
+      if (new Date(year, month, date) <= new Date()) {
+        // double click -> add
+        const record = {
+          date: eventDate,
+          habitId: habitId,
+        };
+        this.store
+          .dispatch(new AddRecord(record))
+          .pipe(
+            take(1),
+            tap(() => window.location.reload())
+          )
+          .subscribe();
+      } else {
+        window.alert('You cannot complete future task!');
+      }
     }
   }
-  public greyoutBackGround() {}
+
   public disableAddRecord(day: number, createdOn: Date): string {
     const year = this.currentFullDate.getFullYear();
     const month = this.currentFullDate.getMonth();
@@ -157,7 +160,7 @@ export class HabitTableComponent implements OnInit {
   findCompletionStatus(date: number, habitId: string): boolean {
     const year = this.currentFullDate.getFullYear();
     const month = this.currentFullDate.getMonth();
-    const eventDate = format(new Date(year, month, date), 'MM/dd/yyyy');
+    const eventDate = format(new Date(year, month, date), 'yyyy/MM/dd');
     const habitCompleted = this.dailyRecords.filter(
       (item) => item.date === eventDate && item.habitId === habitId
     );
