@@ -105,11 +105,7 @@
                   ]"
                   [ngStyle]="{ backgroundColor: habit.iconColor }"
                 >
-                  {{
-                    habit.frequency === "Day" && habit.countPerFreq > 1
-                      ? completionCount
-                      : ""
-                  }}
+                  {{ habit.countPerFreq >= 1 ? completionCount : "" }}
                 </button>
               </div>
             </button>

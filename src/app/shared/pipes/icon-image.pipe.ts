@@ -16,7 +16,7 @@ export class IconImagePipe implements PipeTransform {
     date: number,
     habitId: string
   ): boolean {
-    const eventDate = format(new Date(year, month, date), 'MM/dd/yyyy');
+    const eventDate = format(new Date(year, month, date), 'yyyy/MM/dd');
     // access to the selector w/o subscribing
     const statusReport = this.store.selectSnapshot(
       DailyHabitRecordState.dailyCompletionStatus

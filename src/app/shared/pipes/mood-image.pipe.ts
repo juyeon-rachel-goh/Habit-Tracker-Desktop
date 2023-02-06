@@ -10,7 +10,7 @@ export class MoodImagePipe implements PipeTransform {
   constructor(private store: Store) {}
 
   transform(year: number, month: number, date: number): string {
-    const eventDate = format(new Date(year, month, date), 'MM/dd/yyyy');
+    const eventDate = format(new Date(year, month, date), 'yyyy/MM/dd');
     // access to the selector w/o subscribing
     const dailyMoodList = this.store.selectSnapshot(MoodState.dailyMoodList);
     const result = dailyMoodList?.find((mood) => mood.eventDate === eventDate);
