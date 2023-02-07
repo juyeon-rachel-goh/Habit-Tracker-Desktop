@@ -11,6 +11,10 @@ import {
   MatDialogRef,
 } from '@angular/material/dialog';
 import { Store } from '@ngxs/store';
+import { Habit } from 'src/app/shared/models/habit';
+import { Freqeuncy } from '../enums/frequency';
+import { DailyHabitRecordState } from 'src/app/store/daily-record.state';
+import { IconColor } from '../enums/icon-color';
 
 fdescribe('HabitDetailComponent', () => {
   let component: HabitDetailComponent;
@@ -44,20 +48,129 @@ fdescribe('HabitDetailComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  // it('should return ....', () => {
-  //   component.habitData = {} as any;
-  //   const store = TestBed.inject(Store);
-  //   store.reset({
-  //     ...store.snapshot,
-  //     record: { dailyRecords: [] },
-  //   });
-  //   component.calculateStreaks();
-  //   expect(component.streaks).toEqual([{
-  //     streak: 1;
-  //     startDate: Date;
-  //     endDate?: Date;
-  //   }]);
-  //   expect(result.results).toBeTruthy();
-  //   // expect(result.results.length).toEqual(1);
-  // });
+  it('should return completion count of daily habits with multiple entries on the same day', () => {
+    component.habitId = 'testId001';
+    const store = TestBed.inject(Store);
+    store.reset({
+      ...store.snapshot,
+      record: {
+        dailyRecords: [
+          {
+            date: '2023/01/16',
+            habitId: 'testId001',
+          },
+          {
+            date: '2023/01/16',
+            habitId: 'testId001',
+          },
+          {
+            date: '2023/01/16',
+            habitId: 'testId001',
+          },
+          {
+            date: '2023/01/08',
+            habitId: 'testId001',
+          },
+          {
+            date: '2023/01/09',
+            habitId: 'testId001',
+          },
+        ],
+      },
+    });
+    component.findnumOfCompletion();
+    expect(component.numOfCompletion).toEqual(3);
+  });
+
+  it('should return Streaks[] of selected DAILY habit', () => {
+    component.habitData = {
+      id: 'testId001',
+      habitName: 'mock Habit',
+      frequency: Freqeuncy.Day,
+      countPerFreq: 1,
+      iconColor: IconColor['#072ac8'],
+      createdOn: new Date('2023/01/01'),
+      archiveStatus: false,
+    };
+    const store = TestBed.inject(Store);
+    store.reset({
+      ...store.snapshot,
+      record: {
+        dailyRecords: [
+          { date: '2023/02/01', habitId: 'testId001' },
+          { date: '2023/02/04', habitId: 'testId001' },
+          { date: '2023/02/05', habitId: 'testId001' },
+          { date: '2023/02/07', habitId: 'testId001' },
+        ],
+      },
+    });
+    component.calculateStreaks();
+    expect(component.streaks).toEqual([
+      {
+        streak: 1,
+        startDate: new Date('2023/02/01'),
+        // endDate?: Date;
+      },
+      {
+        streak: 0,
+        startDate: new Date('2023/02/03'),
+        // endDate?: Date;
+      },
+      {
+        streak: 2,
+        startDate: new Date('2023/02/04'),
+        // endDate?: Date;
+      },
+      {
+        streak: 1,
+        startDate: new Date('2023/02/07'),
+        // endDate?: Date;
+      },
+    ]);
+  });
+
+  it('should return Streaks[] of selected WEEKLY habit', () => {
+    component.habitData = {
+      id: 'testId001',
+      habitName: 'mock Habit',
+      frequency: Freqeuncy.Week,
+      countPerFreq: 2,
+      iconColor: IconColor['#072ac8'],
+      createdOn: new Date('2023/01/11'),
+      archiveStatus: false,
+    };
+    const store = TestBed.inject(Store);
+    store.reset({
+      ...store.snapshot,
+      record: {
+        dailyRecords: [
+          { date: '2023/01/11', habitId: 'testId001' },
+          { date: '2023/01/12', habitId: 'testId001' }, // 1st strk = 1
+          { date: '2023/01/16', habitId: 'testId001' },
+          { date: '2023/01/21', habitId: 'testId001' }, // 2nd strk = 2 THEN RESET TO 0 (pushed on 1/23 week) (no entry for 1/23 week)
+          { date: '2023/01/25', habitId: 'testId001' }, // no goal met
+          { date: '2023/02/06', habitId: 'testId001' },
+          { date: '2023/02/07', habitId: 'testId001' }, // 3rd strk =1
+        ],
+      },
+    });
+    component.calculateStreaks();
+    expect(component.streaks).toEqual([
+      {
+        streak: 2,
+        startDate: new Date('2023/01/09'),
+        // endDate?: Date;
+      },
+      {
+        streak: 0,
+        startDate: new Date('2023/01/30'),
+        // endDate?: Date;
+      },
+      {
+        streak: 1,
+        startDate: new Date('2023/02/06'),
+        // endDate?: Date;
+      },
+    ]);
+  });
 });
