@@ -27,7 +27,7 @@ export class IconImagePipe implements PipeTransform {
     const result = statusReport?.find(
       (item) => item.date === eventDate && item.habitId === habitId
     );
-    if (result?.completionStatus) {
+    if (result) {
       return true;
     } else {
       return false;
