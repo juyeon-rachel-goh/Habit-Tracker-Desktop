@@ -3,6 +3,7 @@ import { Store } from '@ngxs/store';
 import {
   addDays,
   addMonths,
+  addWeeks,
   differenceInDays,
   differenceInMonths,
   differenceInWeeks,
@@ -12,7 +13,6 @@ import {
   format,
   getDaysInMonth,
   isWithinInterval,
-  nextDay,
   startOfDay,
   startOfMonth,
   startOfWeek,
@@ -159,6 +159,7 @@ export class HabitDetailComponent implements OnInit {
     let startDateFunction: (date: Date) => Date;
     let maxStreaksFunction: (startDate: Date, endDate: Date) => number;
     let findStartDateofStreaksFunction: (date: Date, streak: number) => Date;
+    let findEndDateofStreaksFunction: (date: Date, streak: number) => Date;
     switch (this.habitData?.frequency) {
       case Freqeuncy.Day:
         delta = (date: Date) => {
@@ -172,6 +173,11 @@ export class HabitDetailComponent implements OnInit {
         };
         findStartDateofStreaksFunction = (date: Date, streak: number) => {
           return subDays(date, streak);
+        };
+        findEndDateofStreaksFunction = (date: Date, streak: number) => {
+          let startDate = findStartDateofStreaksFunction(date, streak);
+          console.log(startDate, streak);
+          return addDays(startDate, streak); // pass startDate?
         };
         break;
       case Freqeuncy.Week:
@@ -190,6 +196,12 @@ export class HabitDetailComponent implements OnInit {
         findStartDateofStreaksFunction = (date: Date, streak: number) => {
           return subWeeks(date, streak);
         };
+        findEndDateofStreaksFunction = (date: Date, streak: number) => {
+          let startDate = findStartDateofStreaksFunction(date, streak);
+          return endOfWeek(addWeeks(startDate, streak), {
+            weekStartsOn: 1,
+          }); // pass startDate?
+        };
         break;
       case Freqeuncy.Month:
         delta = (date: Date) => {
@@ -204,6 +216,12 @@ export class HabitDetailComponent implements OnInit {
         };
         findStartDateofStreaksFunction = (date: Date, streak: number) => {
           return subMonths(date, streak);
+        };
+        findEndDateofStreaksFunction = (date: Date, streak: number) => {
+          let startDate = endOfMonth(
+            findStartDateofStreaksFunction(date, streak)
+          );
+          return addMonths(startDate, streak); // pass startDate?
         };
         break;
       default:
@@ -238,7 +256,6 @@ export class HabitDetailComponent implements OnInit {
             end: endofInterval,
           })
         );
-        console.log(recordsFound);
         let streaksToCount = currentStreak;
         if (recordsFound.length >= this.habitData.countPerFreq) {
           ////// Goal Met
@@ -248,6 +265,7 @@ export class HabitDetailComponent implements OnInit {
               recordsFound[length - 1] &&
               recordsFound[length - 1].date <= format(new Date(), 'yyyy/MM/dd')
             ) {
+              console.log(recordsFound);
               streaksToCount = currentStreak - 1;
             }
             this.streaks.push({
@@ -256,22 +274,28 @@ export class HabitDetailComponent implements OnInit {
                 currentStartInterval, //date
                 streaksToCount // - streak
               ),
-              // endDate: endDateTimeofInterval,
+              endDate: findEndDateofStreaksFunction(
+                currentStartInterval, //date
+                streaksToCount // - streak
+              ),
             });
           }
         } else {
+          console.log('else statement called');
           ////// Goal NOT Met = Reset current streak to 0
           this.streaks.push({
-            streak: currentStreak,
+            streak: currentStreak, //2
             startDate: findStartDateofStreaksFunction(
               currentStartInterval,
               streaksToCount
             ),
-            // endDate: endDateTimeofInterval,
+            endDate: findEndDateofStreaksFunction(
+              currentStartInterval, //date
+              streaksToCount // - streak
+            ),
           });
           currentStreak = 0;
         }
-
         currentStartInterval = nextStartOfInterval;
       }
       console.log(this.streaks);
@@ -334,7 +358,6 @@ export class HabitDetailComponent implements OnInit {
     return result;
   }
 
-  // use streaks object??? ///////
   private calculateAvgScore() {
     let startDateFunction: (date: Date) => Date;
     let endDateFunction: (date: Date) => Date;
