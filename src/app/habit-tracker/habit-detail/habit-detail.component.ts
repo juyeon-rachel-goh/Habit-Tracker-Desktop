@@ -336,15 +336,11 @@ export class HabitDetailComponent implements OnInit {
 
   // use streaks object??? ///////
   private calculateAvgScore() {
-    let delta: (date: Date) => number;
     let startDateFunction: (date: Date) => Date;
     let endDateFunction: (date: Date) => Date;
     let maxStreaksFunction: (endDate: Date, startDate: Date) => number;
     switch (this.habitData?.frequency) {
       case Freqeuncy.Day:
-        delta = (date: Date) => {
-          return 1;
-        };
         startDateFunction = (date: Date) => {
           return startOfDay(date);
         };
@@ -355,9 +351,6 @@ export class HabitDetailComponent implements OnInit {
           differenceInDays(endDate, startDate);
         break;
       case Freqeuncy.Week:
-        delta = (date: Date) => {
-          return 7;
-        };
         startDateFunction = (date: Date) => {
           return startOfWeek(date, { weekStartsOn: 1 });
         };
@@ -368,9 +361,6 @@ export class HabitDetailComponent implements OnInit {
           differenceInWeeks(endDate, startDate, { roundingMethod: 'ceil' });
         break;
       case Freqeuncy.Month:
-        delta = (date: Date) => {
-          return getDaysInMonth(date);
-        };
         startDateFunction = (date: Date) => {
           return startOfMonth(date);
         };
@@ -384,26 +374,15 @@ export class HabitDetailComponent implements OnInit {
         return 0;
     }
 
-    if (this.dailyRecords && this.dailyRecords.length >= 1) {
-      let startDate = startDateFunction(new Date(this.dailyRecords[0].date)); //start date of calculating range
-      let endDate = endDateFunction(new Date()); //end date of calculating range
-      let maxStreaks = maxStreaksFunction(endDate, startDate);
-      // Find 100% streak period (if goal / target = 1 => streak +=1)
-      let earnedStreaks = 0;
-      let intervalStart = startDate;
-      for (let i = 0; i < maxStreaks; i++) {
-        let intervalEnd = addDays(intervalStart, delta(intervalStart));
-        const trueWithinInterval = this.dailyRecords.filter(
-          (record) =>
-            record.date >= format(intervalStart, 'yyyy/MM/dd') &&
-            record.date < format(intervalEnd, 'yyyy/MM/dd')
-        );
-        intervalStart = intervalEnd; //update value of intervalStart after 1 loop
-        if (trueWithinInterval.length / this.habitData?.countPerFreq! >= 1) {
-          earnedStreaks += 1; // earn 1 point of weekly goal has met
-        }
-      }
-      let result = (earnedStreaks / maxStreaks) * 100;
+    if (this.dailyRecords && this.streaks) {
+      const startDate = startDateFunction(new Date(this.dailyRecords[0].date)); //start date of calculating range
+      const endDate = endDateFunction(new Date()); //end date of calculating range
+      const maxStreaks = maxStreaksFunction(endDate, startDate);
+      const totalStreaksEarned = Object.values(this.streaks).reduce(
+        (s, { streak }) => s + streak,
+        0
+      );
+      const result = (totalStreaksEarned / maxStreaks) * 100;
       return result >= 100 ? 100 : result;
     }
     return 0;
