@@ -1,4 +1,4 @@
-<div class="bg-light py-5">
+<footer class="bg-light py-5">
   <div class="container">
     <div class="d-flex flex-row justify-content-between">
       <div>
@@ -19,9 +19,7 @@
               label="Email"
               hint="Enter Vaild Email"
               id="email"
-              [inputFormControl]="
-                newsletterForm.get('newSubscriber') | asFormControl
-              "
+              [inputFormControl]="newsletterForm.get('email') | asFormControl"
             ></app-textfield
             ><button mat-raised-button color="primary" type="submit">
               Sign Up
@@ -52,4 +50,4 @@
       </div>
     </div>
   </div>
-</div>
+</footer>

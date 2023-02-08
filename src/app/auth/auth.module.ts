@@ -7,6 +7,7 @@ import { PipesModule } from '../shared/pipes/pipes.module';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { InputModule } from '../input/input.module';
+import { LayoutModule } from '../layout/layout.module';
 
 @NgModule({
   declarations: [RegisterComponent, SignInComponent],
@@ -17,6 +18,7 @@ import { InputModule } from '../input/input.module';
     PipesModule,
     MatButtonModule,
     MatInputModule,
+    LayoutModule,
   ],
 })
 export class AuthModule {}

@@ -1,8 +1,12 @@
+body {
+  height: 100%;
+}
+
 table {
   empty-cells: show;
   width: 100%;
   margin-top: 10pt;
-  margin-bottom: 30pt;
+  margin-bottom: 30px;
 }
 th,
 td {
@@ -11,9 +15,14 @@ td {
   border-bottom: 1px solid #ddd;
 }
 
+tr {
+  height: 35px;
+}
+
 tr:hover {
   background-color: rgba(102, 222, 255, 0.3);
 }
+
 button {
   padding: 0;
   border: none;
@@ -21,19 +30,21 @@ button {
   margin: auto;
   display: block;
 }
+
 .cell-container {
-  width: 24px;
-  height: 24px;
+  width: 30px;
+  height: 30px;
 }
+
 .incomplete-habit {
   color: rgba(255, 255, 255, 0.9);
   opacity: 50%;
   text-align: center;
   padding: 2px;
-  border-radius: 50%;
+  border-radius: 35%;
   text-align: center;
   text-decoration: none;
-  font-size: 10px;
+  font-size: 15px;
 }
 
 .complete-habit {
@@ -41,10 +52,10 @@ button {
   opacity: 100%;
   text-align: center;
   padding: 2px;
-  border-radius: 50%;
+  border-radius: 35%;
   text-align: center;
   text-decoration: none;
-  font-size: 10px;
+  font-size: 15px;
 }
 
 .material-icons {

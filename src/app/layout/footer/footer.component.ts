@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { NewsLetterService } from 'src/app/shared/services/news-letter.service';
 
 @Component({
   selector: 'app-footer',
@@ -7,12 +8,13 @@ import { FormControl, FormGroup } from '@angular/forms';
   styleUrls: ['./footer.component.scss'],
 })
 export class FooterComponent implements OnInit {
-  constructor() {}
+  constructor(private newLetterService: NewsLetterService) {}
 
-  public newsletterForm = new FormGroup({ newSubscriber: new FormControl('') });
+  public newsletterForm = new FormGroup({ email: new FormControl('') });
 
   ngOnInit(): void {}
   onNewsLetterSubmit() {
     console.log(this.newsletterForm.value);
+    this.newLetterService.addSubscriber(this.newsletterForm.value).subscribe();
   }
 }

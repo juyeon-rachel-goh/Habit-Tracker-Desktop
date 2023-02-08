@@ -1,117 +1,117 @@
-<div class="container">
-  <h1 class="">Habit Tracker Main Page</h1>
+<body>
+  <div class="container">
+    <div class="d-flex flex-row">
+      <button type="button" (click)="loadMonth('prev')">
+        <mat-icon matTooltip="Display Previous Month">navigate_before</mat-icon>
+      </button>
+      <h2>{{ currentFullDate | date : "MMMM YYYY" }}</h2>
 
-  <div class="d-flex flex-row">
-    <button type="button" (click)="loadMonth('prev')">
-      <mat-icon matTooltip="Display Previous Month">navigate_before</mat-icon>
-    </button>
-    <h2>{{ currentFullDate | date : "MMMM YYYY" }}</h2>
+      <button type="button" (click)="loadMonth('next')">
+        <mat-icon matTooltip="Display Next Month">navigate_next</mat-icon>
+      </button>
+    </div>
+    <div class="py-2 d-flex flex-row justify-content-between">
+      <button mat-flat-button color="primary" (click)="onAddHabit()">
+        Add New Habit
+      </button>
+      <!-- TODO: Display archived habits only (to delete, unarchive or just view) -->
+      <button mat-flat-button color="primary" (click)="onViewArchive()">
+        Archived Habits
+      </button>
+    </div>
+    <div style="overflow-x: auto">
+      <table>
+        <ng-container>
+          <!-- 2nd row -->
+          <tr>
+            <th>Mood</th>
 
-    <button type="button" (click)="loadMonth('next')">
-      <mat-icon matTooltip="Display Next Month">navigate_next</mat-icon>
-    </button>
-  </div>
-  <div class="py-2 d-flex flex-row justify-content-between">
-    <button mat-flat-button color="primary" (click)="onAddHabit()">
-      Add New Habit
-    </button>
-    <!-- TODO: Display archived habits only (to delete, unarchive or just view) -->
-    <button mat-flat-button color="primary" (click)="onViewArchive()">
-      Archived Habits
-    </button>
-  </div>
-  <div style="overflow-x: auto">
-    <table>
-      <ng-container>
-        <!-- 1st row -->
-        <tr>
-          <th>Date</th>
-          <td class="" *ngFor="let n of daysInMonth | range; let i = index">
-            {{ n }}
-          </td>
-        </tr>
-        <!-- 2nd row -->
-        <tr>
-          <th>Mood</th>
-
-          <td
-            class=""
-            style="cursor: pointer"
-            *ngFor="let n of daysInMonth | range; let i = index"
-          >
-            <!-- need to pass fulldate  -->
-            <a
-              (click)="
-                onOpenMoodSelector(
-                  currentFullDate.getFullYear(),
-                  currentFullDate.getMonth(),
-                  i + 1
-                )
-              "
+            <td
+              class=""
+              style="cursor: pointer"
+              *ngFor="let n of daysInMonth | range; let i = index"
             >
-              <mat-icon class="material-icons">{{
-                currentFullDate.getFullYear()
-                  | moodImage : currentFullDate.getMonth() : i + 1
-              }}</mat-icon>
-            </a>
-          </td>
-        </tr>
+              <!-- need to pass fulldate  -->
+              <a
+                (click)="
+                  onOpenMoodSelector(
+                    currentFullDate.getFullYear(),
+                    currentFullDate.getMonth(),
+                    i + 1
+                  )
+                "
+              >
+                <mat-icon class="material-icons">{{
+                  currentFullDate.getFullYear()
+                    | moodImage : currentFullDate.getMonth() : i + 1
+                }}</mat-icon>
+              </a>
+            </td>
+          </tr>
+          <!-- 1st row -->
+          <tr>
+            <th>Date</th>
+            <td class="" *ngFor="let n of daysInMonth | range; let i = index">
+              {{ n }}
+            </td>
+          </tr>
 
-        <!-- 3rd Row -->
-        <tr>
-          <th>Days</th>
-          <td class="" *ngFor="let n of daysInMonth | range; let i = index">
-            {{
-              n
-                | getDay
-                  : currentFullDate.getMonth()
-                  : currentFullDate.getFullYear()
-                | slice : 0 : 3
-            }}
-          </td>
-        </tr>
+          <!-- 3rd Row -->
+          <tr>
+            <th>Days</th>
+            <td class="" *ngFor="let n of daysInMonth | range; let i = index">
+              {{
+                n
+                  | getDay
+                    : currentFullDate.getMonth()
+                    : currentFullDate.getFullYear()
+                  | slice : 0 : 3
+              }}
+            </td>
+          </tr>
 
-        <!-- 4th Row : Habit list starts -->
+          <!-- 4th Row : Habit list starts -->
 
-        <tr *ngFor="let habit of habitsList">
-          <th
-            (click)="onViewDetail(habit.id!)"
-            style="cursor: pointer"
-            [matTooltip]="habit.habitName"
-            matTooltipPosition="right"
-          >
-            {{ habit.habitName | truncate : 25 }}
-          </th>
-          <td
-            style="cursor: pointer"
-            *ngFor="let n of daysInMonth | range; let i = index"
-            [ngStyle]="{
-              'background-color': disableAddRecord(i + 1, habit.createdOn)
-            }"
-          >
-            <button
-              class="cell-container"
-              [disabled]="disabledCell"
-              (dblclick)="changeCompletionStatus(i + 1, habit.id!, $event)"
+          <tr *ngFor="let habit of habitsList">
+            <th
+              (click)="onViewDetail(habit.id!)"
+              style="cursor: pointer"
+              matTooltipPosition="left"
+              [matTooltip]="habit.habitName"
             >
-              <div *ngIf="findCompletionStatus(i + 1, habit.id!)">
-                <button
-                  class="cell-container"
-                  [ngClass]="[
-                    habit.frequency === 'Day' &&
-                    habit.countPerFreq > completionCount
-                      ? 'incomplete-habit'
-                      : 'complete-habit'
-                  ]"
-                  [ngStyle]="{ backgroundColor: habit.iconColor }"
-                >
-                  {{ habit.countPerFreq >= 1 ? completionCount : "" }}
-                </button>
-              </div>
-            </button>
-          </td>
-        </tr>
-      </ng-container>
-    </table>
+              {{ habit.habitName | truncate : 25 }}
+            </th>
+            <td
+              style="cursor: pointer"
+              *ngFor="let n of daysInMonth | range; let i = index"
+              [ngStyle]="{
+                'background-color': disableAddRecord(i + 1, habit.createdOn)
+              }"
+            >
+              <button
+                class="cell-container"
+                [disabled]="disabledCell"
+                (dblclick)="changeCompletionStatus(i + 1, habit.id!, $event)"
+              >
+                <div *ngIf="findCompletionStatus(i + 1, habit.id!)">
+                  <button
+                    class="cell-container"
+                    [ngClass]="[
+                      habit.frequency === 'Day' &&
+                      habit.countPerFreq > completionCount
+                        ? 'incomplete-habit'
+                        : 'complete-habit'
+                    ]"
+                    [ngStyle]="{ backgroundColor: habit.iconColor }"
+                  >
+                    {{ habit.countPerFreq >= 1 ? completionCount : "" }}
+                  </button>
+                </div>
+              </button>
+            </td>
+          </tr>
+        </ng-container>
+      </table>
+    </div>
   </div>
-</div>
+</body>
