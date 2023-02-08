@@ -11,10 +11,9 @@ import {
   MatDialogRef,
 } from '@angular/material/dialog';
 import { Store } from '@ngxs/store';
-import { Habit } from 'src/app/shared/models/habit';
 import { Freqeuncy } from '../enums/frequency';
-import { DailyHabitRecordState } from 'src/app/store/daily-record.state';
 import { IconColor } from '../enums/icon-color';
+import { endOfDay } from 'date-fns';
 
 fdescribe('HabitDetailComponent', () => {
   let component: HabitDetailComponent;
@@ -50,34 +49,28 @@ fdescribe('HabitDetailComponent', () => {
 
   it('should return completion count of daily habits with multiple entries on the same day', () => {
     component.habitId = 'testId001';
-    const store = TestBed.inject(Store);
-    store.reset({
-      ...store.snapshot,
-      record: {
-        dailyRecords: [
-          {
-            date: '2023/01/16',
-            habitId: 'testId001',
-          },
-          {
-            date: '2023/01/16',
-            habitId: 'testId001',
-          },
-          {
-            date: '2023/01/16',
-            habitId: 'testId001',
-          },
-          {
-            date: '2023/01/08',
-            habitId: 'testId001',
-          },
-          {
-            date: '2023/01/09',
-            habitId: 'testId001',
-          },
-        ],
+    component.dailyRecords = [
+      {
+        date: '2023/01/08',
+        habitId: 'testId002',
       },
-    });
+      {
+        date: '2023/01/08',
+        habitId: 'testId002',
+      },
+      {
+        date: '2023/01/08',
+        habitId: 'testId002',
+      },
+      {
+        date: '2023/01/09',
+        habitId: 'testId002',
+      },
+      {
+        date: '2023/01/16',
+        habitId: 'testId001',
+      },
+    ];
     component.findnumOfCompletion();
     expect(component.numOfCompletion).toEqual(3);
   });
@@ -109,22 +102,22 @@ fdescribe('HabitDetailComponent', () => {
       {
         streak: 1,
         startDate: new Date('2023/02/01'),
-        // endDate?: Date;
+        endDate: new Date('2023/02/02'),
       },
       {
         streak: 0,
         startDate: new Date('2023/02/03'),
-        // endDate?: Date;
+        endDate: new Date('2023/02/03'),
       },
       {
         streak: 2,
         startDate: new Date('2023/02/04'),
-        // endDate?: Date;
+        endDate: new Date('2023/02/06'),
       },
       {
         streak: 1,
         startDate: new Date('2023/02/07'),
-        // endDate?: Date;
+        endDate: new Date('2023/02/08'),
       },
     ]);
   });
@@ -159,18 +152,46 @@ fdescribe('HabitDetailComponent', () => {
       {
         streak: 2,
         startDate: new Date('2023/01/09'),
-        // endDate?: Date;
+        endDate: endOfDay(new Date('2023/01/29')),
       },
       {
         streak: 0,
         startDate: new Date('2023/01/30'),
-        // endDate?: Date;
+        endDate: endOfDay(new Date('2023/02/05')),
       },
       {
         streak: 1,
         startDate: new Date('2023/02/06'),
-        // endDate?: Date;
+        endDate: endOfDay(new Date('2023/02/12')),
       },
     ]);
+  });
+
+  it('should return average score of habit', () => {
+    component.habitData = {
+      id: 'testId111',
+      habitName: 'mock Habit',
+      frequency: Freqeuncy.Day,
+      countPerFreq: 2,
+      iconColor: IconColor['#072ac8'],
+      createdOn: new Date('2023/01/11'),
+      archiveStatus: false,
+    };
+    component.streaks = [
+      {
+        streak: 11,
+        startDate: new Date('2023/01/12'),
+      },
+      {
+        streak: 3,
+        startDate: new Date('2023/01/30'),
+      },
+      {
+        streak: 3,
+        startDate: new Date('2023/02/03'),
+      },
+    ];
+    component.calculateAvgScore();
+    expect(component.avgScore).toEqual(58);
   });
 });

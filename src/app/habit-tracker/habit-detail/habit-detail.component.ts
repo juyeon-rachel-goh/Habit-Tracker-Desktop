@@ -135,9 +135,8 @@ export class HabitDetailComponent implements OnInit {
     if (this.dailyRecords) {
       const uniqueDates = [
         ...new Set(this.dailyRecords.map((record) => record.date)),
-      ]; // array of unique dates
+      ];
       const dateCounts = uniqueDates.map(
-        // count records per unique date
         (date) =>
           this.dailyRecords!.filter((record) => record.date === date).length
       );
@@ -281,7 +280,6 @@ export class HabitDetailComponent implements OnInit {
             });
           }
         } else {
-          console.log('else statement called');
           ////// Goal NOT Met = Reset current streak to 0
           this.streaks.push({
             streak: currentStreak, //2
@@ -358,7 +356,7 @@ export class HabitDetailComponent implements OnInit {
     return result;
   }
 
-  private calculateAvgScore() {
+  public calculateAvgScore() {
     let startDateFunction: (date: Date) => Date;
     let endDateFunction: (date: Date) => Date;
     let maxStreaksFunction: (endDate: Date, startDate: Date) => number;
@@ -397,17 +395,17 @@ export class HabitDetailComponent implements OnInit {
         return 0;
     }
 
-    if (this.dailyRecords && this.streaks) {
-      const startDate = startDateFunction(new Date(this.dailyRecords[0].date)); //start date of calculating range
+    if (this.streaks) {
+      const startDate = startDateFunction(new Date(this.habitData.createdOn)); //start date of calculating range
       const endDate = endDateFunction(new Date()); //end date of calculating range
       const maxStreaks = maxStreaksFunction(endDate, startDate);
       const totalStreaksEarned = Object.values(this.streaks).reduce(
         (s, { streak }) => s + streak,
         0
       );
-      const result = (totalStreaksEarned / maxStreaks) * 100;
-      return result >= 100 ? 100 : result;
+      const result = Math.trunc((totalStreaksEarned / maxStreaks) * 100);
+      return result >= 100 ? (this.avgScore = 100) : (this.avgScore = result);
     }
-    return 0;
+    return (this.avgScore = 0);
   }
 }
