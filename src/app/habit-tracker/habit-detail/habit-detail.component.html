@@ -1,84 +1,108 @@
-<div class="container">
-  <div *ngIf="habitData; let data">
-    <!-- Habit Information -->
-    <div class="container">
-      <h1 mat-dialog-title>{{ data.habitName }}</h1>
-      <h4>Target: {{ data.countPerFreq }}x/{{ data.frequency }}</h4>
-      <h4>Start Date: {{ data.createdOn | date : dateFormat }}</h4>
+<div *ngIf="habitData; let data">
+  <!-- Habit Information -->
+  <div class="container">
+    <h1 mat-dialog-title class="habit-title">{{ data.habitName }}</h1>
+    <div class="d-flex flex-row justify-content-around">
+      <h4 class="medium-text">
+        Target: {{ data.countPerFreq }}x/{{ data.frequency }}
+      </h4>
+      <h4 class="medium-text">
+        Start Date: {{ data.createdOn | date : dateFormat }}
+      </h4>
     </div>
+  </div>
 
-    <div class="container">
-      <!-- Box for Number of Complete and Streaks -->
-      <div class="d-flex flex-row p-2">
-        <div class="card" style="width: 18rem">
-          <div class="card-body">
-            <h2 class="">{{ numOfCompletion }}</h2>
-            <p class="card-text">Number of Completion</p>
-          </div>
+  <div class="d-flex flex-row flex-wrap">
+    <!-- Box for Number of Complete and Streaks -->
+    <div class="d-flex flex-column flex-wrap justify-content-around">
+      <div class="card" style="width: 18rem">
+        <div class="card-body">
+          <h1 class="title">Number of Completion</h1>
+          <p class="number">
+            {{ numOfCompletion }}
+          </p>
+          <p class="medium-text">TIMES</p>
         </div>
-        <div class="card" style="width: 18rem">
-          <div class="card-body">
-            <h2 class="">{{ currentStreak.streak }}</h2>
-            <p>{{ currentStreak.startDate | date : dateFormat }}</p>
-            <p>{{ currentStreak.endDate | date : dateFormat }}</p>
-            <p class="card-text">Current Streak</p>
-          </div>
-        </div>
-        <div class="card" style="width: 18rem">
-          <div class="card-body">
-            <h2 class="">{{ bestStreak }}</h2>
-            <p class="card-text">Best Streak</p>
+      </div>
+      <div class="card" style="width: 18rem">
+        <div class="card-body">
+          <h1 class="title">Current Streak</h1>
+          <p class="number">{{ currentStreak.streak }}</p>
+          <ng-template [ngIf]="data.frequency === 'Day'"
+            ><p class="medium-text">DAYS</p></ng-template
+          >
+          <ng-template [ngIf]="data.frequency === 'Week'"
+            ><p class="medium-text">WEEKS</p></ng-template
+          >
+          <ng-template [ngIf]="data.frequency === 'Month'"
+            ><p class="medium-text">MONTHS</p></ng-template
+          >
+          <div class="d-flex flex-row flex-wrap justify-content-around">
+            <span>{{ currentStreak.startDate | date : dateFormat }}</span>
+            <span>{{ currentStreak.endDate | date : dateFormat }}</span>
           </div>
         </div>
       </div>
-      <!-- Current Goal Pie Chart  -->
-      <div class="d-flex flex-row flex-wrap">
-        <circle-progress
-          [percent]="currentScore"
-          [radius]="75"
-          [outerStrokeWidth]="10"
-          [innerStrokeWidth]="5"
-          [outerStrokeColor]="'#78C000'"
-          [innerStrokeColor]="'#C7E596'"
-          [backgroundPadding]="40"
-          [unitsFontSize]="'15'"
-          [titleFontWeight]="'700'"
-          [subtitleFontSize]="'12'"
-          [animation]="true"
-          [animationDuration]="300"
-          [subtitle]="'Goal Met'"
-        ></circle-progress>
-        <!-- Habit Score Pie Chart  -->
-        <circle-progress
-          [percent]="avgScore"
-          [radius]="75"
-          [outerStrokeWidth]="10"
-          [innerStrokeWidth]="5"
-          [outerStrokeColor]="'#fa8107'"
-          [innerStrokeColor]="'#fcc388'"
-          [backgroundPadding]="40"
-          [unitsFontSize]="'15'"
-          [titleFontWeight]="'700'"
-          [subtitleFontSize]="'12'"
-          [animation]="true"
-          [animationDuration]="300"
-          [subtitle]="'Average Score'"
-        ></circle-progress>
-      </div>
-      <!-- Events -->
-      <div class="container py-3">
-        <button mat-raised-button color="primary" (click)="onEdit(data.id!)">
-          Edit
-        </button>
-        <span class="px-2"></span>
-        <button mat-raised-button color="accent" (click)="onClickArchive()">
-          {{ isArchived ? "Unarchive" : "Archive" }}
-        </button>
-        <span class="px-2"></span>
-        <button mat-raised-button color="warn" (click)="onDelete()">
-          Delete
-        </button>
+      <div class="card" style="width: 18rem">
+        <div class="card-body">
+          <h1 class="title">Best Streak</h1>
+          <p class="number">{{ bestStreak }}</p>
+          <ng-template [ngIf]="data.frequency === 'Day'"
+            ><p class="medium-text">DAYS</p></ng-template
+          >
+          <ng-template [ngIf]="data.frequency === 'Week'"
+            ><p class="medium-text">WEEKS</p></ng-template
+          >
+          <ng-template [ngIf]="data.frequency === 'Month'"
+            ><p class="medium-text">MONTHS</p></ng-template
+          >
+        </div>
       </div>
     </div>
+    <!-- Current Goal Pie Chart  -->
+    <div class="d-flex flex-column justify-content-center flex-wrap">
+      <circle-progress
+        [percent]="currentScore"
+        [radius]="75"
+        [outerStrokeWidth]="10"
+        [innerStrokeWidth]="5"
+        [outerStrokeColor]="'#78C000'"
+        [innerStrokeColor]="'#C7E596'"
+        [backgroundPadding]="30"
+        [unitsFontSize]="'15'"
+        [titleFontWeight]="'700'"
+        [subtitleFontSize]="'12'"
+        [animation]="true"
+        [animationDuration]="300"
+        [subtitle]="'Goal Met'"
+      ></circle-progress>
+      <!-- Habit Score Pie Chart  -->
+      <circle-progress
+        [percent]="avgScore"
+        [radius]="75"
+        [outerStrokeWidth]="10"
+        [innerStrokeWidth]="5"
+        [outerStrokeColor]="'#fa8107'"
+        [innerStrokeColor]="'#fcc388'"
+        [backgroundPadding]="30"
+        [unitsFontSize]="'15'"
+        [titleFontWeight]="'700'"
+        [subtitleFontSize]="'12'"
+        [animation]="true"
+        [animationDuration]="300"
+        [subtitle]="'Average Score'"
+      ></circle-progress>
+    </div>
+  </div>
+  <div class="container">
+    <button mat-raised-button color="primary" (click)="onEdit(data.id!)">
+      Edit
+    </button>
+    <span class="px-2"></span>
+    <button mat-raised-button color="accent" (click)="onClickArchive()">
+      {{ isArchived ? "Unarchive" : "Archive" }}
+    </button>
+    <span class="px-2"></span>
+    <button mat-raised-button color="warn" (click)="onDelete()">Delete</button>
   </div>
 </div>

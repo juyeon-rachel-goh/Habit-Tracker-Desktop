@@ -19,8 +19,8 @@ tr {
   height: 35px;
 }
 
-tr:hover {
-  background-color: rgba(102, 222, 255, 0.3);
+td:hover {
+  background-color: rgba(255, 247, 0, 0.75);
 }
 
 button {
@@ -63,4 +63,18 @@ button {
   align-items: center;
   justify-content: center;
   margin: auto;
+}
+
+.full-with-dialog {
+  position: relative;
+  overflow: auto;
+  width: 500px;
+
+  @media (max-width: 568px) {
+    width: 440px;
+  }
+
+  @media (max-width: 468px) {
+    width: 340px;
+  }
 }

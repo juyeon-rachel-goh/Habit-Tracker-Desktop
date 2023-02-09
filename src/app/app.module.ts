@@ -15,13 +15,8 @@ import { LayoutModule } from './layout/layout.module';
 import { HomeComponent } from './home/home.component';
 import { ContactUsComponent } from './contact-us/contact-us.component';
 import { HabitTrackerModule } from './habit-tracker/habit-tracker.module';
-import { NgxsModule } from '@ngxs/store';
-import { AuthState } from './store/auth.state';
-import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
-import { MoodState } from './store/mood.state';
-import { HabitState } from './store/habit.state';
-import { DailyHabitRecordState } from './store/daily-record.state';
 import { StoreModule } from './store/store/store.module';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [AppComponent, HomeComponent, ContactUsComponent],
@@ -33,6 +28,7 @@ import { StoreModule } from './store/store/store.module';
     HabitTrackerModule,
     PipesModule,
     HttpClientModule,
+    ReactiveFormsModule,
     LayoutModule,
     MatButtonModule,
     NgbModule,
