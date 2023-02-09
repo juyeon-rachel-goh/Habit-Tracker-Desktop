@@ -1,4 +1,59 @@
 <body>
-  <p>contact-us works!</p>
+  <div class="container">
+    <div class="d-flex flex-row">
+      <div class="w-50">
+        <h2 class="heading">Love to hear from you.</h2>
+        <h2 class="heading">Let's get in touch</h2>
+      </div>
+      <form
+        [formGroup]="contactUsForm"
+        (ngSubmit)="onSubmit()"
+        class="form-width mx-auto"
+      >
+        <div class="heading">Send us a message</div>
+        <div>
+          <app-textfield
+            label="Full Name"
+            id="fullName"
+            [inputFormControl]="contactUsForm.get('fullName') | asFormControl"
+          ></app-textfield>
+        </div>
+        <div>
+          <app-textfield
+            label="Email"
+            id="email"
+            [inputFormControl]="contactUsForm.get('email') | asFormControl"
+            [condition]="
+              contactUsForm?.get('email')?.hasError('email') &&
+              !contactUsForm?.get('email')?.hasError('required')
+            "
+            errorMessage="Please enter a valid email address"
+          >
+          </app-textfield>
+        </div>
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label id="content">Message</mat-label>
+          <textarea
+            matInput
+            cdkTextareaAutosize
+            cdkAutosizeMinRows="10"
+            cdkAutosizeMaxRows="10"
+            [formControl]="contactUsForm.get('content') | asFormControl"
+          ></textarea>
+        </mat-form-field>
+        <div class="register-page-buttons">
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            [disabled]="!contactUsForm.valid"
+          >
+            Send
+          </button>
+          <!-- when sending a message is complete, show cute dialog box with "Message has been sent!" -->
+        </div>
+      </form>
+    </div>
+  </div>
 </body>
 <app-footer></app-footer>

@@ -105,11 +105,6 @@ fdescribe('HabitDetailComponent', () => {
         endDate: new Date('2023/02/02'),
       },
       {
-        streak: 0,
-        startDate: new Date('2023/02/03'),
-        endDate: new Date('2023/02/03'),
-      },
-      {
         streak: 2,
         startDate: new Date('2023/02/04'),
         endDate: new Date('2023/02/06'),
@@ -155,11 +150,6 @@ fdescribe('HabitDetailComponent', () => {
         endDate: endOfDay(new Date('2023/01/29')),
       },
       {
-        streak: 0,
-        startDate: new Date('2023/01/30'),
-        endDate: endOfDay(new Date('2023/02/05')),
-      },
-      {
         streak: 1,
         startDate: new Date('2023/02/06'),
         endDate: endOfDay(new Date('2023/02/12')),
@@ -192,6 +182,6 @@ fdescribe('HabitDetailComponent', () => {
       },
     ];
     component.calculateAvgScore();
-    expect(component.avgScore).toEqual(58);
+    expect(component.avgScore).toEqual(56);
   });
 });

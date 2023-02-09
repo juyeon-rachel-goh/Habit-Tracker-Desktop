@@ -281,17 +281,20 @@ export class HabitDetailComponent implements OnInit {
           }
         } else {
           ////// Goal NOT Met = Reset current streak to 0
-          this.streaks.push({
-            streak: currentStreak, //2
-            startDate: findStartDateofStreaksFunction(
-              currentStartInterval,
-              streaksToCount
-            ),
-            endDate: findEndDateofStreaksFunction(
-              currentStartInterval, //date
-              streaksToCount // - streak
-            ),
-          });
+          if (currentStreak !== 0) {
+            // only push non-zero values
+            this.streaks.push({
+              streak: currentStreak, //2
+              startDate: findStartDateofStreaksFunction(
+                currentStartInterval,
+                streaksToCount
+              ),
+              endDate: findEndDateofStreaksFunction(
+                currentStartInterval,
+                streaksToCount
+              ),
+            });
+          }
           currentStreak = 0;
         }
         currentStartInterval = nextStartOfInterval;
