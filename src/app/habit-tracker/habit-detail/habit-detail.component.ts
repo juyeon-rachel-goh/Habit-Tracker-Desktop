@@ -159,6 +159,7 @@ export class HabitDetailComponent implements OnInit {
     let maxStreaksFunction: (startDate: Date, endDate: Date) => number;
     let findStartDateofStreaksFunction: (date: Date, streak: number) => Date;
     let findEndDateofStreaksFunction: (date: Date, streak: number) => Date;
+    let findEndofCurrentInterval: (date: Date) => Date;
     switch (this.habitData?.frequency) {
       case Freqeuncy.Day:
         delta = (date: Date) => {
@@ -175,8 +176,10 @@ export class HabitDetailComponent implements OnInit {
         };
         findEndDateofStreaksFunction = (date: Date, streak: number) => {
           let startDate = findStartDateofStreaksFunction(date, streak);
-          console.log(startDate, streak);
-          return addDays(startDate, streak); // pass startDate?
+          return sub(addDays(startDate, streak), { seconds: 1 });
+        };
+        findEndofCurrentInterval = (date: Date) => {
+          return endOfDay(date);
         };
         break;
       case Freqeuncy.Week:
@@ -197,9 +200,12 @@ export class HabitDetailComponent implements OnInit {
         };
         findEndDateofStreaksFunction = (date: Date, streak: number) => {
           let startDate = findStartDateofStreaksFunction(date, streak);
-          return endOfWeek(addWeeks(startDate, streak), {
+          return sub(addWeeks(startDate, streak), { seconds: 1 }); // pass startDate?
+        };
+        findEndofCurrentInterval = (date: Date) => {
+          return endOfWeek(date, {
             weekStartsOn: 1,
-          }); // pass startDate?
+          });
         };
         break;
       case Freqeuncy.Month:
@@ -217,10 +223,11 @@ export class HabitDetailComponent implements OnInit {
           return subMonths(date, streak);
         };
         findEndDateofStreaksFunction = (date: Date, streak: number) => {
-          let startDate = endOfMonth(
-            findStartDateofStreaksFunction(date, streak)
-          );
-          return addMonths(startDate, streak); // pass startDate?
+          let startDate = findStartDateofStreaksFunction(date, streak);
+          return sub(addMonths(startDate, streak), { seconds: 1 }); // pass startDate?
+        };
+        findEndofCurrentInterval = (date: Date) => {
+          return endOfMonth(date);
         };
         break;
       default:
@@ -261,30 +268,27 @@ export class HabitDetailComponent implements OnInit {
           currentStreak += 1;
           if (i === maxStreaks - 1) {
             if (
-              recordsFound[length - 1] &&
-              recordsFound[length - 1].date <= format(new Date(), 'yyyy/MM/dd')
+              recordsFound[recordsFound.length - 1] &&
+              recordsFound[recordsFound.length - 1].date <=
+                format(new Date(), 'yyyy/MM/dd')
             ) {
-              console.log(recordsFound);
               streaksToCount = currentStreak - 1;
             }
             this.streaks.push({
               streak: currentStreak,
               startDate: findStartDateofStreaksFunction(
-                currentStartInterval, //date
-                streaksToCount // - streak
+                currentStartInterval,
+                streaksToCount
               ),
-              endDate: findEndDateofStreaksFunction(
-                currentStartInterval, //date
-                streaksToCount // - streak
-              ),
+              endDate: findEndofCurrentInterval(currentStartInterval),
             });
           }
         } else {
           ////// Goal NOT Met = Reset current streak to 0
           if (currentStreak !== 0) {
-            // only push non-zero values
+            // Push non-zero value before reset
             this.streaks.push({
-              streak: currentStreak, //2
+              streak: currentStreak,
               startDate: findStartDateofStreaksFunction(
                 currentStartInterval,
                 streaksToCount
@@ -294,8 +298,25 @@ export class HabitDetailComponent implements OnInit {
                 streaksToCount
               ),
             });
+            currentStreak = 0;
+
+            //push one more time for 0 value of current interval (so it does not skip a cycle)
+            this.streaks.push({
+              streak: currentStreak,
+              startDate: currentStartInterval,
+              endDate: findEndofCurrentInterval(currentStartInterval),
+            });
+          } else {
+            // push zero value if 0 streak continues
+            this.streaks.push({
+              streak: currentStreak,
+              startDate: findStartDateofStreaksFunction(
+                currentStartInterval,
+                streaksToCount
+              ),
+              endDate: findEndofCurrentInterval(currentStartInterval),
+            });
           }
-          currentStreak = 0;
         }
         currentStartInterval = nextStartOfInterval;
       }
