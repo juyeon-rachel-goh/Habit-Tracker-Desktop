@@ -17,6 +17,7 @@ import { ContactUsComponent } from './contact-us/contact-us.component';
 import { HabitTrackerModule } from './habit-tracker/habit-tracker.module';
 import { StoreModule } from './store/store/store.module';
 import { ReactiveFormsModule } from '@angular/forms';
+import { DailyRecordFunctions } from './shared/utility/dailyRecords';
 
 @NgModule({
   declarations: [AppComponent, HomeComponent, ContactUsComponent],
@@ -37,7 +38,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     MatInputModule,
     StoreModule,
   ],
-  providers: [],
+  providers: [DailyRecordFunctions],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

@@ -41,16 +41,29 @@
     <!-- Color Picker -->
     <div>
       <div class="sub-heading">Pick a Color</div>
-      <span class="px-1" *ngFor="let color of enumIconColor | keys">
-        <app-icon-selector
-          [iconFormControl]="habitForm.get('iconColor') | asFormControl"
-          name="iconColor"
-          value="{{ color }}"
-          style.color="{{ color }}"
-          icon="lens"
-        ></app-icon-selector>
-      </span>
-      <button type="button" (click)="onSelectRandIconColor()">Random</button>
+      <div class="d-flex flex-row align-items-center">
+        <span
+          class="p-1"
+          *ngFor="let color of enumIconColor | keys"
+          style="height: 58px; width: 58px"
+        >
+          <app-icon-selector
+            [iconFormControl]="habitForm.get('iconColor') | asFormControl"
+            name="iconColor"
+            value="{{ color }}"
+            style.color="{{ color }}"
+            icon="lens"
+          ></app-icon-selector>
+        </span>
+        <button
+          mat-stroked-button
+          type="button"
+          class="round-button"
+          (click)="onSelectRandIconColor()"
+        >
+          Random
+        </button>
+      </div>
     </div>
 
     <div class="pt-5">

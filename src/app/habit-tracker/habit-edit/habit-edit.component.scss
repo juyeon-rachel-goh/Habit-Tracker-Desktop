@@ -11,3 +11,10 @@ $font-stack: Verdana, sans-serif;
   padding-top: 10px;
   color: #000000;
 }
+
+.round-button {
+  border-radius: 70%;
+  border: none;
+  text-align: center;
+  font-size: 7px;
+}

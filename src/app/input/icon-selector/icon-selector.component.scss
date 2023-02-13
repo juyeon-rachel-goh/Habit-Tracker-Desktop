@@ -14,11 +14,11 @@
 /* CHECKED ICON STYLES */
 .hiddenradio [type="radio"]:checked + mat-icon {
   border: 2px solid rgb(0, 119, 255);
-  border-radius: 15px;
+  border-radius: 50%;
 }
 
 .icon-display {
   font-size: 50px;
-  height: 50px;
-  width: 50px;
+  height: 54px;
+  width: 54px;
 }
