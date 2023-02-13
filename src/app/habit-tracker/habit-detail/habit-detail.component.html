@@ -19,7 +19,7 @@
         <div class="card-body">
           <h1 class="title">Number of Completion</h1>
           <p class="number">
-            {{ numOfCompletion }}
+            {{ numOfCompletion || 0 }}
           </p>
           <p class="medium-text">TIMES</p>
         </div>
@@ -27,7 +27,7 @@
       <div class="card" style="width: 18rem">
         <div class="card-body">
           <h1 class="title">Current Streak</h1>
-          <p class="number">{{ currentStreak.streak }}</p>
+          <p class="number">{{ currentStreak.streak || 0 }}</p>
           <ng-template [ngIf]="data.frequency === 'Day'"
             ><p class="medium-text">DAYS</p></ng-template
           >
@@ -46,7 +46,7 @@
       <div class="card" style="width: 18rem">
         <div class="card-body">
           <h1 class="title">Best Streak</h1>
-          <p class="number">{{ bestStreak }}</p>
+          <p class="number">{{ bestStreak.streak || 0 }}</p>
           <ng-template [ngIf]="data.frequency === 'Day'"
             ><p class="medium-text">DAYS</p></ng-template
           >
@@ -56,6 +56,10 @@
           <ng-template [ngIf]="data.frequency === 'Month'"
             ><p class="medium-text">MONTHS</p></ng-template
           >
+          <div class="d-flex flex-row flex-wrap justify-content-around">
+            <span>{{ bestStreak.startDate | date : dateFormat }}</span>
+            <span>{{ bestStreak.endDate | date : dateFormat }}</span>
+          </div>
         </div>
       </div>
     </div>

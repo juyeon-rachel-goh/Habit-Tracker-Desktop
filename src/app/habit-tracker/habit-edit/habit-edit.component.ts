@@ -5,7 +5,7 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { Freqeuncy } from 'src/app/habit-tracker/enums/frequency';
+import { Frequency } from 'src/app/habit-tracker/enums/frequency';
 import { IconColor } from 'src/app/habit-tracker/enums/icon-color';
 import { Habit } from 'src/app/shared/models/habit';
 import { Store } from '@ngxs/store';
@@ -22,7 +22,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 export class HabitEditComponent implements OnInit {
   public habitForm = new FormGroup({});
   private habitData?: Habit;
-  public enumFrequency = Freqeuncy;
+  public enumFrequency = Frequency;
   public enumIconColor = IconColor;
 
   constructor(
