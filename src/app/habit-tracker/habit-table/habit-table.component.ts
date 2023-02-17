@@ -147,9 +147,6 @@ export class HabitTableComponent implements OnInit {
   }
   public onViewDetail(habitId: string) {
     this.dialog.open(HabitDetailComponent, {
-      maxHeight: '80vh',
-      panelClass: ['full-with-dialog'],
-
       data: habitId,
     });
   }

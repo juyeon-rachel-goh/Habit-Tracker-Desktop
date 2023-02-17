@@ -1,112 +1,126 @@
 <div *ngIf="habitData; let data">
   <!-- Habit Information -->
   <div class="container">
-    <h1 mat-dialog-title class="habit-title">{{ data.habitName }}</h1>
-    <div class="d-flex flex-row justify-content-around">
-      <h4 class="medium-text">
-        Target: {{ data.countPerFreq }}x/{{ data.frequency }}
-      </h4>
-      <h4 class="medium-text">
-        Start Date: {{ data.createdOn | date : dateFormat }}
-      </h4>
+    <div class="flex-row-nowrap-space-between">
+      <div class="d-flex flex-column justify-content-around">
+        <h2 mat-dialog-title class="sub-heading">{{ data.habitName }}</h2>
+        <p class="body-text">
+          Started {{ data.createdOn | date : dateFormat }}
+        </p>
+      </div>
+      <div class="flex-row-nowrap">
+        <mat-icon>repeat</mat-icon>
+        <p class="body-text">
+          {{ data.countPerFreq }} x /
+          {{ data.frequency }}
+        </p>
+      </div>
     </div>
-  </div>
 
-  <div class="d-flex flex-row flex-wrap">
-    <!-- Box for Number of Complete and Streaks -->
-    <div class="d-flex flex-column flex-wrap justify-content-around">
-      <div class="card" style="width: 18rem">
+    <!-- Habit Score Pie Chart  -->
+    <circle-progress
+      [percent]="avgScore"
+      [radius]="75"
+      [outerStrokeWidth]="20"
+      [innerStrokeWidth]="20"
+      [space]="-20"
+      [outerStrokeColor]="'#FFD748'"
+      [outerStrokeLinecap]="'butt'"
+      [innerStrokeColor]="'#fffdd8'"
+      [backgroundPadding]="-18"
+      [unitsFontSize]="'15'"
+      [titleFontWeight]="'700'"
+      [subtitleFontSize]="'12'"
+      [animation]="true"
+      [animationDuration]="400"
+      [subtitle]="'Avg. Score'"
+    ></circle-progress>
+
+    <div class="flex-row-nowrap-space-between">
+      <div class="card" style="width: 10rem">
         <div class="card-body">
-          <h1 class="title">Number of Completion</h1>
           <p class="number">
-            {{ numOfCompletion || 0 }}
+            {{ currentStreak.streak || 0 }}
+            <ng-template [ngIf]="data.frequency === 'Day'"
+              ><span class="body-text">days</span></ng-template
+            >
+            <ng-template [ngIf]="data.frequency === 'Week'"
+              ><span class="body-text">weeks</span></ng-template
+            >
+            <ng-template [ngIf]="data.frequency === 'Month'"
+              ><span class="body-text">months</span></ng-template
+            >
           </p>
-          <p class="medium-text">TIMES</p>
+          <p class="body-text">current streak</p>
+          <p class="body-text">
+            since {{ currentStreak.startDate | date : dateFormat }}
+          </p>
         </div>
       </div>
-      <div class="card" style="width: 18rem">
+      <div class="card">
         <div class="card-body">
-          <h1 class="title">Current Streak</h1>
-          <p class="number">{{ currentStreak.streak || 0 }}</p>
-          <ng-template [ngIf]="data.frequency === 'Day'"
-            ><p class="medium-text">DAYS</p></ng-template
-          >
-          <ng-template [ngIf]="data.frequency === 'Week'"
-            ><p class="medium-text">WEEKS</p></ng-template
-          >
-          <ng-template [ngIf]="data.frequency === 'Month'"
-            ><p class="medium-text">MONTHS</p></ng-template
-          >
-          <div class="d-flex flex-row flex-wrap justify-content-around">
-            <span>{{ currentStreak.startDate | date : dateFormat }}</span>
-            <span>{{ currentStreak.endDate | date : dateFormat }}</span>
-          </div>
+          <p class="number">
+            {{ currentScore || 0 }} <span class="body-text">%</span>
+          </p>
+          <p class="body-text">goals met</p>
         </div>
       </div>
-      <div class="card" style="width: 18rem">
+    </div>
+    <div class="flex-row-nowrap-space-between">
+      <!-- Box for Number of Complete and Streaks -->
+      <div class="card">
         <div class="card-body">
-          <h1 class="title">Best Streak</h1>
-          <p class="number">{{ bestStreak.streak || 0 }}</p>
-          <ng-template [ngIf]="data.frequency === 'Day'"
-            ><p class="medium-text">DAYS</p></ng-template
-          >
-          <ng-template [ngIf]="data.frequency === 'Week'"
-            ><p class="medium-text">WEEKS</p></ng-template
-          >
-          <ng-template [ngIf]="data.frequency === 'Month'"
-            ><p class="medium-text">MONTHS</p></ng-template
-          >
+          <p class="number">
+            {{ numOfCompletion || 0 }} <span class="body-text">x</span>
+          </p>
+          <p class="body-text">completed</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-body">
+          <p class="number">
+            {{ bestStreak.streak || 0 }}
+            <ng-template [ngIf]="data.frequency === 'Day'"
+              ><span class="medium-text">days</span></ng-template
+            >
+            <ng-template [ngIf]="data.frequency === 'Week'"
+              ><span class="medium-text">weeks</span></ng-template
+            >
+            <ng-template [ngIf]="data.frequency === 'Month'"
+              ><span class="medium-text">months</span></ng-template
+            >
+          </p>
+          <p class="body-text">Best Streak</p>
           <div class="d-flex flex-row flex-wrap justify-content-around">
             <span>{{ bestStreak.startDate | date : dateFormat }}</span>
             <span>{{ bestStreak.endDate | date : dateFormat }}</span>
           </div>
         </div>
       </div>
+
+      <div class="card">
+        <div class="card-body">
+          <p class="number">
+            {{ numOfCompletion || 0 }} <span class="body-text">x</span>
+          </p>
+          <p class="body-text">missed</p>
+        </div>
+      </div>
     </div>
-    <!-- Current Goal Pie Chart  -->
-    <div class="d-flex flex-column justify-content-center flex-wrap">
-      <circle-progress
-        [percent]="currentScore"
-        [radius]="75"
-        [outerStrokeWidth]="10"
-        [innerStrokeWidth]="5"
-        [outerStrokeColor]="'#78C000'"
-        [innerStrokeColor]="'#C7E596'"
-        [backgroundPadding]="30"
-        [unitsFontSize]="'15'"
-        [titleFontWeight]="'700'"
-        [subtitleFontSize]="'12'"
-        [animation]="true"
-        [animationDuration]="300"
-        [subtitle]="'Goal Met'"
-      ></circle-progress>
-      <!-- Habit Score Pie Chart  -->
-      <circle-progress
-        [percent]="avgScore"
-        [radius]="75"
-        [outerStrokeWidth]="10"
-        [innerStrokeWidth]="5"
-        [outerStrokeColor]="'#fa8107'"
-        [innerStrokeColor]="'#fcc388'"
-        [backgroundPadding]="30"
-        [unitsFontSize]="'15'"
-        [titleFontWeight]="'700'"
-        [subtitleFontSize]="'12'"
-        [animation]="true"
-        [animationDuration]="300"
-        [subtitle]="'Average Score'"
-      ></circle-progress>
+
+    <div class="container">
+      <button mat-raised-button color="primary" (click)="onEdit(data.id!)">
+        Edit
+      </button>
+      <span class="px-2"></span>
+      <button mat-raised-button color="accent" (click)="onClickArchive()">
+        {{ isArchived ? "Unarchive" : "Archive" }}
+      </button>
+      <span class="px-2"></span>
+      <button mat-raised-button color="warn" (click)="onDelete()">
+        Delete
+      </button>
     </div>
-  </div>
-  <div class="container">
-    <button mat-raised-button color="primary" (click)="onEdit(data.id!)">
-      Edit
-    </button>
-    <span class="px-2"></span>
-    <button mat-raised-button color="accent" (click)="onClickArchive()">
-      {{ isArchived ? "Unarchive" : "Archive" }}
-    </button>
-    <span class="px-2"></span>
-    <button mat-raised-button color="warn" (click)="onDelete()">Delete</button>
   </div>
 </div>

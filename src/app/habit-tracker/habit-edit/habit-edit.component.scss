@@ -14,8 +14,8 @@ $font-stack: "Open-Sans", sans-serif;
 
 h2 {
   &.sub-heading {
-    font-size: 16px;
-    font-weight: 500; // Semibold
+    font: 16px $font-stack;
+    font-weight: 600; // Semibold
     color: #383838;
     margin: 0;
   }
