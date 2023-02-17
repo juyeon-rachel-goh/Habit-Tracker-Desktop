@@ -1,11 +1,16 @@
 <mat-form-field
-  appearance="outline"
-  [floatLabel]="getFloatLabelValue()"
   class="form-field-full-width"
+  appearance="fill"
+  hideRequiredMarker="true"
 >
   <mat-label>{{ label }}</mat-label>
   <ng-container *ngIf="inputFormControl"
-    ><input matInput [formControl]="inputFormControl" [type]="inputType"
+    ><input
+      class=""
+      matInput
+      [formControl]="inputFormControl"
+      [type]="inputType"
+      [placeholder]="placeholder"
   /></ng-container>
 
   <!-- Mat-error  -->

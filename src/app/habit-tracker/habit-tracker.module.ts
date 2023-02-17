@@ -22,7 +22,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatListModule } from '@angular/material/list';
 import { MatPaginatorModule } from '@angular/material/paginator';
-
+import { MatSelectModule } from '@angular/material/select';
 @NgModule({
   declarations: [
     HabitTableComponent,
@@ -47,6 +47,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     PipesModule,
     MatButtonToggleModule,
     MatDialogModule,
+    MatSelectModule,
     NgCircleProgressModule.forRoot({}),
   ],
   exports: [
