@@ -87,8 +87,6 @@ export class HabitDetailComponent implements OnInit {
   }
   onEdit(id: string) {
     this.dialog.open(HabitEditComponent, {
-      width: '50%',
-      height: '55%',
       data: id,
     });
   }

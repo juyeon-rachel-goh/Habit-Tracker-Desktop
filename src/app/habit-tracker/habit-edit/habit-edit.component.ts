@@ -75,12 +75,25 @@ export class HabitEditComponent implements OnInit {
     });
   }
 
+  changeCount(count: number) {
+    let value = Number(this.habitForm.value.countPerFreq);
+    let patchValue = 0;
+    if (value + count < 0) {
+      patchValue = 0;
+    } else {
+      patchValue = value + count;
+    }
+    this.habitForm.patchValue({
+      countPerFreq: patchValue,
+    });
+  }
+
   private initForm(habit?: Habit) {
     this.habitForm = this.formBuilder?.group({
       habitName: [habit?.habitName ?? '', [Validators.required]],
       frequency: [habit?.frequency ?? '', [Validators.required]],
       countPerFreq: [
-        habit?.countPerFreq ?? '',
+        habit?.countPerFreq ?? 0,
         [Validators.required, Validators.min(1)],
       ],
       iconColor: [habit?.iconColor ?? '', [Validators.required]],

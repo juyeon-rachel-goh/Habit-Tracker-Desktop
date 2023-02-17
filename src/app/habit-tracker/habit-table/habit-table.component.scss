@@ -1,5 +1,15 @@
+$font-stack: "Open Sans", sans-serif;
+
 body {
   height: 100%;
+}
+
+/* Primary Button Custom Styling */
+.mat-flat-button.mat-primary {
+  color: #383838;
+  background-color: #ffd748;
+  padding: 2px 20px;
+  border-radius: 25px;
 }
 
 table {

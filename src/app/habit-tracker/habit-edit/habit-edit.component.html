@@ -4,49 +4,69 @@
     (ngSubmit)="onSubmit()"
     class="form-width mx-auto"
   >
-    <div class="heading">Add A New Habit</div>
-
     <!-- Name of the habit -->
+    <h2 class="sub-heading">
+      {{ id ? "Edit a Habit" : "Create a Habit" }}
+    </h2>
     <div class="sub-heading">
       <app-textfield
-        label="Name"
-        id="habitName"
         [inputFormControl]="habitForm.get('habitName') | asFormControl"
+        type="text"
+        placeholder="Habit Name"
+        id="habitName"
       ></app-textfield>
     </div>
 
     <!-- Frequency  -->
-    <div class="d-flex flex-row justify-content-around">
-      <div>
-        <div class="sub-heading">Frequency</div>
-        <div *ngFor="let frequency of enumFrequency | keys">
-          <input
-            type="radio"
-            value="{{ frequency }}"
-            [formControl]="habitForm.get('frequency') | asFormControl"
-          />
-          <label for="{{ frequency }}">{{ frequency }}</label>
-        </div>
-      </div>
-      <div>
-        <div class="sub-heading">Goal</div>
+    <div class="row-flex">
+      <h2 class="sub-heading">Frequency</h2>
+      <mat-form-field appearance="fill" style="width: 150px">
+        <mat-select
+          placeholder="Select Frequency"
+          [formControl]="habitForm.get('frequency') | asFormControl"
+        >
+          <mat-option
+            *ngFor="let frequency of enumFrequency | keys"
+            [value]="frequency"
+          >
+            {{ frequency }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <!-- Goal -->
+    <div class="row-flex">
+      <h2 class="sub-heading">Goal</h2>
+      <div class="row-flex">
+        <button
+          class="button-basic borderless-left"
+          type="button"
+          (click)="changeCount(-1)"
+        >
+          <mat-icon>remove</mat-icon>
+        </button>
         <app-textfield
-          label="Count per Frequency"
+          style="width: 30px"
+          placeholder="Count per Frequency"
           type="number"
           [inputFormControl]="habitForm.get('countPerFreq') | asFormControl"
         ></app-textfield>
+        <button
+          class="button-basic borderless-right"
+          type="button"
+          (click)="changeCount(1)"
+        >
+          <mat-icon>add</mat-icon>
+        </button>
       </div>
     </div>
 
     <!-- Color Picker -->
     <div>
-      <div class="sub-heading">Pick a Color</div>
+      <h2 class="sub-heading">Pick a Color</h2>
       <div class="d-flex flex-row align-items-center">
-        <span
-          class="p-1"
-          *ngFor="let color of enumIconColor | keys"
-          style="height: 58px; width: 58px"
-        >
+        <div *ngFor="let color of enumIconColor | keys">
           <app-icon-selector
             [iconFormControl]="habitForm.get('iconColor') | asFormControl"
             name="iconColor"
@@ -54,35 +74,33 @@
             style.color="{{ color }}"
             icon="lens"
           ></app-icon-selector>
-        </span>
+        </div>
         <button
-          mat-stroked-button
           type="button"
-          class="round-button"
+          class="button-basic round-button-circle"
           (click)="onSelectRandIconColor()"
         >
-          Random
+          R
         </button>
       </div>
     </div>
 
-    <div class="pt-5">
+    <div class="flex-row-right">
       <button
-        mat-flat-button
+        mat-dialog-close
+        class="button-basic borderless-right"
+        style="color: #383838"
         type="button"
-        color="accent"
-        [routerLink]="['../']"
       >
-        Cancel
+        <mat-icon>close</mat-icon>
       </button>
-      <span class="px-2"></span>
       <button
-        mat-flat-button
+        class="button-basic borderless-right"
+        style="color: #12e100"
         type="submit"
-        color="primary"
         [disabled]="!habitForm.valid"
       >
-        Save
+        <mat-icon>check</mat-icon>
       </button>
     </div>
   </form>
