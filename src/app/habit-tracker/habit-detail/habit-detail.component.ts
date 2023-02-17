@@ -36,7 +36,7 @@ export class HabitDetailComponent implements OnInit {
   public currentScore: number = 0;
   public avgScore: number = 100;
   public streaks: Streak[] = [];
-  public dateFormat: string = 'MMMM d, y';
+  public dateFormat: string = 'MMM d, y';
 
   constructor(
     private store: Store,
