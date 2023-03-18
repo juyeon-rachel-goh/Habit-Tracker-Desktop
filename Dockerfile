@@ -1,7 +1,6 @@
 # Build app
 FROM node:lts-alpine3.17 as node
 WORKDIR .
-RUN ls /etc
 RUN mkdir desktop
 WORKDIR desktop
 COPY . .
