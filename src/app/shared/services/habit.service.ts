@@ -8,7 +8,7 @@ import { DailyHabitRecord } from '../models/daily-habit-record';
   providedIn: 'root',
 })
 export class HabitService {
-  private url = 'http://localhost:4200/api/habit-tracker';
+  private url = 'api/habit-tracker';
   constructor(private http: HttpClient) {}
 
   public getHabits(): Observable<Habit[]> {

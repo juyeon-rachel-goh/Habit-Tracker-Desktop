@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class NewsLetterService {
-  private url = 'http://localhost:4200/api/subscription';
+  private url = 'api/subscription';
   constructor(private http: HttpClient) {}
 
   addSubscriber(subscriber: Subscriber): Observable<Subscriber> {
