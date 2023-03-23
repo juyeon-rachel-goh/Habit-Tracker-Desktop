@@ -8,7 +8,7 @@ import { ValidationErrors } from '@angular/forms';
   providedIn: 'root',
 })
 export class AuthService {
-  private url = 'http://localhost:4200/api/auth';
+  private url = 'api/auth';
   constructor(private http: HttpClient) {}
 
   // // Services for REGISTER // //

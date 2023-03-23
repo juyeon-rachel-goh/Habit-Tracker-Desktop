@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class ContactUsService {
-  private url = 'http://localhost:4200/api/send-email';
+  private url = 'api/send-email';
   constructor(private http: HttpClient) {}
 
   sendEmail(message: Message): Observable<Message> {
